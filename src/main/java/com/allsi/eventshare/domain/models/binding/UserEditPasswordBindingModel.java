@@ -1,0 +1,54 @@
+package com.allsi.eventshare.domain.models.binding;
+
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+
+import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
+import static com.allsi.eventshare.constants.Constants.PASS_LENGTH_ERR_MGS;
+
+public class UserEditPasswordBindingModel {
+  private String username;
+  private String oldPassword;
+  private String password;
+  private String confirmPassword;
+
+  public UserEditPasswordBindingModel() {
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getOldPassword() {
+    return oldPassword;
+  }
+
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
+  }
+
+  @NotNull(message = NULL_ERR_MSG)
+  @Length(min = 3, max = 16, message = PASS_LENGTH_ERR_MGS)
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @NotNull(message = NULL_ERR_MSG)
+  @Length(min = 3, max = 16, message = PASS_LENGTH_ERR_MGS)
+  public String getConfirmPassword() {
+    return confirmPassword;
+  }
+
+  public void setConfirmPassword(String confirmPassword) {
+    this.confirmPassword = confirmPassword;
+  }
+}

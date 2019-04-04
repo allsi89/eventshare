@@ -1,33 +1,37 @@
 package com.allsi.eventshare.web.controllers;
 
-import com.allsi.eventshare.domain.models.binding.UserBindingModel;
+import com.allsi.eventshare.domain.models.binding.UserEditBindingModel;
+import com.allsi.eventshare.domain.models.binding.UserEditPasswordBindingModel;
+import com.allsi.eventshare.domain.models.binding.UserRegisterBindingModel;
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
-import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
 import com.allsi.eventshare.domain.models.view.UserProfileViewModel;
+import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
   private final UserService userService;
+  private final ImageService imageService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public UserController(UserService userService, ModelMapper modelMapper) {
+  public UserController(UserService userService, ImageService imageService, ModelMapper modelMapper) {
     this.userService = userService;
+    this.imageService = imageService;
     this.modelMapper = modelMapper;
   }
 
@@ -46,7 +50,7 @@ public class UserController extends BaseController {
   @PostMapping("/register")
   @PreAuthorize("isAnonymous()")
   public ModelAndView registerConfirm(@Valid @ModelAttribute(name = "bindingModel")
-                                          UserBindingModel bindingModel,
+                                          UserRegisterBindingModel bindingModel,
                                       BindingResult bindingResult,
                                       ModelAndView modelAndView) {
     if (!bindingModel.getPassword().equals(bindingModel.getConfirmPassword()) ||
@@ -69,6 +73,7 @@ public class UserController extends BaseController {
   public ModelAndView profile(Principal principal) {
     ModelAndView modelAndView = getProfileModelAndView(principal);
 
+
     return super.view("profile", modelAndView);
   }
 
@@ -83,22 +88,50 @@ public class UserController extends BaseController {
   @PostMapping("/profile/edit")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = "userModel")
-                                             UserBindingModel userModel,
-                                         BindingResult bindingResult,
-                                         ModelAndView modelAndView) {
-    if (!userModel.getPassword().equals(userModel.getConfirmPassword()) ||
-        bindingResult.hasErrors()) {
+                                             UserEditBindingModel userModel,
+                                         @RequestParam("file") MultipartFile file,
+                                         BindingResult bindingResult) throws IOException {
+
+    if (bindingResult.hasErrors()) {
       return super.view("edit-profile");
     }
 
-    boolean isSuccessful = this.userService.editUserProfile(this.modelMapper
-        .map(userModel, UserServiceModel.class), userModel.getOldPassword());
+    UserServiceModel userServiceModel = this.modelMapper
+        .map(userModel, UserServiceModel.class);
 
-    if (isSuccessful){
-      return super.redirect("/users/profile");
+    ImageServiceModel imageServiceModel = null;
+
+    this.userService.editUserProfile(userServiceModel);
+    if (file != null) {
+      imageServiceModel = this.imageService.saveImgInDb(file);
+      this.userService.editUserImage(userServiceModel, imageServiceModel);
     }
 
-    return super.view("edit-profile");
+    return super.view("profile");
+  }
+
+  @GetMapping("/password/edit")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView editPassword(){
+    return super.view("edit-password");
+  }
+
+  @PostMapping("/password/edit")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView editPasswordConfirm(Principal principal,
+                                          @ModelAttribute("userModel")
+                                              UserEditPasswordBindingModel userModel,
+                                          BindingResult bindingResult){
+    if (bindingResult.hasErrors()){
+      return super.view("edit-password");
+    }
+
+    this.userService.editUserPassword(this.modelMapper
+        .map(userModel, UserServiceModel.class),
+        principal.getName(),
+        userModel.getOldPassword());
+
+    return super.redirect("/users/profile");
   }
 
   private ModelAndView getProfileModelAndView(Principal principal) {
@@ -110,13 +143,15 @@ public class UserController extends BaseController {
     UserProfileViewModel viewModel = this.modelMapper
         .map(userServiceModel, UserProfileViewModel.class);
 
-    if (userServiceModel.getCorporate()) {
+    viewModel.setImageUrl(userServiceModel.getImageUrl());
 
-      OrganisationViewModel organisationViewModel = this.userService
-          .findUserOrganisation(principal.getName());
-
-      viewModel.setOrganisation(organisationViewModel);
-    }
+//    if (userServiceModel.getCorporate()) {
+//
+//      OrganisationViewModel organisationViewModel = this.userService
+//          .findUserOrganisation(principal.getName());
+//
+//      viewModel.setOrganisation(organisationViewModel);
+//    }
 
     modelAndView
         .addObject("userModel", this.modelMapper

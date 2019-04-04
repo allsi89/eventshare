@@ -21,6 +21,7 @@
     font-family: 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
     font-min-size: large;
     font-weight: bold;
+
 }
 
 
@@ -45,5 +46,9 @@ a:hover {
     background: linear-gradient(rgba(255,255,255,0.9) 0%,rgba(255,255,255,0.9) 100%),
     url('../images/background.jpg') no-repeat;
     background-size: cover;
+}
+
+.custom-btn {
+    'Choose a picture';
 }
 

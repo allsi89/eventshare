@@ -1,7 +1,9 @@
 package com.allsi.eventshare.service;
 
+import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
@@ -19,17 +21,20 @@ import static com.allsi.eventshare.constants.Constants.USER;
 
 @Service
 public class UserServiceImpl implements UserService {
-  private static final String USER_NOT_FOUND_ERR = "Username not found.";
+  private static final String USER_NOT_FOUND_ERR = "User not found!";
+  private static final String INCORRECT_PASSWORD = "Incorrect password!";
 
   private final UserRepository userRepository;
   private final RoleService roleService;
+  private final ImageService imageService;
   private final ModelMapper modelMapper;
   private final BCryptPasswordEncoder encoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+  public UserServiceImpl(UserRepository userRepository, RoleService roleService, ImageService imageService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
     this.userRepository = userRepository;
     this.roleService = roleService;
+    this.imageService = imageService;
     this.modelMapper = modelMapper;
     this.encoder = encoder;
   }
@@ -37,51 +42,80 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean register(UserServiceModel serviceModel) {
     this.roleService.seedRolesInDb();
-    
 
-    User user = this.modelMapper.map(serviceModel, User.class);
-
-    user.setPassword(this.encoder.encode(serviceModel.getPassword()));
-    user.setAccountNonExpired(true);
-    user.setAccountNonLocked(true);
-    user.setCredentialsNonExpired(true);
-    user.setEnabled(true);
-    user.setCorporate(false);
+    User user = this.modelMapper
+        .map(this.setValuesToUserFields(serviceModel), User.class);
 
     this.assignRolesToUser(user);
 
-    try {
+    if (user != null) {
       this.userRepository.saveAndFlush(user);
       return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
     }
+    return false;
+  }
+
+  private UserServiceModel setValuesToUserFields(UserServiceModel serviceModel) {
+    serviceModel.setPassword(this.encoder.encode(serviceModel.getPassword()));
+    serviceModel.setAccountNonExpired(true);
+    serviceModel.setAccountNonLocked(true);
+    serviceModel.setCredentialsNonExpired(true);
+    serviceModel.setEnabled(true);
+    serviceModel.setCorporate(false);
+    return serviceModel;
   }
 
   @Override
-  public UserDetails findUserByUsername(String name) {
-    return this.userRepository.findByUsername(name)
+  public UserServiceModel findUserByUsername(String name) {
+    User user = this.userRepository.findByUsername(name)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    return this.modelMapper.map(user, UserServiceModel.class);
   }
 
   @Override
   public OrganisationViewModel findUserOrganisation(String name) {
-    User user = this.userRepository.findByUsername(name).orElse(null);
-    if (user != null) {
-      OrganisationServiceModel organisationServiceModel = this.modelMapper
-          .map(user.getOrganisation(), OrganisationServiceModel.class);
+    UserServiceModel user = this.findUserByUsername(name);
 
-      return getOrganisationViewModel(organisationServiceModel);
-    }
-
-    return null;
+    OrganisationServiceModel organisationServiceModel = this.modelMapper
+        .map(user.getOrganisation(), OrganisationServiceModel.class);
+    return getOrganisationViewModel(organisationServiceModel);
   }
 
   @Override
-  public boolean editUserProfile(UserServiceModel map, String oldPassword) {
-    return false;
+  public void editUserProfile(UserServiceModel userServiceModel) {
+    User user = this.userRepository.findByUsername(userServiceModel.getUsername())
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    user.setEmail(userServiceModel.getEmail());
+    this.userRepository.saveAndFlush(user);
   }
+
+  @Override
+  public void editUserImage(UserServiceModel userServiceModel, ImageServiceModel imageServiceModel) {
+    User user = this.userRepository.findByUsername(userServiceModel.getUsername())
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+    Image image = this.imageService.findImageById(imageServiceModel.getId());
+
+    user.setImage(image);
+    this.userRepository.saveAndFlush(user);
+
+  }
+
+  @Override
+  public void editUserPassword(UserServiceModel model, String name, String oldPassword) {
+    User user = this.userRepository.findByUsername(name)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    if (!this.encoder.matches(oldPassword, user.getPassword())){
+      throw new IllegalArgumentException(INCORRECT_PASSWORD);
+    }
+
+    user.setPassword(this.encoder.encode(model.getPassword()));
+
+    this.userRepository.saveAndFlush(user);
+  }
+
 
   private OrganisationViewModel getOrganisationViewModel(OrganisationServiceModel organisationServiceModel) {
     OrganisationViewModel organisationViewModel = this.modelMapper

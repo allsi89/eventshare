@@ -14,11 +14,10 @@ public class User extends BaseEntity implements UserDetails {
   private String password;
   private String email;
   private Boolean isCorporate;
-  private Organisation organisation;
+  private Image image;
   private List<Event> createdEvents;
   private List<Event> attendanceEvents;
   private List<Comment> comments;
-//  private Image image;
 
   private boolean isAccountNonExpired;
   private boolean isAccountNonLocked;
@@ -68,20 +67,20 @@ public class User extends BaseEntity implements UserDetails {
     isCorporate = corporate;
   }
 
-  @OneToOne(targetEntity = Organisation.class)
-  @JoinTable(name = "users_organisations",
+  @OneToOne(targetEntity = Image.class)
+  @JoinTable(name = "users_images",
       joinColumns = @JoinColumn(
           name = "user_id",
           referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(
-          name = "organisation_id",
+          name = "image_id",
           referencedColumnName = "id"))
-  public Organisation getOrganisation() {
-    return organisation;
+  public Image getImage() {
+    return image;
   }
 
-  public void setOrganisation(Organisation organisation) {
-    this.organisation = organisation;
+  public void setImage(Image image) {
+    this.image = image;
   }
 
   @OneToMany(targetEntity = Event.class, mappedBy = "creator")

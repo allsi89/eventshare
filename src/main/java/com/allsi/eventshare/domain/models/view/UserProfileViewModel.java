@@ -4,7 +4,7 @@ public class UserProfileViewModel {
   private String username;
   private String password;
   private String email;
-  private String imageUrl;
+  private String imageId;
   private boolean isCorporate;
   private OrganisationViewModel organisation;
 
@@ -36,11 +36,11 @@ public class UserProfileViewModel {
   }
 
   public String getImageUrl() {
-    return imageUrl;
+    return imageId;
   }
 
   public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+    this.imageId = imageUrl;
   }
 
   public boolean isCorporate() {

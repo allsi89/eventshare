@@ -12,7 +12,7 @@
     <div class="jumbotron bg-transparent" th:object="${userModel}">
 
         <div class="text-center mt-3">
-            <img  src="/images/profileImg.png"
+            <img th:src="*{imageUrl}"
                  th:height="200" th:width="200" alt="profile picture">
         </div>
         <div class="row mt-3">
