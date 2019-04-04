@@ -1,17 +1,21 @@
-package com.allsi.eventshare.domain.entities;
+package com.allsi.eventshare.domain.models.service;
 
-import javax.persistence.*;
-import java.util.List;
-
-@Entity(name = "cities")
-public class City extends BaseEntity {
+public class CityServiceModel {
+  private String id;
   private String name;
   private String postCode;
 
-  public City() {
+  public CityServiceModel() {
   }
 
-  @Column(name = "name", nullable = false)
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   public String getName() {
     return name;
   }
@@ -20,7 +24,6 @@ public class City extends BaseEntity {
     this.name = name;
   }
 
-  @Column(name = "postcode")
   public String getPostCode() {
     return postCode;
   }

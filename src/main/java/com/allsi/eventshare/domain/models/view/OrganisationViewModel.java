@@ -1,24 +1,16 @@
-package com.allsi.eventshare.domain.models.service;
+package com.allsi.eventshare.domain.models.view;
 
-public class OrganisationServiceModel {
-  private String id;
+public class OrganisationViewModel {
   private String name;
-  private CountryServiceModel country;
-  private CityServiceModel city;
+  private String country;
+  private String city;
+  private String cityPostCode;
   private String address;
   private String website;
   private String email;
   private String phone;
 
-  public OrganisationServiceModel() {
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
+  public OrganisationViewModel() {
   }
 
   public String getName() {
@@ -29,20 +21,28 @@ public class OrganisationServiceModel {
     this.name = name;
   }
 
-  public CountryServiceModel getCountry() {
+  public String getCountry() {
     return country;
   }
 
-  public void setCountry(CountryServiceModel country) {
+  public void setCountry(String country) {
     this.country = country;
   }
 
-  public CityServiceModel getCity() {
+  public String getCity() {
     return city;
   }
 
-  public void setCity(CityServiceModel city) {
+  public void setCity(String city) {
     this.city = city;
+  }
+
+  public String getCityPostCode() {
+    return cityPostCode;
+  }
+
+  public void setCityPostCode(String cityPostCode) {
+    this.cityPostCode = cityPostCode;
   }
 
   public String getAddress() {

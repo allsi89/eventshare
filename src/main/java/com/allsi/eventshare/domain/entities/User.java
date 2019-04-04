@@ -1,6 +1,5 @@
 package com.allsi.eventshare.domain.entities;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -10,8 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity(name = "users")
-public class User implements UserDetails {
-  private String id;
+public class User extends BaseEntity implements UserDetails {
   private String username;
   private String password;
   private String email;
@@ -30,18 +28,6 @@ public class User implements UserDetails {
 
   public User() {
     this.roles = new HashSet<>();
-  }
-
-  @Id
-  @GeneratedValue(generator = "uuid-string")
-  @GenericGenerator(name = "uuid-string", strategy = "org.hibernate.id.UUIDGenerator")
-  @Column(name = "id", unique = true, updatable = false, nullable = false)
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   @Override

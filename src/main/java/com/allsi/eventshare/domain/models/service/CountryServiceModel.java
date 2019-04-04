@@ -1,35 +1,30 @@
-package com.allsi.eventshare.domain.entities;
+package com.allsi.eventshare.domain.models.service;
 
-import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "countries")
-public class Country{
-  private Integer id;
+public class CountryServiceModel {
+  private int id;
   private String iso;
   private String name;
   private String niceName;
   private String iso3;
   private String numCode;
   private String phoneCode;
-  private List<City> cities;
+  private List<CityServiceModel> cities;
 
-
-  public Country() {
+  public CountryServiceModel() {
+    this.cities = new ArrayList<>();
   }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, updatable = false)
-  public Integer getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(int id) {
     this.id = id;
   }
 
-  @Column(name = "iso")
   public String getIso() {
     return iso;
   }
@@ -38,7 +33,6 @@ public class Country{
     this.iso = iso;
   }
 
-  @Column(name = "name", nullable = false)
   public String getName() {
     return name;
   }
@@ -47,7 +41,6 @@ public class Country{
     this.name = name;
   }
 
-  @Column(name = "nicename", nullable = false)
   public String getNiceName() {
     return niceName;
   }
@@ -56,7 +49,6 @@ public class Country{
     this.niceName = niceName;
   }
 
-  @Column(name = "iso3")
   public String getIso3() {
     return iso3;
   }
@@ -65,7 +57,6 @@ public class Country{
     this.iso3 = iso3;
   }
 
-  @Column(name = "numcode")
   public String getNumCode() {
     return numCode;
   }
@@ -74,7 +65,6 @@ public class Country{
     this.numCode = numCode;
   }
 
-  @Column(name = "phonecode", nullable = false)
   public String getPhoneCode() {
     return phoneCode;
   }
@@ -83,17 +73,11 @@ public class Country{
     this.phoneCode = phoneCode;
   }
 
-  @OneToMany(targetEntity = City.class)
-  @JoinTable(name = "countries_cities",
-  joinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"),
-  inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"))
-  public List<City> getCities() {
+  public List<CityServiceModel> getCities() {
     return cities;
   }
 
-  public void setCities(List<City> cities) {
+  public void setCities(List<CityServiceModel> cities) {
     this.cities = cities;
   }
-
-
 }

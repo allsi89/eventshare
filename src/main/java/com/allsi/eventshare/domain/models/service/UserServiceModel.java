@@ -10,6 +10,7 @@ public class UserServiceModel {
   private String username;
   private String password;
   private String email;
+  private String imageUrl;
   private Boolean isCorporate;
   private OrganisationServiceModel organisation;
   private List<EventServiceModel> createdEvents;
@@ -60,6 +61,14 @@ public class UserServiceModel {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   public Boolean getCorporate() {

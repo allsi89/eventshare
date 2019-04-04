@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 
 import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
-public class UserRegisterBindingModel {
+public class UserBindingModel {
   private static final String USERNAME_REGEX_PATTERN = "^(?![_.])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$";
   private static final String USERNAME_LENGTH_ERR_MSG = "Username must be 5-15 symbols long.";
   private static final String USERNAME_NOT_ALLOWED_CHARS_ERR_MSG = "Invalid username. " +
@@ -16,11 +16,12 @@ public class UserRegisterBindingModel {
   private static final String PASS_LENGTH_ERR_MGS = "Password must be 3-16 symbols long.";
 
   private String username;
+  private String oldPassword;
   private String password;
   private String confirmPassword;
   private String email;
 
-  public UserRegisterBindingModel() {
+  public UserBindingModel() {
   }
 
   @NotNull(message = NULL_ERR_MSG)
@@ -32,6 +33,14 @@ public class UserRegisterBindingModel {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getOldPassword() {
+    return oldPassword;
+  }
+
+  public void setOldPassword(String oldPassword) {
+    this.oldPassword = oldPassword;
   }
 
   @NotNull(message = NULL_ERR_MSG)
