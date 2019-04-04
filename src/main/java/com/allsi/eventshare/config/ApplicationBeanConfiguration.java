@@ -1,5 +1,7 @@
 package com.allsi.eventshare.config;
 
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,5 +22,10 @@ public class ApplicationBeanConfiguration {
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public Storage storage() {
+    return StorageOptions.getDefaultInstance().getService();
   }
 }
