@@ -1,9 +1,7 @@
 package com.allsi.eventshare.service;
 
-import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
-import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
@@ -26,15 +24,13 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final RoleService roleService;
-  private final ImageService imageService;
   private final ModelMapper modelMapper;
   private final BCryptPasswordEncoder encoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, RoleService roleService, ImageService imageService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+  public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
     this.userRepository = userRepository;
     this.roleService = roleService;
-    this.imageService = imageService;
     this.modelMapper = modelMapper;
     this.encoder = encoder;
   }
@@ -88,18 +84,10 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     user.setEmail(userServiceModel.getEmail());
+    if (userServiceModel.getImageUrl() != null){
+      user.setImageUrl(userServiceModel.getImageUrl());
+    }
     this.userRepository.saveAndFlush(user);
-  }
-
-  @Override
-  public void editUserImage(UserServiceModel userServiceModel, ImageServiceModel imageServiceModel) {
-    User user = this.userRepository.findByUsername(userServiceModel.getUsername())
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-    Image image = this.imageService.findImageById(imageServiceModel.getId());
-
-    user.setImage(image);
-    this.userRepository.saveAndFlush(user);
-
   }
 
   @Override
@@ -132,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
   private void assignRolesToUser(User user) {
     if (this.userRepository.count() == 0) {
-      user.setRoles(this.roleService.getAllRoles()
+      user.setRoles(this.roleService.getAllRolesNotCorp()
           .stream()
           .map(r -> this.modelMapper.map(r, Role.class))
           .collect(Collectors.toSet()));

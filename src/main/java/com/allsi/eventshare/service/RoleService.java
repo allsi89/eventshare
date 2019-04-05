@@ -10,4 +10,6 @@ public interface RoleService {
   RoleServiceModel findByAuthority(String authority);
 
   List<RoleServiceModel> getAllRoles();
+
+  List<RoleServiceModel> getAllRolesNotCorp();
 }

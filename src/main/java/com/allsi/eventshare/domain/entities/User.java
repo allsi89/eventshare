@@ -14,7 +14,7 @@ public class User extends BaseEntity implements UserDetails {
   private String password;
   private String email;
   private Boolean isCorporate;
-  private Image image;
+  private String imageUrl;
   private List<Event> createdEvents;
   private List<Event> attendanceEvents;
   private List<Comment> comments;
@@ -67,20 +67,13 @@ public class User extends BaseEntity implements UserDetails {
     isCorporate = corporate;
   }
 
-  @OneToOne(targetEntity = Image.class)
-  @JoinTable(name = "users_images",
-      joinColumns = @JoinColumn(
-          name = "user_id",
-          referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(
-          name = "image_id",
-          referencedColumnName = "id"))
-  public Image getImage() {
-    return image;
+  @Column(name = "image_url")
+  public String getImageUrl() {
+    return imageUrl;
   }
 
-  public void setImage(Image image) {
-    this.image = image;
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   @OneToMany(targetEntity = Event.class, mappedBy = "creator")

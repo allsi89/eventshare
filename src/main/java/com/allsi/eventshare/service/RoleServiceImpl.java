@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,8 @@ import static com.allsi.eventshare.constants.Constants.*;
 
 @Service
 public class RoleServiceImpl implements RoleService {
+  private static final String ROLE_NOT_FOUND = "Role not found.";
+
   private final RoleRepository roleRepository;
   private final ModelMapper modelMapper;
 
@@ -26,26 +29,42 @@ public class RoleServiceImpl implements RoleService {
   @Override
   public void seedRolesInDb() {
     if (this.roleRepository.count() == 0){
-      Role rootAdmin = new Role(ROOT_ADMIN);
-      this.roleRepository.saveAndFlush(rootAdmin);
-      Role admin = new Role(ADMIN);
-      this.roleRepository.saveAndFlush(admin);
-      Role moderator = new Role(MODERATOR);
-      this.roleRepository.saveAndFlush(moderator);
-      Role user = new Role(USER);
-      this.roleRepository.saveAndFlush(user);
+
+      List<String> authorities = new ArrayList<>(){{
+        add(ROOT_ADMIN);
+        add(ADMIN);
+        add(MODERATOR);
+        add(CORP);
+        add(USER);
+      }};
+
+      for (String authority : authorities) {
+        Role role = new Role(authority);
+        this.roleRepository.saveAndFlush(role);
+      }
+
     }
   }
 
   @Override
   public RoleServiceModel findByAuthority(String authority) {
+    Role role = this.roleRepository.findByAuthority(authority)
+        .orElseThrow(() -> new IllegalArgumentException(ROLE_NOT_FOUND));
 
-    return null;
+    return this.modelMapper.map(role, RoleServiceModel.class);
   }
 
   @Override
   public List<RoleServiceModel> getAllRoles() {
     return this.roleRepository.findAll()
+        .stream()
+        .map(r->this.modelMapper.map(r, RoleServiceModel.class))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<RoleServiceModel> getAllRolesNotCorp() {
+    return this.roleRepository.findAllByAuthorityNot(CORP)
         .stream()
         .map(r->this.modelMapper.map(r, RoleServiceModel.class))
         .collect(Collectors.toList());

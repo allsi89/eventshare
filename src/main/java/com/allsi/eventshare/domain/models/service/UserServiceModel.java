@@ -10,13 +10,12 @@ public class UserServiceModel {
   private String username;
   private String password;
   private String email;
-  private String imageId;
+  private String imageUrl;
   private Boolean isCorporate;
   private OrganisationServiceModel organisation;
   private List<EventServiceModel> createdEvents;
   private List<EventServiceModel> attendanceEvents;
   private List<CommentServiceModel> comments;
-//  private Image image;
 
   private boolean isAccountNonExpired;
   private boolean isAccountNonLocked;
@@ -64,11 +63,11 @@ public class UserServiceModel {
   }
 
   public String getImageUrl() {
-    return imageId;
+    return imageUrl;
   }
 
-  public void setImageUrl(String imageId) {
-    this.imageId = imageId;
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   public Boolean getCorporate() {

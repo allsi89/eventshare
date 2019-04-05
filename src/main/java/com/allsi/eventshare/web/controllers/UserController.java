@@ -3,10 +3,9 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.binding.UserEditBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserEditPasswordBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserRegisterBindingModel;
-import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.UserProfileViewModel;
-import com.allsi.eventshare.service.ImageService;
+import com.allsi.eventshare.service.CloudService;
 import com.allsi.eventshare.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +24,13 @@ import java.security.Principal;
 @RequestMapping("/users")
 public class UserController extends BaseController {
   private final UserService userService;
-  private final ImageService imageService;
+  private final CloudService cloudService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public UserController(UserService userService, ImageService imageService, ModelMapper modelMapper) {
+  public UserController(UserService userService, CloudService cloudService, ModelMapper modelMapper) {
     this.userService = userService;
-    this.imageService = imageService;
+    this.cloudService = cloudService;
     this.modelMapper = modelMapper;
   }
 
@@ -70,17 +69,18 @@ public class UserController extends BaseController {
 
   @GetMapping("/profile")
   @PreAuthorize("isAuthenticated()")
-  public ModelAndView profile(Principal principal) {
-    ModelAndView modelAndView = getProfileModelAndView(principal);
-
+  public ModelAndView profile(Principal principal, ModelAndView modelAndView) {
+    modelAndView
+        .addObject("userModel", this.getProfileViewModel(principal));
 
     return super.view("profile", modelAndView);
   }
 
   @GetMapping("/profile/edit")
   @PreAuthorize("isAuthenticated()")
-  public ModelAndView editProfile(Principal principal) {
-    ModelAndView modelAndView = getProfileModelAndView(principal);
+  public ModelAndView editProfile(Principal principal, ModelAndView modelAndView) {
+    modelAndView
+        .addObject("userModel", this.getProfileViewModel(principal));
 
     return super.view("edit-profile", modelAndView);
   }
@@ -99,15 +99,13 @@ public class UserController extends BaseController {
     UserServiceModel userServiceModel = this.modelMapper
         .map(userModel, UserServiceModel.class);
 
-    ImageServiceModel imageServiceModel = null;
-
-    this.userService.editUserProfile(userServiceModel);
     if (file != null) {
-      imageServiceModel = this.imageService.saveImgInDb(file);
-      this.userService.editUserImage(userServiceModel, imageServiceModel);
+      userServiceModel.setImageUrl(this.cloudService.uploadImage(file));
     }
 
-    return super.view("profile");
+    this.userService.editUserProfile(userServiceModel);
+
+    return super.redirect("/users/profile");
   }
 
   @GetMapping("/password/edit")
@@ -134,29 +132,11 @@ public class UserController extends BaseController {
     return super.redirect("/users/profile");
   }
 
-  private ModelAndView getProfileModelAndView(Principal principal) {
+  private UserProfileViewModel getProfileViewModel(Principal principal) {
     UserServiceModel userServiceModel = this.userService
         .findUserByUsername(principal.getName());
 
-    ModelAndView modelAndView = new ModelAndView();
-
-    UserProfileViewModel viewModel = this.modelMapper
+    return this.modelMapper
         .map(userServiceModel, UserProfileViewModel.class);
-
-    viewModel.setImageUrl(userServiceModel.getImageUrl());
-
-//    if (userServiceModel.getCorporate()) {
-//
-//      OrganisationViewModel organisationViewModel = this.userService
-//          .findUserOrganisation(principal.getName());
-//
-//      viewModel.setOrganisation(organisationViewModel);
-//    }
-
-    modelAndView
-        .addObject("userModel", this.modelMapper
-            .map(userServiceModel, UserProfileViewModel.class));
-
-    return modelAndView;
   }
 }

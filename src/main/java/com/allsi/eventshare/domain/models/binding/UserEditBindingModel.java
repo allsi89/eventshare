@@ -7,6 +7,7 @@ import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
 public class UserEditBindingModel {
   private String username;
+  private String imageUrl;
   private String email;
 
   public UserEditBindingModel() {
@@ -18,6 +19,14 @@ public class UserEditBindingModel {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   @NotNull(message = NULL_ERR_MSG)

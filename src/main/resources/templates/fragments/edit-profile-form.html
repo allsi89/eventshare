@@ -3,6 +3,10 @@
           th:method="post" enctype="multipart/form-data">
         <div class="form-group align-content-center mb-3">
             <label for="fileUploadInput" class="font-weight-bold mt-3 mb-3">Profile Picture</label>
+            <div>
+                <img th:src="${userModel.imageUrl}"
+                     th:height="200" th:width="200" alt="profile picture">
+            </div>
             <input type="file" name="file" id="fileUploadInput">
         </div>
 

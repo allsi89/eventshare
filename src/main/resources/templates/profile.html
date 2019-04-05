@@ -9,20 +9,20 @@
 <body class="se-bg">
 <br/>
 <main class="mt-3">
-    <div class="jumbotron bg-transparent" th:object="${userModel}">
+    <div class="jumbotron bg-transparent">
 
         <div class="text-center mt-3">
-            <img th:src="*{imageUrl}"
+            <img th:src="${userModel.imageUrl}"
                  th:height="200" th:width="200" alt="profile picture">
         </div>
         <div class="row mt-3">
             <div class="col col-md-12 text-center">
-                <h1 th:text="*{username}"></h1>
+                <h1 th:text="${userModel.username}"></h1>
             </div>
         </div>
         <div class="row">
             <div class="col col-md-12 text-center">
-                <h4 th:text="*{email}"></h4>
+                <h4 th:text="${userModel.email}"></h4>
             </div>
         </div>
 
