@@ -2,6 +2,7 @@ package com.allsi.eventshare.domain.models.view;
 
 public class OrganisationViewModel {
   private String name;
+  private String imageUrl;
   private String country;
   private String city;
   private String cityPostCode;
@@ -19,6 +20,14 @@ public class OrganisationViewModel {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   public String getCountry() {

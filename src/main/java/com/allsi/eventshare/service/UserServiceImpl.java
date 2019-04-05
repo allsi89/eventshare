@@ -2,9 +2,7 @@ package com.allsi.eventshare.service;
 
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
-import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
-import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
+import static com.allsi.eventshare.constants.Constants.CORP;
 import static com.allsi.eventshare.constants.Constants.USER;
 
 @Service
@@ -44,11 +43,13 @@ public class UserServiceImpl implements UserService {
 
     this.assignRolesToUser(user);
 
-    if (user != null) {
+    try {
       this.userRepository.saveAndFlush(user);
       return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
     }
-    return false;
   }
 
   private UserServiceModel setValuesToUserFields(UserServiceModel serviceModel) {
@@ -69,14 +70,14 @@ public class UserServiceImpl implements UserService {
     return this.modelMapper.map(user, UserServiceModel.class);
   }
 
-  @Override
-  public OrganisationViewModel findUserOrganisation(String name) {
-    UserServiceModel user = this.findUserByUsername(name);
-
-    OrganisationServiceModel organisationServiceModel = this.modelMapper
-        .map(user.getOrganisation(), OrganisationServiceModel.class);
-    return getOrganisationViewModel(organisationServiceModel);
-  }
+//  @Override
+//  public OrganisationViewModel findUserOrganisation(String name) {
+//    UserServiceModel user = this.findUserByUsername(name);
+//
+//    OrganisationServiceModel organisationServiceModel = this.modelMapper
+//        .map(user.getOrganisation(), OrganisationServiceModel.class);
+//    return getOrganisationViewModel(organisationServiceModel);
+//  }
 
   @Override
   public void editUserProfile(UserServiceModel userServiceModel) {
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     user.setEmail(userServiceModel.getEmail());
-    if (userServiceModel.getImageUrl() != null){
+    if (userServiceModel.getImageUrl() != null) {
       user.setImageUrl(userServiceModel.getImageUrl());
     }
     this.userRepository.saveAndFlush(user);
@@ -95,7 +96,7 @@ public class UserServiceImpl implements UserService {
     User user = this.userRepository.findByUsername(name)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    if (!this.encoder.matches(oldPassword, user.getPassword())){
+    if (!this.encoder.matches(oldPassword, user.getPassword())) {
       throw new IllegalArgumentException(INCORRECT_PASSWORD);
     }
 
@@ -104,19 +105,34 @@ public class UserServiceImpl implements UserService {
     this.userRepository.saveAndFlush(user);
   }
 
+  @Override
+  public void addCorpToUserRoles(String name) {
+    UserServiceModel userServiceModel = this.findUserByUsername(name);
 
-  private OrganisationViewModel getOrganisationViewModel(OrganisationServiceModel organisationServiceModel) {
-    OrganisationViewModel organisationViewModel = this.modelMapper
-        .map(organisationServiceModel, OrganisationViewModel.class);
+    userServiceModel.getRoles().add(this.roleService.findByAuthority(CORP));
 
-    organisationViewModel.setCountry(organisationServiceModel.getCountry().getNiceName());
-    organisationViewModel.setCity(organisationServiceModel.getCity().getName());
-    organisationViewModel.setCityPostCode(organisationServiceModel.getCity().getPostCode());
-    organisationViewModel.setPhone(organisationServiceModel
-        .getCountry().getPhoneCode() + organisationServiceModel.getPhone());
+    User user = this.modelMapper.map(userServiceModel, User.class);
+    User toEdit = this.userRepository.findById(user.getId())
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    return organisationViewModel;
+    toEdit.setCorporate(true);
+    toEdit.setRoles(user.getRoles());
+
+    this.userRepository.saveAndFlush(toEdit);
   }
+
+//  private OrganisationViewModel getOrganisationViewModel(OrganisationServiceModel organisationServiceModel) {
+//    OrganisationViewModel organisationViewModel = this.modelMapper
+//        .map(organisationServiceModel, OrganisationViewModel.class);
+//
+//    organisationViewModel.setCountry(organisationServiceModel.getCountry().getNiceName());
+//    organisationViewModel.setCity(organisationServiceModel.getCity().getName());
+//    organisationViewModel.setCityPostCode(organisationServiceModel.getCity().getPostCode());
+//    organisationViewModel.setPhone(organisationServiceModel
+//        .getCountry().getPhoneCode() + organisationServiceModel.getPhone());
+//
+//    return organisationViewModel;
+//  }
 
   private void assignRolesToUser(User user) {
     if (this.userRepository.count() == 0) {

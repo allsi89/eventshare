@@ -1,0 +1,105 @@
+<th:block th:fragment="login" xmlns:th="http://www.thymeleaf.org">
+    <form th:action="@{/users/login}" th:method="post">
+        <div class="form-group">
+            <label for="inputUsername">Username</label>
+            <input type="text" class="form-control" id="inputUsername"
+                   name="username"><span class="bar"></span>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Password</label>
+            <input type="password" class="form-control" id="inputPassword"
+                   name="password"><span class="bar"></span>
+        </div>
+        <button type="submit" id="submitButton" class="button buttonBlue">Login
+            <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+        </button>
+
+    </form>
+</th:block>
+
+<th:block th:fragment="register" xmlns:th="http://www.thymeleaf.org">
+<form th:action="@{/users/register}" th:method="post">
+    <div class="form-group">
+        <label for="inputUsername">Username</label>
+        <input type="text" class="form-control" id="inputUsername"
+               name="username"><span class="bar"></span>
+    </div>
+    <div class="form-group">
+        <label for="inputEmail">Email</label>
+        <input type="email" class="form-control" id="inputEmail"
+               name="email"><span class="bar"></span>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control" id="inputPassword"
+               name="password"><span class="bar"></span>
+    </div>
+    <div class="form-group">
+        <label for="inputConfirmPassword">Password</label>
+        <input type="password" class="form-control" id="inputConfirmPassword"
+               name="confirmPassword"><span class="bar"></span>
+    </div>
+    <button type="submit" id="submitButton" class="button buttonBlue">Register
+        <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+    </button>
+</form>
+</th:block>
+
+<th:block th:fragment="edit-profile" xmlns:th="http://www.thymeleaf.org">
+    <form class="se-form se-form-text mt-3 mb-3" th:action="@{/users/profile/edit}"
+          th:method="post" enctype="multipart/form-data">
+        <div>
+            <object th:data="${userModel.imageUrl}" type="image/jpg" height="100" width="100">
+                <img src="/images/profileImg.png" height="100" width="100" />
+            </object>
+        </div>
+        <div><h5>Profile Picture</h5></div>
+        <div class="form-group">
+            <input type="file" name="file" id="fileUploadInput">
+        </div>
+
+        <h5>Username</h5>
+        <div class="form-group">
+            <input type="text" th:value="${userModel.username}"
+                   class="form-control" name="username"
+                   id="username" readonly>
+        </div>
+        <h5>Email</h5>
+        <div class="form-group">
+            <input type="email" th:value="${userModel.email}"
+                   class="form-control"
+                   id="email" name="email"><span class="bar"></span>
+        </div>
+        <hr class="hr-2 bg-info">
+        <button type="submit" id="submitButton" class="button buttonBlue">Edit
+            <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+        </button>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+</th:block>
+
+<th:block th:fragment="edit-password">
+    <form class="se-form se-form-text" th:action="@{/users/password/edit}"
+          th:method="post">
+        <div class="form-group">
+            <label for="oldPassword">Old Password</label>
+            <input type="password" class="form-control" id="oldPassword"
+                   name="oldPassword" required><span class="bar"></span>
+        </div>
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" class="form-control" id="password"
+                   name="password"><span class="bar"></span>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirmPassword"
+                   name="confirmPassword"><span class="bar"></span>
+        </div>
+        <hr class="hr-2 bg-info">
+        <button type="submit" id="submitButton" class="button buttonBlue">Edit
+            <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+        </button>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+</th:block>

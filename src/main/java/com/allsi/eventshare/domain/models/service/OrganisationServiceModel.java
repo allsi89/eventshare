@@ -3,6 +3,7 @@ package com.allsi.eventshare.domain.models.service;
 public class OrganisationServiceModel {
   private String id;
   private String name;
+  private String imageUrl;
   private CountryServiceModel country;
   private CityServiceModel city;
   private String address;
@@ -27,6 +28,14 @@ public class OrganisationServiceModel {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
   public CountryServiceModel getCountry() {

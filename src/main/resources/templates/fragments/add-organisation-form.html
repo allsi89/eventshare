@@ -1,0 +1,70 @@
+<th:block th:fragment xmlns:th="http://www.thymeleaf.org">
+
+    <div class="form-group mt-3">
+        <label for="name" class="font-weight-bold">Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Name...">
+    </div>
+    <div class="form-group align-content-center mb-3">
+        <label for="fileUploadInput" class="font-weight-bold mt-3 mb-3">Picture</label>
+        <div>
+            <object type="image/jpg" height="100" width="100">
+                <img src="/images/profileImg.png" height="100" width="100"/>
+            </object>
+        </div>
+        <input type="file" name="file" id="fileUploadInput">
+    </div>
+    <!--country-->
+    <!--city + postcode-->
+    <div class="form-group mt-3 form-inline">
+        <label for="address" class="font-weight-bold">Address</label>
+        <input type="text" class="form-control"
+               id="address" placeholder="Address..." name="address">
+    </div>
+    <div class="form-group mt-3">
+        <label for="website" class="font-weight-bold">Website</label>
+        <input type="url" class="form-control"
+               id="website" placeholder="Link to Website..." name="website">
+    </div>
+    <div class="form-group mt-3 form-inline">
+        <div class="form-check mr-3">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1"
+                   value="option1" checked onclick="standard()">
+            <label class="form-check-label" for="gridRadios1">
+                I'll use my registration email
+            </label>
+        </div>
+        <div class="form-check ">
+            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2"
+                   value="option2" onclick="custom()">
+            <label class="form-check-label" for="gridRadios2">
+                Other email
+            </label>
+        </div>
+
+    </div>
+    <div class="form-group mt-3">
+        <label for="email" class="font-weight-bold">Organisation Email</label>
+        <input type="email" class="form-control"
+               id="email" placeholder="Email..." name="email">
+    </div>
+    <!--country get phone code-->
+    <div class="form-group mt-3 form-inline">
+        <label for="phone" class="font-weight-bold">Phone Number</label>
+        <input type="text" class="form-control"
+               id="phone" placeholder="Phone Number..." name="phone">
+    </div>
+    <hr class="hr-2 bg-info">
+    <div class="button-holder d-flex justify-content-center">
+        <button type="submit" class="btn se-background">Add</button>
+    </div>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+</th:block>
+<!--<script>-->
+    <!--function standard() {-->
+        <!--document.getElementById("email").disabled = true;-->
+    <!--}-->
+    <!--function custom() {-->
+        <!--document.getElementById("email").disabled = false;-->
+    <!--}-->
+<!--</script>-->

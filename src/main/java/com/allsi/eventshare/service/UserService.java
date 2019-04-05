@@ -9,9 +9,11 @@ public interface UserService extends UserDetailsService {
 
   UserServiceModel findUserByUsername(String name);
 
-  OrganisationViewModel findUserOrganisation(String name);
+//  OrganisationViewModel findUserOrganisation(String name);
 
   void editUserProfile(UserServiceModel userServiceModel);
 
   void editUserPassword(UserServiceModel userModel, String name, String oldPassword);
+
+  void addCorpToUserRoles(String name);
 }

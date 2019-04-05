@@ -99,7 +99,7 @@ public class UserController extends BaseController {
     UserServiceModel userServiceModel = this.modelMapper
         .map(userModel, UserServiceModel.class);
 
-    if (file != null) {
+    if (!file.isEmpty()) {
       userServiceModel.setImageUrl(this.cloudService.uploadImage(file));
     }
 

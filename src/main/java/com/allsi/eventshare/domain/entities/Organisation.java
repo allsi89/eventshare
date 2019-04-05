@@ -6,8 +6,9 @@ import javax.persistence.*;
 @Entity(name = "organisations")
 public class Organisation extends BaseEntity{
   private String name;
-  private Country country;
-  private City city;
+  private String imageUrl;
+//  private Country country;
+//  private City city;
   private String address;
   private String website;
   private String email;
@@ -26,25 +27,34 @@ public class Organisation extends BaseEntity{
     this.name = name;
   }
 
-  @OneToOne
-  @JoinColumn(name = "country_id", referencedColumnName = "id")
-  public Country getCountry() {
-    return country;
+  @Column(name = "image_url")
+  public String getImageUrl() {
+    return imageUrl;
   }
 
-  public void setCountry(Country country) {
-    this.country = country;
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 
-  @OneToOne(targetEntity = Country.class)
-  @JoinColumn(name = "city_id", referencedColumnName = "id")
-  public City getCity() {
-    return city;
-  }
-
-  public void setCity(City city) {
-    this.city = city;
-  }
+//  @OneToOne
+//  @JoinColumn(name = "country_id", referencedColumnName = "id")
+//  public Country getCountry() {
+//    return country;
+//  }
+//
+//  public void setCountry(Country country) {
+//    this.country = country;
+//  }
+//
+//  @OneToOne(targetEntity = Country.class)
+//  @JoinColumn(name = "city_id", referencedColumnName = "id")
+//  public City getCity() {
+//    return city;
+//  }
+//
+//  public void setCity(City city) {
+//    this.city = city;
+//  }
 
   @Column(name = "address")
   public String getAddress() {

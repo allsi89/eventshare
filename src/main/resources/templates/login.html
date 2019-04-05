@@ -3,35 +3,26 @@
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
 </head>
-<body class="se-bg">
+<body>
 
     <header>
         <th:block th:include="~{fragments/navbar}"></th:block>
     </header>
     <br/>
     <main>
-        <div class="container text-center col-md-4 mt-6 mb-6">
-            <div class="mt-6 se-form-text">
+        <div class="container">
+            <div class="mt-8 text-center">
                 <h1>Login</h1>
             </div>
-            <form th:action="@{/users/login}" th:method="post" class="se-form se-form-text mt-3">
-                <div class="form-group">
-                    <label for="inputUsername">Username</label>
-                    <input type="text" class="form-control" id="inputUsername"
-                           name="username" placeholder="Enter username...">
-                </div>
-                <div class="form-group">
-                    <label for="inputPassword">Password</label>
-                    <input type="password" class="form-control" id="inputPassword"
-                           name="password" placeholder="Enter password...">
-                </div>
-                <button type="submit" id="submitButton" class="btn btn-info mt-3 mb-3">Login</button>
-
-            </form>
+           <th:block th:replace="~{fragments/user-form :: login}"></th:block>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <th:block th:include="~{fragments/footer}"></th:block>
     </main>
+
+    <script>
+        myFunction();
+    </script>
 
 </body>
 </html>

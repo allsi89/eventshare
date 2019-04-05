@@ -9,15 +9,12 @@
 <body>
 <br/>
 <main class="mt-3">
-    <h1 class="text-center">Change Password</h1>
-    <div class="container">
-        <th:block th:replace="~{fragments/user-form :: edit-password}"></th:block>
+    <h1 class="mb-3 mb-3 text-center se-form-text">Edit Profile</h1>
+    <div class="container text-center col-md-4 mt-6 mb-6">
+        <th:block th:replace="~{fragments/edit-profile-form}"></th:block>
     </div>
 </main>
 <th:block th:include="~{fragments/footer}"></th:block>
-<script>
-    myFunction();
-</script>
+
 </body>
 </html>
-
