@@ -1,18 +1,18 @@
 package com.allsi.eventshare.domain.models.view;
 
 public class CountryViewModel {
-  private int id;
+  private String id;
   private String niceName;
-  private String phoneCode;
+  private String phonecode;
 
   public CountryViewModel() {
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -24,11 +24,11 @@ public class CountryViewModel {
     this.niceName = niceName;
   }
 
-  public String getPhoneCode() {
-    return phoneCode;
+  public String getPhonecode() {
+    return phonecode;
   }
 
-  public void setPhoneCode(String phoneCode) {
-    this.phoneCode = phoneCode;
+  public void setPhonecode(String phoneCode) {
+    this.phonecode = phoneCode;
   }
 }

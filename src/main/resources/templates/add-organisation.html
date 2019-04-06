@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <th:block th:include="~{fragments/head}"></th:block>
 </head>
@@ -11,8 +11,8 @@
 <main class="mt-3">
     <h1 class="mb-3 mb-3 text-center se-form-text">Add Organisation</h1>
     <div class="container">
-        <form class="se-form se-form-text mt-3 mb-3" th:action="@{/organisation/add}"
-              th:method="post" enctype="multipart/form-data">
+        <form class="se-form se-form-text mt-3 mb-3 col-md-9" th:action="@{/organisation/add}" th:object="${bindingModel}"
+              th:method="post" enctype="multipart/form-data"  sec:authorize="!hasRole('ROLE_CORP')">
             <th:block th:replace="~{fragments/organisation-form :: add-organisation}"></th:block>
         </form>
     </div>
@@ -22,14 +22,28 @@
 <script>
     myFunction();
     $("input[type=checkbox]").on("click", function(){
-        document.getElementById("email").disabled = !!$(this).is(":not(:checked)");
+        if ($(this).is(":checked")) {
+            document.getElementById("email").disabled = true;
+            document.getElementById("email").value = '';
+        } else {
+            document.getElementById("email").disabled = false;
+        }
     });
-    // function standard() {
-    //     document.getElementById("email").disabled = true;
-    // }
-    // function custom() {
-    //     document.getElementById("email").disabled = false;
-    // }
+
+    fetch('/countries/fetch')
+        .then((response) => response.json())
+        .then((json) => {
+            json.forEach((country) => $('#country').append(`<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`));
+        })
+        .catch((err) => console.log(err));
+
+    $('#country').change(function () {
+        var countryCode = $(this).val();
+
+        if (countryCode) {
+            $('#phoneCode').val(countryCode);
+        }
+    });
 </script>
 </body>
 </html>

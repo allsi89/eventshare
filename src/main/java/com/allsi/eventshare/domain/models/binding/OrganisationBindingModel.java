@@ -1,26 +1,24 @@
 package com.allsi.eventshare.domain.models.binding;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
-public class OrganisationAddBindingModel {
+public class OrganisationBindingModel {
   private String name;
   private String imageUrl;
-  private int countryId;
-  private String cityName;
-  private String postCode;
+  private String country;
+  private String city;
+  private String state;
+  private String zip;
   private String address;
   private String website;
   private String email;
   private String phone;
 
-  public OrganisationAddBindingModel() {
+  public OrganisationBindingModel() {
   }
 
   @NotNull(message = NULL_ERR_MSG)
@@ -41,32 +39,39 @@ public class OrganisationAddBindingModel {
     this.name = name;
   }
 
-//  @NotNull(message = NULL_ERR_MSG)
-//  @NotEmpty
-//  public int getCountryId() {
-//    return countryId;
-//  }
-//
-//  public void setCountryId(int countryId) {
-//    this.countryId = countryId;
-//  }
-//
-//  @NotNull(message = NULL_ERR_MSG)
-//  @NotEmpty
-//  public String getCityName() {
-//    return cityName;
-//  }
-
-  public void setCityName(String cityName) {
-    this.cityName = cityName;
+  @NotNull(message = NULL_ERR_MSG)
+  public String getCountry() {
+    return country;
   }
 
-  public String getPostCode() {
-    return postCode;
+  public void setCountry(String country) {
+    this.country = country;
   }
 
-  public void setPostCode(String postCode) {
-    this.postCode = postCode;
+  @NotNull(message = NULL_ERR_MSG)
+  @NotEmpty
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public String getZip() {
+    return zip;
+  }
+
+  public void setZip(String zip) {
+    this.zip = zip;
   }
 
   public String getAddress() {

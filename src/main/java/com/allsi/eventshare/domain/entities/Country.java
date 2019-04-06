@@ -1,42 +1,19 @@
 package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity(name = "countries")
-public class Country{
-  private Integer id;
-  private String iso;
+public class Country extends BaseEntity{
   private String name;
   private String niceName;
   private String iso3;
-  private String numCode;
-  private String phoneCode;
-  private List<City> cities;
-
+  private String numcode;
+  private String phonecode;
 
   public Country() {
   }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", unique = true, updatable = false)
-  public Integer getId() {
-    return id;
-  }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  @Column(name = "iso")
-  public String getIso() {
-    return iso;
-  }
-
-  public void setIso(String iso) {
-    this.iso = iso;
-  }
 
   @Column(name = "name", nullable = false)
   public String getName() {
@@ -66,34 +43,21 @@ public class Country{
   }
 
   @Column(name = "numcode")
-  public String getNumCode() {
-    return numCode;
+  public String getNumcode() {
+    return numcode;
   }
 
-  public void setNumCode(String numCode) {
-    this.numCode = numCode;
+  public void setNumcode(String numCode) {
+    this.numcode = numCode;
   }
 
   @Column(name = "phonecode", nullable = false)
-  public String getPhoneCode() {
-    return phoneCode;
+  public String getPhonecode() {
+    return phonecode;
   }
 
-  public void setPhoneCode(String phoneCode) {
-    this.phoneCode = phoneCode;
+  public void setPhonecode(String phoneCode) {
+    this.phonecode = phoneCode;
   }
-
-  @OneToMany(targetEntity = City.class)
-  @JoinTable(name = "countries_cities",
-  joinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"),
-  inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"))
-  public List<City> getCities() {
-    return cities;
-  }
-
-  public void setCities(List<City> cities) {
-    this.cities = cities;
-  }
-
 
 }

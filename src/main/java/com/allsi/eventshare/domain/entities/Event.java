@@ -9,7 +9,9 @@ public class Event extends BaseEntity{
   private String name;
   private String description;
   private Country country;
-  private City city;
+  private String city;
+  private String state;
+  private String zip;
   private String address;
   private LocalDateTime startsOn;
   private LocalDateTime endsOn;
@@ -52,16 +54,29 @@ public class Event extends BaseEntity{
     this.country = country;
   }
 
-  @ManyToOne(targetEntity = City.class)
-  @JoinTable(name = "events_cities",
-  joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-  inverseJoinColumns = @JoinColumn(name = "city_id", referencedColumnName = "id"))
-  public City getCity() {
+  @Column(name = "city", nullable = false)
+  public String getCity() {
     return city;
   }
 
-  public void setCity(City city) {
+  public void setCity(String city) {
     this.city = city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public String getZip() {
+    return zip;
+  }
+
+  public void setZip(String zip) {
+    this.zip = zip;
   }
 
   @Column(name = "address")

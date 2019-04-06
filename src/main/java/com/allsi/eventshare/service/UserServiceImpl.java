@@ -6,11 +6,17 @@ import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.Constants.CORP;
@@ -103,6 +109,7 @@ public class UserServiceImpl implements UserService {
     user.setPassword(this.encoder.encode(model.getPassword()));
 
     this.userRepository.saveAndFlush(user);
+
   }
 
   @Override

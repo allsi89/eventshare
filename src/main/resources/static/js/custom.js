@@ -1,16 +1,16 @@
 function myFunction() {
     $(window, document, undefined).ready(function() {
 
-        var $ripples = $('.ripples');
+        let $ripples = $('.ripples');
 
         $ripples.on('click.Ripples', function(e) {
 
-            var $this = $(this);
-            var $offset = $this.parent().offset();
-            var $circle = $this.find('.ripplesCircle');
+            let $this = $(this);
+            let $offset = $this.parent().offset();
+            let $circle = $this.find('.ripplesCircle');
 
-            var x = e.pageX - $offset.left;
-            var y = e.pageY - $offset.top;
+            let x = e.pageX - $offset.left;
+            let y = e.pageY - $offset.top;
 
             $circle.css({
                 top: y + 'px',
@@ -21,13 +21,29 @@ function myFunction() {
 
         });
 
+
         $ripples.on('animationend webkitAnimationEnd mozAnimationEnd oanimationend MSAnimationEnd', function(e) {
             $(this).removeClass('is-active');
         });
 
+        // $(document).ready();
+
+    });
+//
+    $('input').focus(function() {
+        $(this).prev().addClass('stylee');
+    }).blur(function() {
+        if($(this).val())
+        {
+            $(this).prev().addClass('stylee');
+        }
+        else
+        {
+            $(this).prev().removeClass('stylee');
+        }
     });
 
-    $('input').focus(function() {
+    $('select').focus(function() {
         $(this).prev().addClass('stylee');
     }).blur(function() {
         if($(this).val())

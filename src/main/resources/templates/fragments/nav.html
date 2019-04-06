@@ -1,0 +1,80 @@
+<th:block th:fragment xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <th:block sec:authorize="isAuthenticated()">
+
+        <nav class="navbar navbar-expand-lg fixed-top se-nav">
+            <a class="navbar-brand mr-auto mr-lg-0" href="#">Event Share</a>
+            <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/home}">Home<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Organisations</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:href="@{/users/profile}" id="dropdown01"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" th:href="@{/users/profile/edit}">Edit Profile</a>
+                            <a class="dropdown-item" th:href="@{/users/password/edit}">Change Password</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Organisation</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown02">
+                            <a class="dropdown-item" th:href="@{/organisation/add}"
+                               sec:authorize="!hasRole('ROLE_CORP')">Add</a>
+                            <a class="dropdown-item" href="#" sec:authorize="hasRole('ROLE_CORP')">Edit</a>
+                            <a class="dropdown-item" href="#" sec:authorize="hasRole('ROLE_CORP')">Delete</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">My Events</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Dashboard</a>
+                            <a class="dropdown-item" href="#">Add New Event</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" sec:authorize="hasRole('ROLE_ADMIN')" href="#"
+                           id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Users</a>
+                            <a class="dropdown-item" href="#">Logger</a>
+                        </div>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+
+        <div class="nav-scroller bg-white box-shadow">
+            <nav class="nav nav-underline">
+                <a class="nav-link active" href="#">Dashboard</a>
+                <a class="nav-link" href="#">
+                    Friends
+                    <span class="badge badge-pill bg-light align-text-bottom">27</span>
+                </a>
+                <a class="nav-link" href="#">Explore</a>
+                <a class="nav-link" href="#">Suggestions</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" th:href="@{/users/logout}">Logout</a>
+            </nav>
+        </div>
+    </th:block>
+</th:block>

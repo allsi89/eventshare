@@ -52,19 +52,18 @@ public class UserController extends BaseController {
                                           UserRegisterBindingModel bindingModel,
                                       BindingResult bindingResult,
                                       ModelAndView modelAndView) {
-    if (!bindingModel.getPassword().equals(bindingModel.getConfirmPassword()) ||
-        bindingResult.hasErrors()) {
-      return super.view("register");
-    }
 
-    boolean isSuccessful = this.userService
-        .register(this.modelMapper.map(bindingModel, UserServiceModel.class));
-    if (isSuccessful) {
-      return super.redirect("/login");
+    if (bindingModel.getPassword().equals(bindingModel.getConfirmPassword()) &&
+        !bindingResult.hasErrors()) {
+
+      if (this.userService
+          .register(this.modelMapper
+              .map(bindingModel, UserServiceModel.class))) {
+        return super.redirect("/login");
+      }
     }
 
     return super.view("register");
-
   }
 
   @GetMapping("/profile")
@@ -92,25 +91,26 @@ public class UserController extends BaseController {
                                          @RequestParam("file") MultipartFile file,
                                          BindingResult bindingResult) throws IOException {
 
-    if (bindingResult.hasErrors()) {
-      return super.view("edit-profile");
+    if (!bindingResult.hasErrors()) {
+
+      UserServiceModel userServiceModel = this.modelMapper
+          .map(userModel, UserServiceModel.class);
+
+      if (!file.isEmpty()) {
+        userServiceModel.setImageUrl(this.cloudService.uploadImage(file));
+      }
+
+      this.userService.editUserProfile(userServiceModel);
+
+      return super.redirect("/users/profile");
     }
 
-    UserServiceModel userServiceModel = this.modelMapper
-        .map(userModel, UserServiceModel.class);
-
-    if (!file.isEmpty()) {
-      userServiceModel.setImageUrl(this.cloudService.uploadImage(file));
-    }
-
-    this.userService.editUserProfile(userServiceModel);
-
-    return super.redirect("/users/profile");
+    return super.view("edit-profile");
   }
 
   @GetMapping("/password/edit")
   @PreAuthorize("isAuthenticated()")
-  public ModelAndView editPassword(){
+  public ModelAndView editPassword() {
     return super.view("edit-password");
   }
 
@@ -119,17 +119,18 @@ public class UserController extends BaseController {
   public ModelAndView editPasswordConfirm(Principal principal,
                                           @ModelAttribute("userModel")
                                               UserEditPasswordBindingModel userModel,
-                                          BindingResult bindingResult){
-    if (bindingResult.hasErrors()){
-      return super.view("edit-password");
+                                          BindingResult bindingResult) {
+    if (!bindingResult.hasErrors()) {
+      this.userService.editUserPassword(this.modelMapper
+              .map(userModel, UserServiceModel.class),
+          principal.getName(),
+          userModel.getOldPassword());
+
+      return super.redirect("/users/profile");
+
     }
 
-    this.userService.editUserPassword(this.modelMapper
-        .map(userModel, UserServiceModel.class),
-        principal.getName(),
-        userModel.getOldPassword());
-
-    return super.redirect("/users/profile");
+    return super.view("edit-password");
   }
 
   private UserProfileViewModel getProfileViewModel(Principal principal) {

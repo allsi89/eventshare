@@ -4,11 +4,13 @@ package com.allsi.eventshare.domain.entities;
 import javax.persistence.*;
 
 @Entity(name = "organisations")
-public class Organisation extends BaseEntity{
+public class Organisation extends BaseEntity {
   private String name;
   private String imageUrl;
-//  private Country country;
-//  private City city;
+  private Country country;
+  private String city;
+  private String state;
+  private String zip;
   private String address;
   private String website;
   private String email;
@@ -36,25 +38,40 @@ public class Organisation extends BaseEntity{
     this.imageUrl = imageUrl;
   }
 
-//  @OneToOne
-//  @JoinColumn(name = "country_id", referencedColumnName = "id")
-//  public Country getCountry() {
-//    return country;
-//  }
-//
-//  public void setCountry(Country country) {
-//    this.country = country;
-//  }
-//
-//  @OneToOne(targetEntity = Country.class)
-//  @JoinColumn(name = "city_id", referencedColumnName = "id")
-//  public City getCity() {
-//    return city;
-//  }
-//
-//  public void setCity(City city) {
-//    this.city = city;
-//  }
+  @OneToOne
+  @JoinColumn(name = "country_id", referencedColumnName = "id")
+  public Country getCountry() {
+    return country;
+  }
+
+  public void setCountry(Country country) {
+    this.country = country;
+  }
+
+  @Column(name = "city", nullable = false)
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public String getZip() {
+    return zip;
+  }
+
+  public void setZip(String zip) {
+    this.zip = zip;
+  }
 
   @Column(name = "address")
   public String getAddress() {

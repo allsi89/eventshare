@@ -1,36 +1,20 @@
 package com.allsi.eventshare.domain.models.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CountryServiceModel {
-  private int id;
-  private String iso;
+  private String id;
   private String name;
   private String niceName;
-  private String iso3;
-  private String numCode;
-  private String phoneCode;
-  private List<CityServiceModel> cities;
+  private String phonecode;
 
   public CountryServiceModel() {
-    this.cities = new ArrayList<>();
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
-  }
-
-  public String getIso() {
-    return iso;
-  }
-
-  public void setIso(String iso) {
-    this.iso = iso;
   }
 
   public String getName() {
@@ -49,35 +33,11 @@ public class CountryServiceModel {
     this.niceName = niceName;
   }
 
-  public String getIso3() {
-    return iso3;
+  public String getPhonecode() {
+    return phonecode;
   }
 
-  public void setIso3(String iso3) {
-    this.iso3 = iso3;
-  }
-
-  public String getNumCode() {
-    return numCode;
-  }
-
-  public void setNumCode(String numCode) {
-    this.numCode = numCode;
-  }
-
-  public String getPhoneCode() {
-    return phoneCode;
-  }
-
-  public void setPhoneCode(String phoneCode) {
-    this.phoneCode = phoneCode;
-  }
-
-  public List<CityServiceModel> getCities() {
-    return cities;
-  }
-
-  public void setCities(List<CityServiceModel> cities) {
-    this.cities = cities;
+  public void setPhonecode(String phonecode) {
+    this.phonecode = phonecode;
   }
 }
