@@ -13,6 +13,8 @@ public class Event extends BaseEntity{
   private String state;
   private String zip;
   private String address;
+  private String website;
+
   private LocalDateTime startsOn;
   private LocalDateTime endsOn;
   private Boolean isOpenToRegister;
@@ -79,6 +81,14 @@ public class Event extends BaseEntity{
     this.zip = zip;
   }
 
+  public String getWebsite() {
+    return website;
+  }
+
+  public void setWebsite(String website) {
+    this.website = website;
+  }
+
   @Column(name = "address")
   public String getAddress() {
     return address;
@@ -106,7 +116,7 @@ public class Event extends BaseEntity{
     this.endsOn = endsOn;
   }
 
-  @Column(name = "is_open_to_register", columnDefinition = "bit default 1")
+  @Column(name = "is_open_to_register", columnDefinition = "tinyint default 1")
   public Boolean getOpenToRegister() {
     return isOpenToRegister;
   }

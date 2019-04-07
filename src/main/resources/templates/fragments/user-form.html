@@ -75,6 +75,11 @@
                    class="form-control"
                    id="email" name="email"><span class="bar"></span>
         </div>
+        <div class="form-group">
+            <label for="inputAbout">About Me</label>
+            <textarea type="text" th:value="${userModel.about}" class="form-control"
+                      id="inputAbout" name="about" th:field="${userModel.about}"></textarea><span class="bar"></span>
+        </div>
         <hr/>
         <button type="submit" id="submitButton" class="button buttonBlue">Edit
             <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>

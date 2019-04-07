@@ -13,6 +13,7 @@ public class User extends BaseEntity implements UserDetails {
   private String username;
   private String password;
   private String email;
+  private String about;
   private Boolean isCorporate;
   private String imageUrl;
   private List<Event> createdEvents;
@@ -56,6 +57,15 @@ public class User extends BaseEntity implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  @Column(name = "about", columnDefinition = "TEXT")
+  public String getAbout() {
+    return about;
+  }
+
+  public void setAbout(String about) {
+    this.about = about;
   }
 
   @Column(name = "is_corporate", columnDefinition = "tinyint default 0")

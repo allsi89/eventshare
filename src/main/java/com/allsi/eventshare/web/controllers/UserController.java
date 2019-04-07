@@ -63,6 +63,7 @@ public class UserController extends BaseController {
       }
     }
 
+    modelAndView.addObject("bindingModel", bindingModel);
     return super.view("register");
   }
 
@@ -89,7 +90,8 @@ public class UserController extends BaseController {
   public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = "userModel")
                                              UserEditBindingModel userModel,
                                          @RequestParam("file") MultipartFile file,
-                                         BindingResult bindingResult) throws IOException {
+                                         BindingResult bindingResult,
+                                         ModelAndView modelAndView) throws IOException {
 
     if (!bindingResult.hasErrors()) {
 
@@ -105,7 +107,9 @@ public class UserController extends BaseController {
       return super.redirect("/users/profile");
     }
 
-    return super.view("edit-profile");
+    modelAndView.addObject("userModel", userModel);
+
+    return super.view("edit-profile", modelAndView);
   }
 
   @GetMapping("/password/edit")
@@ -117,9 +121,10 @@ public class UserController extends BaseController {
   @PostMapping("/password/edit")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView editPasswordConfirm(Principal principal,
-                                          @ModelAttribute("userModel")
+                                          @Valid @ModelAttribute("userModel")
                                               UserEditPasswordBindingModel userModel,
-                                          BindingResult bindingResult) {
+                                          BindingResult bindingResult,
+                                          ModelAndView modelAndView) {
     if (!bindingResult.hasErrors()) {
       this.userService.editUserPassword(this.modelMapper
               .map(userModel, UserServiceModel.class),
@@ -129,6 +134,8 @@ public class UserController extends BaseController {
       return super.redirect("/users/profile");
 
     }
+
+    modelAndView.addObject("userModel", userModel);
 
     return super.view("edit-password");
   }

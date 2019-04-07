@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
   private static final String ORG_NOT_FOUND = "Organisation not found";
+
   private final OrganisationRepository organisationRepository;
   private final UserService userService;
   private final ModelMapper modelMapper;
@@ -35,7 +36,7 @@ public class OrganisationServiceImpl implements OrganisationService {
   }
 
   @Override
-  public boolean addOrganisation(OrganisationServiceModel serviceModel, String name, String countryId) {
+  public void addOrganisation(OrganisationServiceModel serviceModel, String name, String countryId) {
     UserServiceModel user = this.userService.findUserByUsername(name);
 
     if (serviceModel.getEmail()== null){
@@ -51,22 +52,40 @@ public class OrganisationServiceImpl implements OrganisationService {
     organisation.setUser(new User());
     organisation.getUser().setId(user.getId());
 
-    try {
-      this.organisationRepository.saveAndFlush(organisation);
-      this.userService.addCorpToUserRoles(name);
-      return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+    this.organisationRepository.saveAndFlush(organisation);
+    this.userService.addCorpToUserRoles(name);
   }
 
   @Override
   public void deleteOrganisation(String username) {
     UserServiceModel serviceModel = this.userService.findUserByUsername(username);
-    Organisation organisation =  this.organisationRepository.findByUser_Id(serviceModel.getId())
+
+    Organisation organisation =  this.organisationRepository
+        .findByUser_Id(serviceModel.getId())
         .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+
     this.userService.serCorpUserInactive(username);
+
     this.organisationRepository.delete(organisation);
   }
+
+  @Override
+  public void editOrganisation(OrganisationServiceModel organisationServiceModel, String username, String countryId) {
+    UserServiceModel userServiceModel = this.userService.findUserByUsername(username);
+
+    Organisation organisationToBeSaved = this.organisationRepository
+        .findByUser_Id(userServiceModel.getId())
+        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+
+    organisationServiceModel.setId(organisationToBeSaved.getId());
+
+    Organisation organisation = this.modelMapper.map(organisationServiceModel, Organisation.class);
+
+    organisation.setCountry(new Country());
+    organisation.getCountry().setId(countryId);
+
+    this.organisationRepository.saveAndFlush(organisation);
+
+  }
+
 }

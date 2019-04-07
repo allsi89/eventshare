@@ -94,6 +94,8 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     user.setEmail(userServiceModel.getEmail());
+    user.setAbout(userServiceModel.getAbout());
+
     if (userServiceModel.getImageUrl() != null) {
       user.setImageUrl(userServiceModel.getImageUrl());
     }

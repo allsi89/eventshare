@@ -1,19 +1,13 @@
 package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.binding.OrganisationBindingModel;
-import com.allsi.eventshare.domain.models.service.CountryServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
 import com.allsi.eventshare.service.CloudService;
-import com.allsi.eventshare.service.CountryService;
 import com.allsi.eventshare.service.OrganisationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.allsi.eventshare.constants.Constants.CORP;
 
@@ -34,20 +26,18 @@ public class OrganisationController extends BaseController {
   private static final String PLUS_CHAR = "+";
 
   private final OrganisationService organisationService;
-  private final CountryService countryService;
   private final CloudService cloudService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public OrganisationController(OrganisationService organisationService, CountryService countryService, CloudService cloudService, ModelMapper modelMapper) {
+  public OrganisationController(OrganisationService organisationService, CloudService cloudService, ModelMapper modelMapper) {
     this.organisationService = organisationService;
-    this.countryService = countryService;
     this.cloudService = cloudService;
     this.modelMapper = modelMapper;
   }
 
   @GetMapping("/view")
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
   public ModelAndView viewOrganisation(Principal principal, ModelAndView modelAndView) {
 
     OrganisationServiceModel organisation = this.organisationService
@@ -56,12 +46,9 @@ public class OrganisationController extends BaseController {
     OrganisationViewModel viewModel = this.modelMapper
         .map(organisation, OrganisationViewModel.class);
 
-    CountryServiceModel country = this.countryService
-        .findByCountryId(organisation.getCountry().getId());
+    viewModel.setCountry(organisation.getCountry().getNiceName());
 
-    viewModel.setCountry(country.getNiceName());
-
-    viewModel.setPhone(PLUS_CHAR + country.getPhonecode() + organisation.getPhone());
+    viewModel.setPhone(PLUS_CHAR + organisation.getCountry().getPhonecode() + organisation.getPhone());
 
     modelAndView.addObject("viewModel", viewModel);
 
@@ -69,7 +56,7 @@ public class OrganisationController extends BaseController {
   }
 
   @GetMapping("/add")
-  @PreAuthorize("!hasRole('ROLE_CORP')")
+  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
   public ModelAndView addOrganisation(ModelAndView modelAndView,
                                       @ModelAttribute(name = "bindingModel")
                                           OrganisationBindingModel bindingModel) {
@@ -79,12 +66,13 @@ public class OrganisationController extends BaseController {
   }
 
   @PostMapping("/add")
-  @PreAuthorize("!hasRole('ROLE_CORP')")
+  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
   public ModelAndView addOrganisationConfirm(Principal principal,
                                              @Valid @ModelAttribute(name = "bindingModel")
                                                  OrganisationBindingModel bindingModel,
                                              @RequestParam("file") MultipartFile file,
-                                             BindingResult bindingResult) throws IOException {
+                                             BindingResult bindingResult,
+                                             ModelAndView modelAndView) throws IOException {
     if (!bindingResult.hasErrors()) {
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
@@ -93,17 +81,13 @@ public class OrganisationController extends BaseController {
         serviceModel.setImageUrl(this.cloudService.uploadImage(file));
       }
 
-      this.countryService.findByCountryId(bindingModel.getCountry());
+      this.organisationService
+          .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
 
-      if (this.organisationService
-          .addOrganisation(serviceModel,
-              principal.getName(),
-              bindingModel.getCountry())) {
-
-        updateAuth();
-        return super.redirect("/organisation/view", CORP, true);
-      }
+      return super.redirect("/organisation/view", CORP, true);
     }
+
+    modelAndView.addObject("bindingModel", bindingModel);
 
     return super.view("add-organisation");
   }
@@ -115,9 +99,9 @@ public class OrganisationController extends BaseController {
                                        @ModelAttribute("bindingModel")
                                            OrganisationBindingModel bindingModel) {
 
-    bindingModel = getOrganisationBindingModel(principal, bindingModel);
+    modelAndView.addObject("bindingModel",
+        getOrganisationBindingModel(principal.getName()));
 
-    modelAndView.addObject("bindingModel", bindingModel);
     return super.view("edit-organisation", modelAndView);
   }
 
@@ -128,62 +112,59 @@ public class OrganisationController extends BaseController {
                                                   OrganisationBindingModel bindingModel,
                                               @RequestParam("file") MultipartFile file,
                                               ModelAndView modelAndView,
-                                              BindingResult bindingResult) {
+                                              BindingResult bindingResult) throws IOException {
+    if (!bindingResult.hasErrors()) {
+      OrganisationServiceModel serviceModel = this.modelMapper
+          .map(bindingModel, OrganisationServiceModel.class);
 
-    //TODO
+      if (!file.isEmpty()) {
+        serviceModel.setImageUrl(this.cloudService.uploadImage(file));
+      }
 
-    return super.redirect("/home"); // --> SUCCESS
+      this.organisationService
+          .editOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
+
+      return super.redirect("/organisation/view");
+    }
+
+    modelAndView.addObject("bindingModel", bindingModel);
+
+    return super.view("edit-organisation", modelAndView); // --> FAIL
   }
 
   @GetMapping("/delete")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
   public ModelAndView deleteOrganisation(Principal principal,
-                                       ModelAndView modelAndView,
-                                       @ModelAttribute("deleteModel")
-                                           OrganisationBindingModel deleteModel) {
+                                         ModelAndView modelAndView,
+                                         @ModelAttribute("deleteModel")
+                                             OrganisationBindingModel deleteModel) {
 
-    deleteModel = getOrganisationBindingModel(principal, deleteModel);
-
-    modelAndView.addObject("deleteModel", deleteModel);
+    modelAndView.addObject("deleteModel",
+        getOrganisationBindingModel(principal.getName()));
 
     return super.view("delete-organisation", modelAndView);
-  }
-
-  private void updateAuth() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-    Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
-    SecurityContextHolder.getContext().setAuthentication(newAuth);
   }
 
   @PostMapping("/delete")
   @PreAuthorize("hasRole('ROLE_CORP')")
   public ModelAndView deleteOrganisationConfirm(Principal principal,
-                                              @ModelAttribute("deleteModel")
-                                                  OrganisationBindingModel deleteModel) {
+                                                @ModelAttribute("deleteModel")
+                                                    OrganisationBindingModel deleteModel) {
 
     this.organisationService.deleteOrganisation(principal.getName());
-
-    updateAuth();
-    //TODO
 
     return super.redirect("/home", CORP, false); // --> SUCCESS
   }
 
 
-
-  private OrganisationBindingModel getOrganisationBindingModel(Principal principal, OrganisationBindingModel bindingModel) {
+  private OrganisationBindingModel getOrganisationBindingModel(String name) {
     OrganisationServiceModel serviceModel = this.organisationService
-        .getOrganisationByUsername(principal.getName());
+        .getOrganisationByUsername(name);
 
-
-    bindingModel = this.modelMapper
+    OrganisationBindingModel bindingModel = this.modelMapper
         .map(serviceModel, OrganisationBindingModel.class);
 
-    CountryServiceModel country = this.countryService
-        .findByCountryId(serviceModel.getCountry().getId());
-
-    bindingModel.setCountry(country.getNiceName());
+    bindingModel.setCountry(serviceModel.getCountry().getNiceName());
     return bindingModel;
   }
 }
