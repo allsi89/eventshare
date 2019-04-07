@@ -16,4 +16,6 @@ public interface UserService extends UserDetailsService {
   void editUserPassword(UserServiceModel userModel, String name, String oldPassword);
 
   void addCorpToUserRoles(String name);
+
+  void serCorpUserInactive(String username);
 }

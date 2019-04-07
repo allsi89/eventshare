@@ -13,12 +13,12 @@
     <div class="container">
         <form class="se-form se-form-text mt-3 mb-3 col-md-9" th:action="@{/organisation/edit}" th:object="${bindingModel}"
               th:method="post" enctype="multipart/form-data">
-            <th:block th:replace="~{fragments/organisation-form :: edit-organisation}"></th:block>
+            <th:block th:replace="~{fragments/organisation-form :: modify-organisation}"></th:block>
+            <th:block th:replace="~{fragments/organisation-form :: edit-option}"></th:block>
         </form>
     </div>
 </main>
 <th:block th:include="~{fragments/footer}"></th:block>
-
 </body>
 <script th:inline="javascript">
     fetch('/countries/fetch')

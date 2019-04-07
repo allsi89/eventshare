@@ -2,6 +2,7 @@ package com.allsi.eventshare.service;
 
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
+import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -15,8 +16,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.Constants.CORP;
@@ -126,6 +129,25 @@ public class UserServiceImpl implements UserService {
     toEdit.setRoles(user.getRoles());
 
     this.userRepository.saveAndFlush(toEdit);
+  }
+
+  @Override
+  public void serCorpUserInactive(String username) {
+    User user = this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    user.setCorporate(false);
+
+    RoleServiceModel roleServiceModel = this.roleService.findByAuthority(CORP);
+
+    Set<Role> roles = user.getRoles()
+        .stream()
+        .filter(role -> !role.getAuthority().equals(CORP))
+        .collect(Collectors.toSet());
+
+    user.setRoles(roles);
+
+    this.userRepository.saveAndFlush(user);
   }
 
 //  private OrganisationViewModel getOrganisationViewModel(OrganisationServiceModel organisationServiceModel) {

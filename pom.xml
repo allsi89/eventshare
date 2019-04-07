@@ -14,6 +14,14 @@
     <name>eventshare</name>
     <description>Final Project for Spring MVC @ SoftUni</description>
 
+    <properties>
+        <java.version>11</java.version>
+        <INSTANCE_CONNECTION_NAME>event-share:europe-west6:event-share-db</INSTANCE_CONNECTION_NAME>
+        <user>allsi</user>
+        <password>1001</password>
+        <database>event_share_db</database>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
