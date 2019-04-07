@@ -27,8 +27,8 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public OrganisationServiceModel getOrganisationByUsername(String username) {
-    UserServiceModel user = this.userService.findUserByUsername(username);
-    Organisation organisation =  this.organisationRepository.findByUser_Id(user.getId())
+    UserServiceModel serviceModel = this.userService.findUserByUsername(username);
+    Organisation organisation =  this.organisationRepository.findByUser_Id(serviceModel.getId())
         .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
 
     return this.modelMapper.map(organisation, OrganisationServiceModel.class);
@@ -59,5 +59,14 @@ public class OrganisationServiceImpl implements OrganisationService {
       e.printStackTrace();
       return false;
     }
+  }
+
+  @Override
+  public void deleteOrganisation(String username) {
+    UserServiceModel serviceModel = this.userService.findUserByUsername(username);
+    Organisation organisation =  this.organisationRepository.findByUser_Id(serviceModel.getId())
+        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+    this.userService.serCorpUserInactive(username);
+    this.organisationRepository.delete(organisation);
   }
 }

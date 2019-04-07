@@ -9,6 +9,9 @@ import java.security.Principal;
 
 @Controller
 public class HomeController extends BaseController {
+  public HomeController() {
+      }
+
   @GetMapping("/error")
   public ModelAndView wrong() {
     return super.view("error/wrong");

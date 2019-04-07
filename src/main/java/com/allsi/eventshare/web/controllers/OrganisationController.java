@@ -10,6 +10,10 @@ import com.allsi.eventshare.service.OrganisationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.allsi.eventshare.constants.Constants.CORP;
 
 @Controller
 @RequestMapping("/organisation")
@@ -61,7 +69,7 @@ public class OrganisationController extends BaseController {
   }
 
   @GetMapping("/add")
-  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
+  @PreAuthorize("!hasRole('ROLE_CORP')")
   public ModelAndView addOrganisation(ModelAndView modelAndView,
                                       @ModelAttribute(name = "bindingModel")
                                           OrganisationBindingModel bindingModel) {
@@ -71,7 +79,7 @@ public class OrganisationController extends BaseController {
   }
 
   @PostMapping("/add")
-  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
+  @PreAuthorize("!hasRole('ROLE_CORP')")
   public ModelAndView addOrganisationConfirm(Principal principal,
                                              @Valid @ModelAttribute(name = "bindingModel")
                                                  OrganisationBindingModel bindingModel,
@@ -92,7 +100,8 @@ public class OrganisationController extends BaseController {
               principal.getName(),
               bindingModel.getCountry())) {
 
-        return super.redirect("/organisation/view");
+        updateAuth();
+        return super.redirect("/organisation/view", CORP, true);
       }
     }
 
@@ -104,19 +113,9 @@ public class OrganisationController extends BaseController {
   public ModelAndView editOrganisation(Principal principal,
                                        ModelAndView modelAndView,
                                        @ModelAttribute("bindingModel")
-      OrganisationBindingModel bindingModel) {
+                                           OrganisationBindingModel bindingModel) {
 
-    OrganisationServiceModel serviceModel = this.organisationService
-        .getOrganisationByUsername(principal.getName());
-
-
-    bindingModel  = this.modelMapper
-        .map(serviceModel, OrganisationBindingModel.class);
-
-    CountryServiceModel country = this.countryService
-        .findByCountryId(serviceModel.getCountry().getId());
-
-    bindingModel.setCountry(country.getNiceName());
+    bindingModel = getOrganisationBindingModel(principal, bindingModel);
 
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view("edit-organisation", modelAndView);
@@ -126,13 +125,65 @@ public class OrganisationController extends BaseController {
   @PreAuthorize("hasRole('ROLE_CORP')")
   public ModelAndView editOrganisationConfirm(Principal principal,
                                               @Valid @ModelAttribute("bindingModel")
-                                              OrganisationBindingModel bindingModel,
+                                                  OrganisationBindingModel bindingModel,
                                               @RequestParam("file") MultipartFile file,
                                               ModelAndView modelAndView,
                                               BindingResult bindingResult) {
 
+    //TODO
 
-    return super.view("edit-organisation");
+    return super.redirect("/home"); // --> SUCCESS
   }
 
+  @GetMapping("/delete")
+  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  public ModelAndView deleteOrganisation(Principal principal,
+                                       ModelAndView modelAndView,
+                                       @ModelAttribute("deleteModel")
+                                           OrganisationBindingModel deleteModel) {
+
+    deleteModel = getOrganisationBindingModel(principal, deleteModel);
+
+    modelAndView.addObject("deleteModel", deleteModel);
+
+    return super.view("delete-organisation", modelAndView);
+  }
+
+  private void updateAuth() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+    Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updatedAuthorities);
+    SecurityContextHolder.getContext().setAuthentication(newAuth);
+  }
+
+  @PostMapping("/delete")
+  @PreAuthorize("hasRole('ROLE_CORP')")
+  public ModelAndView deleteOrganisationConfirm(Principal principal,
+                                              @ModelAttribute("deleteModel")
+                                                  OrganisationBindingModel deleteModel) {
+
+    this.organisationService.deleteOrganisation(principal.getName());
+
+    updateAuth();
+    //TODO
+
+    return super.redirect("/home", CORP, false); // --> SUCCESS
+  }
+
+
+
+  private OrganisationBindingModel getOrganisationBindingModel(Principal principal, OrganisationBindingModel bindingModel) {
+    OrganisationServiceModel serviceModel = this.organisationService
+        .getOrganisationByUsername(principal.getName());
+
+
+    bindingModel = this.modelMapper
+        .map(serviceModel, OrganisationBindingModel.class);
+
+    CountryServiceModel country = this.countryService
+        .findByCountryId(serviceModel.getCountry().getId());
+
+    bindingModel.setCountry(country.getNiceName());
+    return bindingModel;
+  }
 }

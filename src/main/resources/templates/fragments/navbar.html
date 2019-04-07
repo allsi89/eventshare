@@ -64,9 +64,10 @@
                             Organisation
                         </a>
                         <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/organisation/view}" sec:authorize="isAuthenticated()">My organisation</a>
-                            <a class="dropdown-item" th:href="@{/organisation/edit}" sec:authorize="isAuthenticated()">Edit</a>
-                            <a class="dropdown-item" href="#" sec:authorize="isAuthenticated()">Delete</a>
+                            <a class="dropdown-item" th:href="@{/organisation/view}" sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
+                            <a class="dropdown-item" th:href="@{/organisation/add}" sec:authorize="!hasRole('ROLE_CORP')">Add</a>
+                            <a class="dropdown-item" th:href="@{/organisation/edit}" sec:authorize="hasRole('ROLE_CORP')">Edit</a>
+                            <a class="dropdown-item" th:href="@{/organisation/delete}" sec:authorize="hasRole('ROLE_CORP')">Delete</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

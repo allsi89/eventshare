@@ -72,7 +72,7 @@ public class UserController extends BaseController {
     modelAndView
         .addObject("userModel", this.getProfileViewModel(principal));
 
-    return super.view("profile", modelAndView);
+    return super.view("view-profile", modelAndView);
   }
 
   @GetMapping("/profile/edit")

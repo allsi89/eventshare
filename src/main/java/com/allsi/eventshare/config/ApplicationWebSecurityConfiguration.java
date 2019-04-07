@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
@@ -22,7 +23,10 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .and()
         .authorizeRequests()
         .antMatchers("/js/**", "/css/**", "/images/**").permitAll()
-        .antMatchers( "/", "/users/login", "/users/register").anonymous()
+        .antMatchers("/", "/users/login", "/users/register").anonymous()
+        .antMatchers("/organisation/edit/", "/organisation/delete", "/organisation/view")
+        .hasRole("CORP")
+
 //        .antMatchers("/admin", "admin/edit/**").hasRole("ADMIN")
 //        .antMatchers("/viruses/delete/**", "/viruses/edit/**", "viruses/add/**")
 //        .access("hasAnyRole('ADMIN, MODERATOR')")
@@ -34,9 +38,10 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .permitAll()
         .usernameParameter("username")
         .passwordParameter("password")
+//        .successHandler()
         .defaultSuccessUrl("/home", true)
-
         .and()
+
         .logout()
         .invalidateHttpSession(true)
         .deleteCookies("JSESSIONID")
@@ -47,11 +52,14 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .exceptionHandling().accessDeniedPage("/unauthorized");
   }
 
+
+
   private CsrfTokenRepository csrfTokenRepository() {
     HttpSessionCsrfTokenRepository repository =
         new HttpSessionCsrfTokenRepository();
     repository.setSessionAttributeName("_csrf");
     return repository;
   }
+
 
 }

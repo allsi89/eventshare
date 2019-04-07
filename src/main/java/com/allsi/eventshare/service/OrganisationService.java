@@ -7,4 +7,5 @@ public interface OrganisationService {
 
   boolean addOrganisation(OrganisationServiceModel serviceModel, String name, String countryId);
 
+  void deleteOrganisation(String name);
 }

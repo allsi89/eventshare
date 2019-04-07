@@ -19,16 +19,9 @@
 </main>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <th:block th:include="~{fragments/footer}"></th:block>
-<script>
+</body>
+<script  th:inline="javascript">
     myFunction();
-    $("input[type=checkbox]").on("click", function(){
-        if ($(this).is(":checked")) {
-            document.getElementById("email").disabled = true;
-            document.getElementById("email").value = '';
-        } else {
-            document.getElementById("email").disabled = false;
-        }
-    });
 
     fetch('/countries/fetch')
         .then((response) => response.json())
@@ -44,6 +37,14 @@
             $('#phoneCode').val(countryCode);
         }
     });
+
+    $("input[type=checkbox]").on("click", function(){
+        if ($(this).is(":checked")) {
+            document.getElementById("email").disabled = true;
+            document.getElementById("email").value = '';
+        } else {
+            document.getElementById("email").disabled = false;
+        }
+    });
 </script>
-</body>
 </html>
