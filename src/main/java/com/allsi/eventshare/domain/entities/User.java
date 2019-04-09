@@ -15,16 +15,16 @@ public class User extends BaseEntity implements UserDetails {
   private String email;
   private String about;
   private Boolean isCorporate;
-  private String imageUrl;
+  private Image image;
   private List<Event> createdEvents;
   private List<Event> attendanceEvents;
-  private List<Comment> comments;
 
   private boolean isAccountNonExpired;
   private boolean isAccountNonLocked;
   private boolean isCredentialsNonExpired;
   private boolean isEnabled;
   private Set<Role> roles;
+
 
   public User() {
     this.roles = new HashSet<>();
@@ -77,13 +77,14 @@ public class User extends BaseEntity implements UserDetails {
     isCorporate = corporate;
   }
 
-  @Column(name = "image_url")
-  public String getImageUrl() {
-    return imageUrl;
+  @OneToOne
+  @JoinColumn(name = "image_id", referencedColumnName = "id")
+  public Image getImage() {
+    return image;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setImage(Image image) {
+    this.image = image;
   }
 
   @OneToMany(targetEntity = Event.class, mappedBy = "creator")
@@ -109,15 +110,6 @@ public class User extends BaseEntity implements UserDetails {
 
   public void setAttendanceEvents(List<Event> attendanceEvents) {
     this.attendanceEvents = attendanceEvents;
-  }
-
-  @OneToMany(targetEntity = Comment.class, mappedBy = "user")
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
   }
 
   @Override

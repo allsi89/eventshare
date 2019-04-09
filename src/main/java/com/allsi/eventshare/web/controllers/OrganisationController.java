@@ -1,9 +1,10 @@
 package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.binding.OrganisationBindingModel;
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
-import com.allsi.eventshare.service.CloudService;
+import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.OrganisationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,19 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 
-import static com.allsi.eventshare.constants.Constants.CORP;
-
 @Controller
 @RequestMapping("/organisation")
 public class OrganisationController extends BaseController {
   private static final String PLUS_CHAR = "+";
 
   private final OrganisationService organisationService;
-  private final CloudService cloudService;
+  private final ImageService imageService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public OrganisationController(OrganisationService organisationService, CloudService cloudService, ModelMapper modelMapper) {
+  public OrganisationController(OrganisationService organisationService, ImageService imageService, ModelMapper modelMapper) {
     this.organisationService = organisationService;
-    this.cloudService = cloudService;
+    this.imageService = imageService;
     this.modelMapper = modelMapper;
   }
 
@@ -70,25 +69,20 @@ public class OrganisationController extends BaseController {
   public ModelAndView addOrganisationConfirm(Principal principal,
                                              @Valid @ModelAttribute(name = "bindingModel")
                                                  OrganisationBindingModel bindingModel,
-                                             @RequestParam("file") MultipartFile file,
                                              BindingResult bindingResult,
                                              ModelAndView modelAndView) throws IOException {
     if (!bindingResult.hasErrors()) {
+
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
-
-      if (!file.isEmpty()) {
-        serviceModel.setImageUrl(this.cloudService.uploadImage(file));
-      }
 
       this.organisationService
           .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
 
-      return super.redirect("/organisation/view", CORP, true);
+      return super.redirect("/organisation/view", true);
     }
 
     modelAndView.addObject("bindingModel", bindingModel);
-
     return super.view("add-organisation");
   }
 
@@ -110,16 +104,11 @@ public class OrganisationController extends BaseController {
   public ModelAndView editOrganisationConfirm(Principal principal,
                                               @Valid @ModelAttribute("bindingModel")
                                                   OrganisationBindingModel bindingModel,
-                                              @RequestParam("file") MultipartFile file,
                                               ModelAndView modelAndView,
-                                              BindingResult bindingResult) throws IOException {
+                                              BindingResult bindingResult) {
     if (!bindingResult.hasErrors()) {
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
-
-      if (!file.isEmpty()) {
-        serviceModel.setImageUrl(this.cloudService.uploadImage(file));
-      }
 
       this.organisationService
           .editOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
@@ -129,7 +118,7 @@ public class OrganisationController extends BaseController {
 
     modelAndView.addObject("bindingModel", bindingModel);
 
-    return super.view("edit-organisation", modelAndView); // --> FAIL
+    return super.view("edit-organisation", modelAndView);
   }
 
   @GetMapping("/delete")
@@ -152,8 +141,7 @@ public class OrganisationController extends BaseController {
                                                     OrganisationBindingModel deleteModel) {
 
     this.organisationService.deleteOrganisation(principal.getName());
-
-    return super.redirect("/home", CORP, false); // --> SUCCESS
+    return super.redirect("/home", false);
   }
 
 
@@ -166,5 +154,16 @@ public class OrganisationController extends BaseController {
 
     bindingModel.setCountry(serviceModel.getCountry().getNiceName());
     return bindingModel;
+  }
+
+  @PostMapping("/view/change-picture")
+  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  public ModelAndView changeProfilePicture(Principal principal,
+                                           @RequestParam("file") MultipartFile file) throws IOException {
+
+    ImageServiceModel imageServiceModel = this.imageService.saveInDb(file);
+
+    this.organisationService.editOrganisationPicture(principal.getName(), imageServiceModel);
+    return super.redirect("/organisation/view");
   }
 }

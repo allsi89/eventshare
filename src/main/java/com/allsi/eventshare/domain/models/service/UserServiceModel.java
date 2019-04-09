@@ -16,8 +16,6 @@ public class UserServiceModel {
   private OrganisationServiceModel organisation;
   private List<EventServiceModel> createdEvents;
   private List<EventServiceModel> attendanceEvents;
-  private List<CommentServiceModel> comments;
-
   private boolean isAccountNonExpired;
   private boolean isAccountNonLocked;
   private boolean isCredentialsNonExpired;
@@ -27,7 +25,6 @@ public class UserServiceModel {
   public UserServiceModel() {
     this.createdEvents = new ArrayList<>();
     this.attendanceEvents = new ArrayList<>();
-    this.comments = new ArrayList<>();
     this.roles = new LinkedHashSet<>();
   }
 
@@ -109,14 +106,6 @@ public class UserServiceModel {
 
   public void setAttendanceEvents(List<EventServiceModel> attendanceEvents) {
     this.attendanceEvents = attendanceEvents;
-  }
-
-  public List<CommentServiceModel> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<CommentServiceModel> comments) {
-    this.comments = comments;
   }
 
   public boolean isAccountNonExpired() {

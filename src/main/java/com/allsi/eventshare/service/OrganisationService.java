@@ -1,6 +1,9 @@
 package com.allsi.eventshare.service;
 
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
+
+import java.io.IOException;
 
 public interface OrganisationService {
   OrganisationServiceModel getOrganisationByUsername(String username);
@@ -10,4 +13,6 @@ public interface OrganisationService {
   void deleteOrganisation(String name);
 
   void editOrganisation(OrganisationServiceModel serviceModel, String username, String countryId);
+
+  void editOrganisationPicture(String name, ImageServiceModel imageServiceModel) throws IOException;
 }

@@ -2,9 +2,39 @@
     <div class="text-center mt-3">
         <img th:src="${userModel.imageUrl}" height="200" width="200" class="profile-pic"/>
     </div>
+    <div class="text-center mt-3">
+        <a href="#" class="btn" data-toggle="modal" role="button" data-target="#modal">Change Picture</a>
+        <div id="modal" class="modal modal-custom">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+                <div class="modal-content">
+                    <form id="change-profile-picture-form" class="form" th:action="@{/users/profile/change-picture}" th:method="post"
+                    enctype="multipart/form-data">
+
+                        <div class="file-field">
+                            <div class="btn">
+                                <span>Profile Picture</span>
+                                <input type="file" name="file" required>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                        onclick="$('#change-profile-picture-form').submit()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
     <div class="row mt-3">
         <div class="col col-md-12 text-center">
-            <h1 th:text="${userModel.username}"></h1>
+            <h2 th:text="${userModel.username}"></h2>
         </div>
     </div>
     <div class="row mt-2">
@@ -15,7 +45,7 @@
     <hr class="text-center col-md-3"/>
     <div class="row mt-2">
         <div class="col col-md-12 text-center">
-            <h3 th:text="${userModel.about}"></h3>
+            <h1 th:text="${userModel.about}"></h1>
         </div>
     </div>
 </th:block>
@@ -24,83 +54,107 @@
     <div class="text-center">
         <img th:src="${viewModel.imageUrl}" height="200" width="200" class="profile-pic"/>
     </div>
-    <div class="row">
+    <div class="text-center mt-3">
+        <a href="#" class="btn" data-toggle="modal" role="button" data-target="#modal">Change Picture</a>
+        <div id="modal" class="modal modal-custom">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-content">
+                <form id="change-organisation-picture-form" class="form" th:action="@{/organisation/view/change-picture}" th:method="post"
+                      enctype="multipart/form-data">
+
+                    <div class="file-field">
+                        <div class="btn">
+                            <span>Organisation Picture</span>
+                            <input type="file" name="file" required>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                        onclick="$('#change-organisation-picture-form').submit()">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
         <div class="col col-md-12">
             <h1 th:text="${viewModel.name}"></h1>
         </div>
     </div>
     <hr/>
-    <br/>
     <div class="row">
-        <div class="col col-md-12">
+
+        <div class="col col-md-12 text-center">
             <h3>Contact</h3>
         </div>
+        <div class="col">
+            <hr class="text-center col-md-3"/>
+        </div>
     </div>
-    <hr class="text-center col-md-3"/>
-    <hr class="text-center col-md-2"/>
-    <hr class="text-center col-md-1"/>
     <div class="row">
         <div class="col col-md-12 text-center">
-            <div class="row justify-content-center">
-                <i class="material-icons mr-1">&#xe0be;</i>
-                <h4 th:text="${viewModel.email}"></h4>
+            <i class="material-icons mr-1">&#xe0be;</i>
+            <div class="row justify-content-center mt-4">
+                <p th:text="${viewModel.email}"></p>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col col-md-12 text-center">
-            <div class="row justify-content-center">
-                <i class="material-icons mr-1">http</i>
-                <h4 th:text="${viewModel.website}"></h4>
+            <i class="material-icons mr-1">http</i>
+            <div class="row justify-content-center mt-4">
+                <a th:href="${viewModel.website}">My Website</a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col col-md-12 text-center">
-            <div class="row justify-content-center">
-                <i class="material-icons mr-1">&#xe0b0;</i>
-                <h4 th:text="${viewModel.phone}"></h4>
+            <i class="material-icons mr-1">&#xe0b0;</i>
+            <div class="row justify-content-center mt-4">
+                <p th:text="${viewModel.phone}"></p>
             </div>
         </div>
     </div>
-
     <br/>
     <div class="row">
         <div class="col col-md-12">
             <h3>Address</h3>
         </div>
+        <div class="col">
+            <hr class="text-center col-md-3"/>
+        </div>
     </div>
-    <hr class="text-center col-md-3"/>
-    <hr class="text-center col-md-2"/>
-    <hr class="text-center col-md-1"/>
     <div class="row">
         <div class="col col-md-12 text-center">
-            <div class="row justify-content-center">
-                <i class="material-icons">
-                    my_location
-                </i>
-                <h4 th:text="${viewModel.country}"></h4>
+            <i class="material-icons">
+                my_location
+            </i>
+            <div class="row justify-content-center mt-4">
+                <p th:text="${viewModel.country}"></p>
             </div>
         </div>
     </div>
     <div class="row mt-2">
         <div class="col col-md-12 text-center">
-            <div class="row justify-content-center">
-                <i class="material-icons">
-                    location_city
-                </i>
-                <h4 th:text="${viewModel.city}"></h4>
+            <i class="material-icons">
+                location_city
+            </i>
+            <div class="row justify-content-center mt-4">
+                <p th:text="${viewModel.zip}  + ' ' + ${viewModel.city}"></p>
             </div>
         </div>
     </div>
     <div class="row mt-2">
         <div class="col col-md-12 text-center">
-            <h4 th:text="${viewModel.zip}"></h4>
-        </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col col-md-12 text-center">
-            <h4 th:text="${viewModel.address}"></h4>
+            <p th:text="${viewModel.address}"></p>
         </div>
     </div>
     <hr/>

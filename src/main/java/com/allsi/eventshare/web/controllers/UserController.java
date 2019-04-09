@@ -3,9 +3,10 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.binding.UserEditBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserEditPasswordBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserRegisterBindingModel;
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.UserProfileViewModel;
-import com.allsi.eventshare.service.CloudService;
+import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ import java.security.Principal;
 @RequestMapping("/users")
 public class UserController extends BaseController {
   private final UserService userService;
-  private final CloudService cloudService;
+  private final ImageService imageService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public UserController(UserService userService, CloudService cloudService, ModelMapper modelMapper) {
+  public UserController(UserService userService, ImageService imageService, ModelMapper modelMapper) {
     this.userService = userService;
-    this.cloudService = cloudService;
+    this.imageService = imageService;
     this.modelMapper = modelMapper;
   }
 
@@ -98,11 +99,9 @@ public class UserController extends BaseController {
       UserServiceModel userServiceModel = this.modelMapper
           .map(userModel, UserServiceModel.class);
 
-      if (!file.isEmpty()) {
-        userServiceModel.setImageUrl(this.cloudService.uploadImage(file));
-      }
+      ImageServiceModel imageServiceModel = this.imageService.saveInDb(file);
 
-      this.userService.editUserProfile(userServiceModel);
+      this.userService.editUserProfile(userServiceModel, imageServiceModel);
 
       return super.redirect("/users/profile");
     }
@@ -147,4 +146,16 @@ public class UserController extends BaseController {
     return this.modelMapper
         .map(userServiceModel, UserProfileViewModel.class);
   }
+
+
+  @PostMapping("/profile/change-picture")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView changeProfilePicture(Principal principal,
+                                           @RequestParam("file") MultipartFile file) throws IOException {
+
+    this.userService.editUserPicture(principal.getName(), this.imageService.saveInDb(file));
+    return super.redirect("/users/profile");
+  }
+
+
 }

@@ -1,6 +1,7 @@
 package com.allsi.eventshare.domain.models.binding;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 
@@ -8,7 +9,7 @@ import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
 public class OrganisationBindingModel {
   private String name;
-  private String imageUrl;
+  private MultipartFile image;
   private String country;
   private String city;
   private String state;
@@ -27,12 +28,12 @@ public class OrganisationBindingModel {
     return name;
   }
 
-  public String getImageUrl() {
-    return imageUrl;
+  public MultipartFile getImage() {
+    return image;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setImage(MultipartFile image) {
+    this.image = image;
   }
 
   public void setName(String name) {

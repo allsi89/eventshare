@@ -1,10 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:include="~{fragments/head}"></th:block>
 </head>
-<body>
+<header>
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+</header>
+<body onload="standard()">
+<br/>
+<main class="mt-3">
+    <h1 class="mb-3 mb-3 text-center se-form-text">Add Event</h1>
+    <div class="container">
+        <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom" th:action="@{/events/add}"
+              th:object="${bindingModel}"
+              th:method="post" enctype="multipart/form-data" sec:authorize="isAuthenticated()">
+            <th:block th:replace="~{fragments/event-form :: add-event}"></th:block>
+        </form>
+    </div>
+</main>
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+<th:block th:include="~{fragments/footer}"></th:block>
 
 </body>
+<script th:inline="javascript">
+    myFunction();
+    $(document).ready(function () {
+        $('.datepicker1').datepicker({
+            format:  'dd-mmm-yyyy'
+        });
+        $('.timepicker1').timepicker({
+            format:'hh:mm'
+        });
+        $('.datepicker2').datepicker({
+           format: 'dd-mmm-yyyy'
+        });
+        $('.timepicker2').timepicker({
+            format: 'hh:mm'
+        });
+    });
+
+
+    fetch('/countries/fetch')
+        .then((response) => response.json())
+        .then((json) => {
+            json.forEach((country) => $('#country').append(`<option value="${country.id}">${country.niceName}</option>`));
+        })
+        .catch((err) => console.log(err));
+
+</script>
 </html>

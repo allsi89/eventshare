@@ -2,6 +2,7 @@ package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "events")
@@ -14,16 +15,16 @@ public class Event extends BaseEntity{
   private String zip;
   private String address;
   private String website;
+  private List<Image> images;
 
   private LocalDateTime startsOn;
   private LocalDateTime endsOn;
-  private Boolean isOpenToRegister;
+  private Boolean isNotOpenToRegister;
   private User creator;
   private List<User> attendees;
-  private List<Comment> comments;
-//  private List<Image> images;
 
   public Event() {
+    this.attendees = new ArrayList<>();
   }
 
   @Column(name = "name", nullable = false)
@@ -89,6 +90,18 @@ public class Event extends BaseEntity{
     this.website = website;
   }
 
+  @OneToMany
+  @JoinTable(name = "events_images",
+  joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+  inverseJoinColumns = @JoinColumn(name = "image_id", referencedColumnName = "id"))
+  public List<Image> getImages() {
+    return images;
+  }
+
+  public void setImages(List<Image> images) {
+    this.images = images;
+  }
+
   @Column(name = "address")
   public String getAddress() {
     return address;
@@ -116,13 +129,13 @@ public class Event extends BaseEntity{
     this.endsOn = endsOn;
   }
 
-  @Column(name = "is_open_to_register", columnDefinition = "tinyint default 1")
-  public Boolean getOpenToRegister() {
-    return isOpenToRegister;
+  @Column(name = "is_not_open_to_register", columnDefinition = "tinyint default 0")
+  public Boolean getNotOpenToRegister() {
+    return isNotOpenToRegister;
   }
 
-  public void setOpenToRegister(Boolean openToRegister) {
-    isOpenToRegister = openToRegister;
+  public void setNotOpenToRegister(Boolean notOpenToRegister) {
+    isNotOpenToRegister = notOpenToRegister;
   }
 
   @ManyToOne(targetEntity = User.class)
@@ -144,14 +157,5 @@ public class Event extends BaseEntity{
 
   public void setAttendees(List<User> attendees) {
     this.attendees = attendees;
-  }
-
-  @OneToMany(targetEntity = Comment.class, mappedBy = "event")
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
   }
 }

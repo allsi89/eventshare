@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Entity(name = "organisations")
 public class Organisation extends BaseEntity {
   private String name;
-  private String imageUrl;
+  private Image image;
   private Country country;
   private String city;
   private String state;
@@ -20,6 +20,7 @@ public class Organisation extends BaseEntity {
   public Organisation() {
   }
 
+
   @Column(name = "name", nullable = false)
   public String getName() {
     return name;
@@ -29,13 +30,14 @@ public class Organisation extends BaseEntity {
     this.name = name;
   }
 
-  @Column(name = "image_url")
-  public String getImageUrl() {
-    return imageUrl;
+  @OneToOne
+  @JoinColumn(name = "image_id", referencedColumnName = "id")
+  public Image getImage() {
+    return image;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setImage(Image image) {
+    this.image = image;
   }
 
   @OneToOne

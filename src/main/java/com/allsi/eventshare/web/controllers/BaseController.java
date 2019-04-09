@@ -1,13 +1,13 @@
 package com.allsi.eventshare.web.controllers;
 
-import com.allsi.eventshare.service.MySecurityService;
+import com.allsi.eventshare.service.AuthUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
 public abstract class BaseController {
 
   @Autowired
-  private MySecurityService securityService;
+  private AuthUpdateService authUpdateService;
 
 
 
@@ -20,8 +20,8 @@ public abstract class BaseController {
     return this.view(view, new ModelAndView());
   }
 
-  protected ModelAndView redirect(String url, String role, boolean isToBeAdded) {
-    this.securityService.resetAuth(role, isToBeAdded);
+  protected ModelAndView redirect(String url, boolean isToBeAdded) {
+    this.authUpdateService.resetAuthCorp(isToBeAdded);
     return this.view("redirect:" + url);
   }
 

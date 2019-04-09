@@ -1,35 +1,27 @@
 package com.allsi.eventshare.service;
 
+import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
+import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.CORP;
-import static com.allsi.eventshare.constants.Constants.USER;
+import static com.allsi.eventshare.constants.Constants.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-  private static final String USER_NOT_FOUND_ERR = "User not found!";
-  private static final String INCORRECT_PASSWORD = "Incorrect password!";
-
   private final UserRepository userRepository;
   private final RoleService roleService;
   private final ModelMapper modelMapper;
@@ -76,29 +68,25 @@ public class UserServiceImpl implements UserService {
     User user = this.userRepository.findByUsername(name)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    return this.modelMapper.map(user, UserServiceModel.class);
+    UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+
+    if (user.getImage() != null) {
+      userServiceModel.setImageUrl(user.getImage().getUrl());
+    }
+
+    return userServiceModel;
   }
 
-//  @Override
-//  public OrganisationViewModel findUserOrganisation(String name) {
-//    UserServiceModel user = this.findUserByUsername(name);
-//
-//    OrganisationServiceModel organisationServiceModel = this.modelMapper
-//        .map(user.getOrganisation(), OrganisationServiceModel.class);
-//    return getOrganisationViewModel(organisationServiceModel);
-//  }
-
   @Override
-  public void editUserProfile(UserServiceModel userServiceModel) {
+  public void editUserProfile(UserServiceModel userServiceModel, ImageServiceModel imageServiceModel) {
     User user = this.userRepository.findByUsername(userServiceModel.getUsername())
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     user.setEmail(userServiceModel.getEmail());
     user.setAbout(userServiceModel.getAbout());
 
-    if (userServiceModel.getImageUrl() != null) {
-      user.setImageUrl(userServiceModel.getImageUrl());
-    }
+    userServiceModel.setImageUrl(imageServiceModel.getUrl());
+
     this.userRepository.saveAndFlush(user);
   }
 
@@ -134,7 +122,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void serCorpUserInactive(String username) {
+  public void setCorpUserInactive(String username) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
@@ -152,18 +140,18 @@ public class UserServiceImpl implements UserService {
     this.userRepository.saveAndFlush(user);
   }
 
-//  private OrganisationViewModel getOrganisationViewModel(OrganisationServiceModel organisationServiceModel) {
-//    OrganisationViewModel organisationViewModel = this.modelMapper
-//        .map(organisationServiceModel, OrganisationViewModel.class);
-//
-//    organisationViewModel.setCountry(organisationServiceModel.getCountry().getNiceName());
-//    organisationViewModel.setCity(organisationServiceModel.getCity().getName());
-//    organisationViewModel.setCityPostCode(organisationServiceModel.getCity().getPostCode());
-//    organisationViewModel.setPhone(organisationServiceModel
-//        .getCountry().getPhoneCode() + organisationServiceModel.getPhone());
-//
-//    return organisationViewModel;
-//  }
+  @Override
+  public void editUserPicture(String username, ImageServiceModel imageServiceModel) throws IOException {
+    User user = this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    Image image = this.modelMapper.map(imageServiceModel, Image.class);
+
+    user.setImage(image);
+
+    this.userRepository.saveAndFlush(user);
+  }
+
 
   private void assignRolesToUser(User user) {
     if (this.userRepository.count() == 0) {

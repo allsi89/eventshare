@@ -11,19 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class MySecurityServiceImpl implements MySecurityService {
+import static com.allsi.eventshare.constants.Constants.CORP;
 
-  public void resetAuth(String role, boolean isToBeAdded) {
+@Service
+public class AuthUpdateServiceImpl implements AuthUpdateService {
+
+  public void resetAuthCorp(boolean isToBeAdded) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     List<GrantedAuthority> updatedAuthorities;
 
     if (isToBeAdded) {
       updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-      updatedAuthorities.add(new SimpleGrantedAuthority(role));
+      updatedAuthorities.add(new SimpleGrantedAuthority(CORP));
     } else {
       updatedAuthorities = auth.getAuthorities().stream()
-          .filter(a -> !a.getAuthority().equals(role))
+          .filter(a -> !a.getAuthority().equals(CORP))
           .collect(Collectors.toList());
     }
 

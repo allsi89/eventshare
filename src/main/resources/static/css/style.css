@@ -2,6 +2,26 @@
     background-color: lightcoral;
     padding: 1em;
 }
+
+.modal-body{
+    background: transparent;
+}
+
+.modal-custom{
+    background: transparent;
+    width: 40%;
+    height: 30%;
+}
+
+
+.placeholder-fix::-webkit-input-placeholder {
+    color: #4caf50;
+}
+
+.placeholder-fix:focus::-webkit-input-placeholder  {color:transparent;}
+.placeholder-fix:focus::-moz-placeholder   {color:transparent;}
+.placeholder-fix:-moz-placeholder   {color:transparent;}
+
 .material-icons {
     size: 48px;
     color: #005cbf;
@@ -81,12 +101,8 @@ a:hover {
     font-weight: bolder;
 }
 
-.custom-btn {
-'Choose a picture';
-}
-
 hr {
-    border: 1px solid #4caf50 ;
+    border: 1px solid #2C86A6 ;
 }
 
 
@@ -129,14 +145,30 @@ h5 {
     color: #636363;
 }
 
-form {
+h1 {
+    font-family: "Brush Script MT";
+}
+
+
+.form-custom {
     border: 2px solid #2C86A6;
     border-radius: 5px;
-    width: 50%;
-    margin: 1em auto;
+    margin: 2em auto;
     padding: 1em 1em 1em 1em;
     background: transparent;
     box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px, rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+.login {
+    width: 30%;
+}
+
+.register {
+    width: 40%;
+}
+
+.edit {
+    width: 50%;
 }
 
 .form-group {
@@ -161,8 +193,6 @@ input:focus {
 }
 
 
-/* Label */
-
 label {
     color: #4a89dc;
     font-size: 15px;
@@ -173,49 +203,6 @@ label {
     transition: all 0.2s ease;
 }
 
-
-/* active */
-
-.stylee {
-    transform: scale(.75);
-    left: -2px;
-    font-size: 14px;
-    color: #4caf50;
-}
-
-
-/* Underline */
-
-.bar {
-    position: relative;
-    display: block;
-    width: 100%;
-}
-
-.bar:before,
-.bar:after {
-    content: '';
-    height: 2px;
-    width: 0;
-    bottom: 1px;
-    position: absolute;
-    background: #4caf50;
-    transition: all 0.2s ease;
-}
-
-.bar:before {
-    left: 50%;
-}
-
-.bar:after {
-    right: 50%;
-}
-
-input:focus ~ .bar:before,
-input:focus ~ .bar:after {
-    width: 50%;
-}
-
 .highlight {
     position: absolute;
     height: 60%;
@@ -224,20 +211,6 @@ input:focus ~ .bar:after {
     left: 0;
     pointer-events: none;
     opacity: 0.5;
-}
-
-input:focus ~ .highlight {
-    animation: inputHighlighter 0.3s ease;
-}
-
-@keyframes inputHighlighter {
-    from {
-        background: #4a89dc;
-    }
-    to {
-        width: 0;
-        background: transparent;
-    }
 }
 
 .button {
@@ -261,7 +234,7 @@ input:focus ~ .highlight {
 }
 
 .button:focus {
-    outline: 0;
+    outline: 1px;
 }
 
 .buttonBlue {
@@ -272,53 +245,4 @@ input:focus ~ .highlight {
 .buttonBlue:hover {
     background: #357bd8;
 }
-
-.ripples {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: transparent;
-}
-
-.ripplesCircle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
-}
-
-.ripples.is-active .ripplesCircle {
-    animation: ripples .4s ease-in;
-}
-
-@keyframes ripples {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    100% {
-        width: 200%;
-        padding-bottom: 200%;
-        opacity: 0;
-    }
-}
-
-
-
-
-
-
-
-
-
 
