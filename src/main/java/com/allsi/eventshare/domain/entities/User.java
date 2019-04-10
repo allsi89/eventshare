@@ -68,7 +68,7 @@ public class User extends BaseEntity implements UserDetails {
     this.about = about;
   }
 
-  @Column(name = "is_corporate", columnDefinition = "tinyint default 0")
+  @Column(name = "is_corporate", columnDefinition = "tinyint")
   public Boolean getCorporate() {
     return isCorporate;
   }

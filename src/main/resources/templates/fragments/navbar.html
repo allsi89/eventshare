@@ -1,3 +1,4 @@
+<script src="../../static/js/custom.js"></script>
 <th:block th:fragment xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <th:block sec:authorize="isAnonymous()">
         <nav class="navbar navbar-expand-lg se-nav">
@@ -6,7 +7,6 @@
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse d-flex justify-content-end" id="guestNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
@@ -30,15 +30,11 @@
 <th:block th:fragment xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <th:block sec:authorize="isAuthenticated()">
         <nav class="navbar navbar-expand-lg se-nav">
-            <!--<div class="logo">-->
-            <!--<link rel="icon" type="images/x-icon" th:href="/images/logo.png">-->
-            <!--</div>-->
             <a class="navbar-brand" th:href="@{/home}">Event Share</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#userNav"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse d-flex" id="userNav">
                 <ul class="navbar-nav mr-auto nav-pills">
                     <li class="nav-item">
@@ -64,7 +60,7 @@
                             Organisation
                         </a>
                         <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/organisation/view}" sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
+                            <a class="dropdown-item" th:href="@{/organisation/details}" sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
                             <a class="dropdown-item" th:href="@{/organisation/add}" sec:authorize="!hasRole('ROLE_CORP')">Add</a>
                             <a class="dropdown-item" th:href="@{/organisation/edit}" sec:authorize="hasRole('ROLE_CORP')">Edit</a>
                             <a class="dropdown-item" th:href="@{/organisation/delete}" sec:authorize="hasRole('ROLE_CORP')">Delete</a>
@@ -77,8 +73,8 @@
                             Events
                         </a>
                         <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">My events</a>
-                            <a class="dropdown-item" th:href="@{/events/add}">Add</a>
+                            <a class="dropdown-item" th:href="@{/events/my-events}">My Events</a>
+                            <a class="dropdown-item" th:href="@{/events/add}">Add New</a>
                         </div>
                     </li>
                     <li class="nav-item">

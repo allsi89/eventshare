@@ -1,7 +1,9 @@
 package com.allsi.eventshare.domain.models.service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 public class EventServiceModel {
@@ -14,14 +16,15 @@ public class EventServiceModel {
   private String zip;
   private String address;
   private String website;
-  private String imageUrl;
-  private LocalDateTime startsOn;
-  private LocalDateTime endsOn;
+  private List<ImageServiceModel> images;
+  private LocalDate startsOnDate;
+  private LocalTime startsOnTime;
   private boolean isNotOpenToRegister;
   private UserServiceModel creator;
   private List<UserServiceModel> attendees;
 
   public EventServiceModel() {
+    this.images = new ArrayList<>();
     this.attendees = new ArrayList<>();
   }
 
@@ -97,28 +100,28 @@ public class EventServiceModel {
     this.website = website;
   }
 
-  public String getImageUrl() {
-    return imageUrl;
+  public List<ImageServiceModel> getImages() {
+    return images;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setImages(List<ImageServiceModel> images) {
+    this.images = images;
   }
 
-  public LocalDateTime getStartsOn() {
-    return startsOn;
+  public LocalDate getStartsOnDate() {
+    return startsOnDate;
   }
 
-  public void setStartsOn(LocalDateTime startsOn) {
-    this.startsOn = startsOn;
+  public void setStartsOnDate(LocalDate startsOnDate) {
+    this.startsOnDate = startsOnDate;
   }
 
-  public LocalDateTime getEndsOn() {
-    return endsOn;
+  public LocalTime getStartsOnTime() {
+    return startsOnTime;
   }
 
-  public void setEndsOn(LocalDateTime endsOn) {
-    this.endsOn = endsOn;
+  public void setStartsOnTime(LocalTime startsOnTime) {
+    this.startsOnTime = startsOnTime;
   }
 
   public boolean notOpenToRegister() {

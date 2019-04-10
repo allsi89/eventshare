@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+</header>
+<div class="container-fluid justify-content-center">
+    <main>
+        <div class="jumbotron mt-4 se-background">
+            <h1 th:id="customText">Select what data you want to visualize!</h1>
+            <hr/>
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="created">Created Events</label>
+                        <button type="button" class="button buttonBlue" id="created" data-th-onclick="showCreatedEvents()">Created</button>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="attending">Attending Events</label>
+                        <button type="button" class="button buttonBlue" id="attending" data-th-onclick="showAttendingEvents()">Attending</button>
+                    </div>
+                </div>
+            </form>
+            <div class="custom-container">
+                <div th:id="content-container"></div>
+            </div>
+        </div>
+
+    </main>
+    <th:block th:include="~{fragments/footer}"></th:block>
+</div>
+</body>
+</html>

@@ -1,13 +1,15 @@
 package com.allsi.eventshare.web.controllers;
 
-import com.allsi.eventshare.service.AuthUpdateService;
+import com.allsi.eventshare.util.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 public abstract class BaseController {
 
   @Autowired
-  private AuthUpdateService authUpdateService;
+  private AuthService authService;
 
 
 
@@ -21,7 +23,7 @@ public abstract class BaseController {
   }
 
   protected ModelAndView redirect(String url, boolean isToBeAdded) {
-    this.authUpdateService.resetAuthCorp(isToBeAdded);
+    this.authService.resetAuthCorp(isToBeAdded);
     return this.view("redirect:" + url);
   }
 

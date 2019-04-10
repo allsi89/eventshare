@@ -35,7 +35,7 @@ public class OrganisationController extends BaseController {
     this.modelMapper = modelMapper;
   }
 
-  @GetMapping("/view")
+  @GetMapping("/details")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
   public ModelAndView viewOrganisation(Principal principal, ModelAndView modelAndView) {
 
@@ -51,7 +51,7 @@ public class OrganisationController extends BaseController {
 
     modelAndView.addObject("viewModel", viewModel);
 
-    return super.view("view-organisation", modelAndView);
+    return super.view("organisation-view", modelAndView);
   }
 
   @GetMapping("/add")
@@ -79,7 +79,7 @@ public class OrganisationController extends BaseController {
       this.organisationService
           .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
 
-      return super.redirect("/organisation/view", true);
+      return super.redirect("/organisation/details", true);
     }
 
     modelAndView.addObject("bindingModel", bindingModel);
@@ -156,7 +156,7 @@ public class OrganisationController extends BaseController {
     return bindingModel;
   }
 
-  @PostMapping("/view/change-picture")
+  @PostMapping("/details/change-picture")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
   public ModelAndView changeProfilePicture(Principal principal,
                                            @RequestParam("file") MultipartFile file) throws IOException {
@@ -164,6 +164,6 @@ public class OrganisationController extends BaseController {
     ImageServiceModel imageServiceModel = this.imageService.saveInDb(file);
 
     this.organisationService.editOrganisationPicture(principal.getName(), imageServiceModel);
-    return super.redirect("/organisation/view");
+    return super.redirect("/organisation/details");
   }
 }

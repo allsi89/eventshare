@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.util;
 
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 @Component
 public class CloudServiceImpl implements CloudService {
+  private static final String TEMP_PREFIX = "temp";
+
   private final Cloudinary cloudinary;
 
   @Autowired
@@ -20,7 +22,7 @@ public class CloudServiceImpl implements CloudService {
 
   @Override
   public String uploadImage(MultipartFile multipartFile) throws IOException {
-    File file = File.createTempFile("temp", multipartFile.getOriginalFilename());
+    File file = File.createTempFile(TEMP_PREFIX, multipartFile.getOriginalFilename());
     multipartFile.transferTo(file);
 
     try{

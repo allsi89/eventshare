@@ -74,7 +74,7 @@ public class UserController extends BaseController {
     modelAndView
         .addObject("userModel", this.getProfileViewModel(principal));
 
-    return super.view("view-profile", modelAndView);
+    return super.view("profile-view", modelAndView);
   }
 
   @GetMapping("/profile/edit")
@@ -90,7 +90,6 @@ public class UserController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = "userModel")
                                              UserEditBindingModel userModel,
-                                         @RequestParam("file") MultipartFile file,
                                          BindingResult bindingResult,
                                          ModelAndView modelAndView) throws IOException {
 
@@ -99,9 +98,7 @@ public class UserController extends BaseController {
       UserServiceModel userServiceModel = this.modelMapper
           .map(userModel, UserServiceModel.class);
 
-      ImageServiceModel imageServiceModel = this.imageService.saveInDb(file);
-
-      this.userService.editUserProfile(userServiceModel, imageServiceModel);
+      this.userService.editUserProfile(userServiceModel);
 
       return super.redirect("/users/profile");
     }

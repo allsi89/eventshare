@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.util;
 
 import org.springframework.web.multipart.MultipartFile;
 

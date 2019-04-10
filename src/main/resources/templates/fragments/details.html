@@ -2,36 +2,7 @@
     <div class="text-center mt-3">
         <img th:src="${userModel.imageUrl}" height="200" width="200" class="profile-pic"/>
     </div>
-    <div class="text-center mt-3">
-        <a href="#" class="btn" data-toggle="modal" role="button" data-target="#modal">Change Picture</a>
-        <div id="modal" class="modal modal-custom">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    &times;
-                </button>
-            </div>
-                <div class="modal-content">
-                    <form id="change-profile-picture-form" class="form" th:action="@{/users/profile/change-picture}" th:method="post"
-                    enctype="multipart/form-data">
 
-                        <div class="file-field">
-                            <div class="btn">
-                                <span>Profile Picture</span>
-                                <input type="file" name="file" required>
-                            </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"
-                        onclick="$('#change-profile-picture-form').submit()">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
     <div class="row mt-3">
         <div class="col col-md-12 text-center">
             <h2 th:text="${userModel.username}"></h2>
@@ -54,39 +25,9 @@
     <div class="text-center">
         <img th:src="${viewModel.imageUrl}" height="200" width="200" class="profile-pic"/>
     </div>
-    <div class="text-center mt-3">
-        <a href="#" class="btn" data-toggle="modal" role="button" data-target="#modal">Change Picture</a>
-        <div id="modal" class="modal modal-custom">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-content">
-                <form id="change-organisation-picture-form" class="form" th:action="@{/organisation/view/change-picture}" th:method="post"
-                      enctype="multipart/form-data">
-
-                    <div class="file-field">
-                        <div class="btn">
-                            <span>Organisation Picture</span>
-                            <input type="file" name="file" required>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"
-                        onclick="$('#change-organisation-picture-form').submit()">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
     <div class="row mt-4">
         <div class="col col-md-12">
-            <h1 th:text="${viewModel.name}"></h1>
+            <h2 th:text="${viewModel.name}"></h2>
         </div>
     </div>
     <hr/>
@@ -158,4 +99,43 @@
         </div>
     </div>
     <hr/>
+</th:block>
+
+<th:block th:fragment="event-details">
+    <table class="table mt-5 table-hover table-borderless table-responsive-lg col-md-8"
+           border="0" width="100%" th:object="${viewModel}">
+        <tbody>
+        <tr>
+            <th scope="row" width="40%">Description</th>
+            <th scope="row" th:text="*{description}">New text</th>
+        </tr>
+        <tr>
+            <th scope="row">Location</th>
+            <th scope="row" th:text="|*{country} *{zip} *{city}|"></th>
+        </tr>
+        <tr>
+            <th scope="row">Address</th>
+            <th scope="row" th:text="*{address}"></th>
+        </tr>
+        <tr>
+            <th scope="row">Website</th>
+            <th scope="row"><a th:href="@{viewModel.website}">Click Here</a></th>
+        </tr>
+        <tr>
+            <th scope="row">Starts On</th>
+            <th scope="row" th:text="|*{startsOnDate.toString()} *{startsOnTime.toString()}|"></th>
+        </tr>
+        <tr>
+            <th scope="row">Open for registration</th>
+            <th:block th:switch="*{notOpenToRegister}">
+                <th scope="row" th:case="true">No</th>
+                <th scope="row" th:case="false">Yes</th>
+            </th:block>
+        </tr>
+        <tr>
+            <th scope="row">Users registered for the event</th>
+            <th scope="row" th:text="*{participantCount}"></th>
+        </tr>
+        </tbody>
+    </table>
 </th:block>

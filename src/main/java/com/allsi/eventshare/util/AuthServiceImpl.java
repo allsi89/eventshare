@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.util;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 import static com.allsi.eventshare.constants.Constants.CORP;
 
 @Service
-public class AuthUpdateServiceImpl implements AuthUpdateService {
+public class AuthServiceImpl implements AuthService {
 
   public void resetAuthCorp(boolean isToBeAdded) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -34,5 +35,10 @@ public class AuthUpdateServiceImpl implements AuthUpdateService {
         auth.getCredentials(),
         updatedAuthorities);
     SecurityContextHolder.getContext().setAuthentication(newAuth);
+  }
+
+  @Override
+  public String getPrincipalUsername() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 }

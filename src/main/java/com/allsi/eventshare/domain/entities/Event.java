@@ -1,7 +1,8 @@
 package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class Event extends BaseEntity{
   private String website;
   private List<Image> images;
 
-  private LocalDateTime startsOn;
-  private LocalDateTime endsOn;
+  private LocalDate startsOnDate;
+  private LocalTime startsOnTime;
   private Boolean isNotOpenToRegister;
   private User creator;
   private List<User> attendees;
@@ -111,25 +112,25 @@ public class Event extends BaseEntity{
     this.address = address;
   }
 
-  @Column(name = "starts_on", nullable = false)
-  public LocalDateTime getStartsOn() {
-    return startsOn;
+  @Column(name = "starts_on_date", nullable = false)
+  public LocalDate getStartsOnDate() {
+    return startsOnDate;
   }
 
-  public void setStartsOn(LocalDateTime startsOn) {
-    this.startsOn = startsOn;
+  public void setStartsOnDate(LocalDate startsOnDate) {
+    this.startsOnDate = startsOnDate;
   }
 
-  @Column(name = "ends_on", nullable = false)
-  public LocalDateTime getEndsOn() {
-    return endsOn;
+  @Column(name = "starts_on_time", nullable = false)
+  public LocalTime getStartsOnTime() {
+    return startsOnTime;
   }
 
-  public void setEndsOn(LocalDateTime endsOn) {
-    this.endsOn = endsOn;
+  public void setStartsOnTime(LocalTime startsOnTime) {
+    this.startsOnTime = startsOnTime;
   }
 
-  @Column(name = "is_not_open_to_register", columnDefinition = "tinyint default 0")
+  @Column(name = "is_not_open_to_register", nullable = false, columnDefinition = "tinyint")
   public Boolean getNotOpenToRegister() {
     return isNotOpenToRegister;
   }

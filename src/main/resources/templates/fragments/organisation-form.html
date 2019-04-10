@@ -4,7 +4,6 @@
         <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}">
             <label for="name">Name</label>
             <input type="text" class="form-control" th:value="*{name}" name="name" id="name" required>
-
             <div class="invalid-tooltip"></div>
         </div>
     </div>
@@ -78,12 +77,10 @@
     <hr/>
     <button type="submit" id="submitButton" class="button buttonBlue">Add</button>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
 </th:block>
 
 
 <th:block th:fragment="modify-organisation" xmlns:th="http://www.thymeleaf.org">
-
     <div class="form-row">
         <div class="col-md-6 mb-2 form-group input-field" th:classappend="${#fields.hasErrors('name')}">
             <label for="name">Name</label>

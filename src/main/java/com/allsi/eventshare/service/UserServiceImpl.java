@@ -1,5 +1,6 @@
 package com.allsi.eventshare.service;
 
+import com.allsi.eventshare.domain.entities.BaseEntity;
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,14 +80,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void editUserProfile(UserServiceModel userServiceModel, ImageServiceModel imageServiceModel) {
+  public void editUserProfile(UserServiceModel userServiceModel) {
     User user = this.userRepository.findByUsername(userServiceModel.getUsername())
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     user.setEmail(userServiceModel.getEmail());
     user.setAbout(userServiceModel.getAbout());
-
-    userServiceModel.setImageUrl(imageServiceModel.getUrl());
 
     this.userRepository.saveAndFlush(user);
   }
@@ -102,7 +102,6 @@ public class UserServiceImpl implements UserService {
     user.setPassword(this.encoder.encode(model.getPassword()));
 
     this.userRepository.saveAndFlush(user);
-
   }
 
   @Override
@@ -152,6 +151,16 @@ public class UserServiceImpl implements UserService {
     this.userRepository.saveAndFlush(user);
   }
 
+  @Override
+  public List<String> findUserAttendingEvents(String username) {
+    User user = this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    return user.getAttendanceEvents()
+        .stream()
+        .map(BaseEntity::getId)
+        .collect(Collectors.toList());
+  }
 
   private void assignRolesToUser(User user) {
     if (this.userRepository.count() == 0) {

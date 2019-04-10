@@ -1,111 +1,93 @@
-// function showViruses() {
-//
-//     fetch('/viruses/all-viruses')
-//         .then((response) => response.json())
-//         .then((json) => {
-//             $('#customText').text('All Viruses');
-//             $('.container #content-container').remove();
-//             $('.container').append('<div id ="content-container" class="mt-4 bg-white"></div>');
-//             let table =
-//                 ` <table class="table mt-3 bg-white table-hover" >
-//         <thead>
-//         <tr>
-//             <th scope="col">#</th>
-//             <th scope="col">Name</th>
-//             <th scope="col">Magnitude</th>
-//             <th scope="col">Released On</th>
-//             <th scope="col"></th>
-//             <th scope="col"></th>
-//         </tr>
-//         </thead>
-//         <tbody>`;
-//
-//             json.forEach((virus, index) => {
-//                 table +=
-//                     `<tr><th scope="row">${index + 1}</th>
-//                 <td>${virus.name}</td>
-//                 <td>${virus.magnitude}</td>
-//                 <td>${virus.releasedOn}</td>
-//                 <td>
-//                 <a href="/viruses/edit?id=${virus.id}" class="btn btn-outline-dark text-info">Edit</a>
-//                 </td>
-//                 <td>
-//                 <a href="/viruses/delete?id=${virus.id}" class="btn btn-outline-dark text-danger">Delete</a>
-//                 </td>
-//                 </tr>`;
-//             });
-//             table +=
-//                 `<tbody></table>`;
-//
-//             $('#content-container').append(table);
-//         });
-// }
-//
-// function showCapitals() {
-//
-//     fetch('/viruses/all-capitals')
-//         .then((response) => response.json())
-//         .then((json) => {
-//             $('#customText').text('All Capitals');
-//             $('.container #content-container').remove();
-//             $('.container').append('<div id="content-container" class="mt-4 bg-white"></div>');
-//
-//             let table =
-//                 ` <table class="table mt-3 bg-white table-hover" >
-//         <thead>
-//         <tr>
-//             <th scope="col">#</th>
-//             <th scope="col">Name</th>
-//             <th scope="col">Latitude</th>
-//             <th scope="col">Longitude</th>
-//         </tr>
-//         </thead>
-//         <tbody>`;
-//
-//             json.forEach((capital, index) => {
-//                 table +=
-//                     `<tr>
-//                    <th scope="row">${index + 1}</th>
-//                    <td>${capital.name}</td>
-//                    <td>${capital.latitude}</td>
-//                    <td>${capital.longitude}</td>
-//                    </tr>`;
-//             });
-//             table +=
-//                 '<tbody>' +
-//                 '</table>';
-//
-//             $('#content-container').append(table);
-//         });
-// }
-//
-//
-//
+function showGallery(id) {
+    fetch("/events/all-pictures/" + id)
+        .then((response) => response.json()
+            .then((json) => {
+                $('#content-container').remove();
+                $('.custom-container').append(`<div id="content-container"></div>`);
+
+                console.log(json);
+                json.forEach((image, index) => {
+                    $('#content-container')
+                        .append(`<img src="${image.url}" width="200px" height="200px">`);
+                    console.log(image.url);
+                });
+            }))
+        .catch(() => {
+            $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
+        })
+
+}
 
 
+function showAttendingEvents() {
+    fetch("/events/my-events/attending")
+        .then((response) => response.json())
+        .then((json) => {
+            $('#customText').text('Attending events');
+            $('#content-container').remove();
+            $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
+
+            json.forEach((event, index) => {
+                $('#content-container').append(
+                    `<h4>Event: ${event.name}</h4> <h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h2>
+ <a href="/events/my-events/attending/${event.id}" class="btn btn-info">View</a>`);
+            });
+        })
+        .catch(() => {
+            $('#customText').text('Attending events');
+        });
+
+}
+
+
+function showCreatedEvents() {
+    fetch("/events/my-events/created")
+        .then((response) => response.json())
+        .then((json) => {
+            $('#customText').text('Created events');
+            $('#content-container').remove();
+            $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
+
+            json.forEach((event, index) => {
+                $('#content-container').append(
+                    `<h4> Event: ${event.name}</h4><h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h5>`);
+
+
+                if (event.notOpenToRegister) {
+                    $('#content-container').append(`<p>Open For Registration: No</p>`);
+                } else
+                    $('#content-container').append(`<p>Open For Registration: Yes</p>`);
+
+                $('#content-container').append(`<a href="/events/my-events/created/${event.id}" class="btn btn-info">View</a>
+<a href="/events/my-events/created/edit/${event.id}" class="btn btn-info">Edit</a>
+<a href="/events/my-events/created/delete/${event.id}" class="btn btn-info">Delete</a><hr/>`);
+            });
+        })
+        .catch(() => {
+            $('#customText').text('Created events');
+        });
+
+
+}
+
+//
 function myFunction() {
-    $('input').focus(function() {
+    $('input').focus(function () {
         $(this).prev().addClass('stylee');
-    }).blur(function() {
-        if($(this).val())
-        {
+    }).blur(function () {
+        if ($(this).val()) {
             $(this).prev().addClass('stylee');
-        }
-        else
-        {
+        } else {
             $(this).prev().removeClass('stylee');
         }
     });
 
-    $('select').focus(function() {
+    $('select').focus(function () {
         $(this).prev().addClass('stylee');
-    }).blur(function() {
-        if($(this).val())
-        {
+    }).blur(function () {
+        if ($(this).val()) {
             $(this).prev().addClass('stylee');
-        }
-        else
-        {
+        } else {
             $(this).prev().removeClass('stylee');
         }
     });

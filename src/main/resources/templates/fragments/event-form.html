@@ -10,8 +10,9 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="description">Description</label>
-            <textarea class="form-control materialize-textarea placeholder-fix validate" rows="3" th:value="*{description}" name="description"
-                           id="description" wrap="soft" placeholder="Describe your event here..."></textarea>
+            <textarea class="form-control materialize-textarea placeholder-fix validate" rows="3"
+                      th:value="*{description}" name="description"
+                      id="description" wrap="soft" placeholder="Describe your event here..."></textarea>
         </div>
     </div>
 
@@ -37,8 +38,7 @@
     <div class="form-row">
         <div class="col-md-5 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}">
             <label for="city">City</label>
-            <input type="text" class="form-control" th:value="*{city}" name="city" id="city" required><span
-                class="bar"></span>
+            <input type="text" class="form-control" th:value="*{city}" name="city" id="city" required>
             <div class="invalid-tooltip"></div>
         </div>
 
@@ -58,40 +58,25 @@
     <label class="text-center">Starts On</label>
     <div class="form-row">
         <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control datepicker1 placeholder-fix"
+            <input type="text" class="form-control datepicker placeholder-fix"
                    th:value="*{startsOnDate}" name="startsOnDate" id="starts-on-date"
                    placeholder="Date..." required>
             <div class="invalid-tooltip"></div>
         </div>
         <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control timepicker1 placeholder-fix" th:value="*{startsOnTime}"
-                   name="startsOnTime" id="starts-on-time" placeholder="Time...">
-            <div class="invalid-tooltip"></div>
-        </div>
-    </div>
-    <label class="text-center">Ends On</label>
-    <div class="form-row">
-        <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control datepicker2 placeholder-fix"
-                   th:value="*{endsOnDate}" name="endsOnDate" id="ends-on-date" placeholder="Date...">
-            <div class="invalid-tooltip"></div>
-        </div>
-        <div class="invalid-tooltip"></div>
-        <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control timepicker2 placeholder-fix"
-                   th:value="*{endsOnTime}" name="endsOnTime" id="ends-on-time" placeholder="Time...">
+            <input type="text" class="form-control timepicker placeholder-fix" th:value="*{startsOnTime}"
+                   name="startsOnTime" id="starts-on-time" placeholder="Time..." required>
             <div class="invalid-tooltip"></div>
         </div>
     </div>
     <div class="form-row">
-        <div class=" form-group">
-            <div class="form-check" aria-flowto="bottom">
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" th:value="*{notOpenToRegister}" name="is-not-open-to-register"
-                           class="custom-control-input" id="customSwitch1">
-                    <label class="custom-control-label" for="customSwitch1">I'll activate registration for the event manually</label>
-                </div>
-            </div>
+        <div class="col-md-6 mb-2 form-group selects-container">
+            <label for="not-open-to-register">Open For Registration</label>
+            <select class="form-control select-dropdown validate" id="not-open-to-register"
+                    name="notOpenToRegister" th:value="*{notOpenToRegister}">
+                <option selected="selected" value="false">Yes</option>
+                <option value="true">No, I'll activate manually</option>
+            </select>
         </div>
     </div>
     <hr/>

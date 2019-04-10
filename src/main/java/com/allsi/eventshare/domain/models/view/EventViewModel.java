@@ -1,25 +1,31 @@
-package com.allsi.eventshare.domain.models.binding;
+package com.allsi.eventshare.domain.models.view;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
-public class EventBindingModel {
+public class EventViewModel {
+  private String id;
   private String name;
   private String description;
   private String country;
-  private String city;
-  private String state;
   private String zip;
+  private String city;
   private String address;
   private String website;
-  private Date startsOnDate;
+  private LocalDate startsOnDate;
   private LocalTime startsOnTime;
   private boolean isNotOpenToRegister;
-  private String imageUrl;
+  private int participantCount;
 
-  public EventBindingModel() {
+  public EventViewModel() {
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getName() {
@@ -46,28 +52,20 @@ public class EventBindingModel {
     this.country = country;
   }
 
-  public String getCity() {
-    return city;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public String getState() {
-    return state;
-  }
-
-  public void setState(String state) {
-    this.state = state;
-  }
-
   public String getZip() {
     return zip;
   }
 
   public void setZip(String zip) {
     this.zip = zip;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
   }
 
   public String getAddress() {
@@ -86,11 +84,11 @@ public class EventBindingModel {
     this.website = website;
   }
 
-  public Date getStartsOnDate() {
+  public LocalDate getStartsOnDate() {
     return startsOnDate;
   }
 
-  public void setStartsOnDate(Date startsOnDate) {
+  public void setStartsOnDate(LocalDate startsOnDate) {
     this.startsOnDate = startsOnDate;
   }
 
@@ -102,7 +100,7 @@ public class EventBindingModel {
     this.startsOnTime = startsOnTime;
   }
 
-  public boolean getNotOpenToRegister() {
+  public boolean isNotOpenToRegister() {
     return isNotOpenToRegister;
   }
 
@@ -110,13 +108,11 @@ public class EventBindingModel {
     isNotOpenToRegister = notOpenToRegister;
   }
 
-  public String getImageUrl() {
-    return imageUrl;
+  public int getParticipantCount() {
+    return participantCount;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setParticipantCount(int participantCount) {
+    this.participantCount = participantCount;
   }
-
-
 }
