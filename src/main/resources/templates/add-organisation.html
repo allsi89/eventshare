@@ -26,12 +26,14 @@
     fetch('/countries/fetch')
         .then((response) => response.json())
         .then((json) => {
-            json.forEach((country) => $('#country').append(`<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`));
+            json.forEach((country) =>
+                $('#country').append(
+                        `<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`))
         })
         .catch((err) => console.log(err));
 
     $('#country').change(function () {
-        var countryCode = $(this).val();
+        let countryCode = $(this).val();
 
         if (countryCode) {
             $('#phoneCode').val(countryCode);

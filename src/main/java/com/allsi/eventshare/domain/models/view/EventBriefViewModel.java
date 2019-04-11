@@ -8,7 +8,6 @@ public class EventBriefViewModel {
   private String name;
   private LocalDate startsOnDate;
   private LocalTime startsOnTime;
-  private boolean isNotOpenToRegister;
 
   public EventBriefViewModel() {
   }
@@ -43,13 +42,5 @@ public class EventBriefViewModel {
 
   public void setStartsOnTime(LocalTime startsOnTime) {
     this.startsOnTime = startsOnTime;
-  }
-
-  public boolean isNotOpenToRegister() {
-    return isNotOpenToRegister;
-  }
-
-  public void setNotOpenToRegister(boolean notOpenToRegister) {
-    isNotOpenToRegister = notOpenToRegister;
   }
 }

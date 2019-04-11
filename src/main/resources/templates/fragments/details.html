@@ -60,7 +60,7 @@
         <div class="col col-md-12 text-center">
             <i class="material-icons mr-1">&#xe0b0;</i>
             <div class="row justify-content-center mt-4">
-                <p th:text="${viewModel.phone}"></p>
+                <p th:text="'+' + ${viewModel.countryPhonecode} + ${viewModel.phone}"></p>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
                 my_location
             </i>
             <div class="row justify-content-center mt-4">
-                <p th:text="${viewModel.country}"></p>
+                <p th:text="${viewModel.countryNiceName}"></p>
             </div>
         </div>
     </div>
@@ -111,7 +111,7 @@
         </tr>
         <tr>
             <th scope="row">Location</th>
-            <th scope="row" th:text="|*{country} *{zip} *{city}|"></th>
+            <th scope="row" th:text="|*{countryNiceName} *{zip} *{city}|"></th>
         </tr>
         <tr>
             <th scope="row">Address</th>
@@ -124,13 +124,6 @@
         <tr>
             <th scope="row">Starts On</th>
             <th scope="row" th:text="|*{startsOnDate.toString()} *{startsOnTime.toString()}|"></th>
-        </tr>
-        <tr>
-            <th scope="row">Open for registration</th>
-            <th:block th:switch="*{notOpenToRegister}">
-                <th scope="row" th:case="true">No</th>
-                <th scope="row" th:case="false">Yes</th>
-            </th:block>
         </tr>
         <tr>
             <th scope="row">Users registered for the event</th>

@@ -18,7 +18,6 @@ function showGallery(id) {
 
 }
 
-
 function showAttendingEvents() {
     fetch("/events/my-events/attending")
         .then((response) => response.json())
@@ -50,15 +49,8 @@ function showCreatedEvents() {
 
             json.forEach((event, index) => {
                 $('#content-container').append(
-                    `<h4> Event: ${event.name}</h4><h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h5>`);
-
-
-                if (event.notOpenToRegister) {
-                    $('#content-container').append(`<p>Open For Registration: No</p>`);
-                } else
-                    $('#content-container').append(`<p>Open For Registration: Yes</p>`);
-
-                $('#content-container').append(`<a href="/events/my-events/created/${event.id}" class="btn btn-info">View</a>
+                    `<h4> Event: ${event.name}</h4><h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h5>
+<a href="/events/my-events/created/${event.id}" class="btn btn-info">View</a>
 <a href="/events/my-events/created/edit/${event.id}" class="btn btn-info">Edit</a>
 <a href="/events/my-events/created/delete/${event.id}" class="btn btn-info">Delete</a><hr/>`);
             });
@@ -70,7 +62,6 @@ function showCreatedEvents() {
 
 }
 
-//
 function myFunction() {
     $('input').focus(function () {
         $(this).prev().addClass('stylee');

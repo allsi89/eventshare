@@ -14,16 +14,15 @@ public class User extends BaseEntity implements UserDetails {
   private String password;
   private String email;
   private String about;
-  private Boolean isCorporate;
   private Image image;
   private List<Event> createdEvents;
   private List<Event> attendanceEvents;
+  private Set<Role> roles;
 
   private boolean isAccountNonExpired;
   private boolean isAccountNonLocked;
   private boolean isCredentialsNonExpired;
   private boolean isEnabled;
-  private Set<Role> roles;
 
 
   public User() {
@@ -68,15 +67,6 @@ public class User extends BaseEntity implements UserDetails {
     this.about = about;
   }
 
-  @Column(name = "is_corporate", columnDefinition = "tinyint")
-  public Boolean getCorporate() {
-    return isCorporate;
-  }
-
-  public void setCorporate(Boolean corporate) {
-    isCorporate = corporate;
-  }
-
   @OneToOne
   @JoinColumn(name = "image_id", referencedColumnName = "id")
   public Image getImage() {
@@ -112,52 +102,6 @@ public class User extends BaseEntity implements UserDetails {
     this.attendanceEvents = attendanceEvents;
   }
 
-  @Override
-  @Column(name = "is_account_non_expired")
-  public boolean isAccountNonExpired() {
-    return this.isAccountNonExpired;
-  }
-
-  public void setAccountNonExpired(boolean accountNonExpired) {
-    isAccountNonExpired = accountNonExpired;
-  }
-
-  @Override
-  @Column(name = "is_account_non_locked")
-  public boolean isAccountNonLocked() {
-    return this.isAccountNonLocked;
-  }
-
-  public void setAccountNonLocked(boolean accountNonLocked) {
-    isAccountNonLocked = accountNonLocked;
-  }
-
-  @Override
-  @Column(name = "is_credentials_non_expired")
-  public boolean isCredentialsNonExpired() {
-    return this.isCredentialsNonExpired;
-  }
-
-  public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-    isCredentialsNonExpired = credentialsNonExpired;
-  }
-
-  @Override
-  @Column(name = "is_enabled")
-  public boolean isEnabled() {
-    return this.isEnabled;
-  }
-
-  public void setEnabled(boolean enabled) {
-    isEnabled = enabled;
-  }
-
-  @Override
-  @Transient
-  public Collection<Role> getAuthorities() {
-    return this.roles;
-  }
-
   @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
   @JoinTable(name = "users_roles",
       joinColumns = @JoinColumn(
@@ -172,5 +116,47 @@ public class User extends BaseEntity implements UserDetails {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  @Override
+  @Transient
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  @Transient
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  public void setAccountNonLocked(boolean accountNonLocked) {
+    isAccountNonLocked = accountNonLocked;
+  }
+
+  @Override
+  @Transient
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+    isCredentialsNonExpired = credentialsNonExpired;
+  }
+
+  @Override
+  @Transient
+  public boolean isEnabled() {
+    return true;
+  }
+
+  public void setEnabled(boolean enabled) {
+    isEnabled = enabled;
+  }
+
+  @Override
+  @Transient
+  public Collection<Role> getAuthorities() {
+    return this.roles;
   }
 }

@@ -20,7 +20,7 @@
         <div class="col-md-6 mb-2 form-group selects-container">
             <label for="country">Country</label>
             <select class="form-control select-dropdown validate" id="country"
-                    name="country" required>
+                    name="countryNiceName" required>
                 <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
             </select>
         </div>
@@ -67,16 +67,6 @@
             <input type="text" class="form-control timepicker placeholder-fix" th:value="*{startsOnTime}"
                    name="startsOnTime" id="starts-on-time" placeholder="Time..." required>
             <div class="invalid-tooltip"></div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-6 mb-2 form-group selects-container">
-            <label for="not-open-to-register">Open For Registration</label>
-            <select class="form-control select-dropdown validate" id="not-open-to-register"
-                    name="notOpenToRegister" th:value="*{notOpenToRegister}">
-                <option selected="selected" value="false">Yes</option>
-                <option value="true">No, I'll activate manually</option>
-            </select>
         </div>
     </div>
     <hr/>

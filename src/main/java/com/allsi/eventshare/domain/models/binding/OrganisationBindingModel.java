@@ -10,7 +10,7 @@ import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 public class OrganisationBindingModel {
   private String name;
   private MultipartFile image;
-  private String country;
+  private String countryId;
   private String city;
   private String state;
   private String zip;
@@ -40,14 +40,23 @@ public class OrganisationBindingModel {
     this.name = name;
   }
 
+
   @NotNull(message = NULL_ERR_MSG)
-  public String getCountry() {
-    return country;
+  public String getCountryId() {
+    return countryId;
   }
 
-  public void setCountry(String country) {
-    this.country = country;
+  public void setCountryId(String countryNiceName) {
+    this.countryId = countryNiceName;
   }
+
+//  public String getCountry() {
+//    return country;
+//  }
+//
+//  public void setCountry(String country) {
+//    this.country = country;
+//  }
 
   @NotNull(message = NULL_ERR_MSG)
   @NotEmpty

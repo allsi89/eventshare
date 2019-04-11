@@ -11,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Set;
@@ -22,6 +21,7 @@ import static com.allsi.eventshare.constants.Constants.*;
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
   private static final String ORG_NOT_FOUND = "Organisation not found";
+//  private static final String PLUS_CHAR = "+";
 
   private final OrganisationRepository organisationRepository;
   private final UserRepository userRepository;
@@ -50,9 +50,11 @@ public class OrganisationServiceImpl implements OrganisationService {
     OrganisationServiceModel organisationServiceModel = this.modelMapper
         .map(organisation, OrganisationServiceModel.class);
 
-    if (organisation.getImage() != null){
-      organisationServiceModel.setImageUrl(organisation.getImage().getUrl());
-    }
+    organisationServiceModel.setPhone(organisation.getPhone());
+    //TODO -- check image
+//    if (organisation.getImage() != null){
+//      organisationServiceModel.setImageUrl(organisation.getImage().getUrl());
+//    }
 
     return organisationServiceModel;
   }
@@ -87,12 +89,9 @@ public class OrganisationServiceImpl implements OrganisationService {
     User user= this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-
     Organisation organisation =  this.organisationRepository
         .findByUser_Id(user.getId())
         .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
-
-    user.setCorporate(false);
 
     Set<Role> roles = user.getRoles();
 
@@ -125,7 +124,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     organisation.setImage(original.getImage());
 
     this.organisationRepository.saveAndFlush(organisation);
-
   }
 
   @Override

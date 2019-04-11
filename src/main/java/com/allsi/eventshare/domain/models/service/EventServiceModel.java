@@ -19,7 +19,6 @@ public class EventServiceModel {
   private List<ImageServiceModel> images;
   private LocalDate startsOnDate;
   private LocalTime startsOnTime;
-  private boolean isNotOpenToRegister;
   private UserServiceModel creator;
   private List<UserServiceModel> attendees;
 
@@ -122,14 +121,6 @@ public class EventServiceModel {
 
   public void setStartsOnTime(LocalTime startsOnTime) {
     this.startsOnTime = startsOnTime;
-  }
-
-  public boolean notOpenToRegister() {
-    return isNotOpenToRegister;
-  }
-
-  public void setNotOpenToRegister(boolean notOpenToRegister) {
-    isNotOpenToRegister = notOpenToRegister;
   }
 
   public UserServiceModel getCreator() {

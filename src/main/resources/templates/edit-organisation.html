@@ -24,22 +24,14 @@
     fetch('/countries/fetch')
         .then((response) => response.json())
         .then((json) => {
-            let countries = [[${bindingModel.country}]];
+            let countryId = [[${bindingModel.countryId}]];
             // console.log(countries);
             json.forEach((country) =>
                 $('#country').append(
-                    countries.includes(country.niceName)
+                    countryId.includes(country.id)
                         ? `<option value="${country.id}" selected>${country.niceName + ' +' + country.phonecode}</option>`
                         : `<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`));
         })
         .catch((err) => console.log(err));
-
-    $('#country').change(function () {
-        var countryCode = $(this).val();
-
-        if (countryCode) {
-            $('#phoneCode').val(countryCode);
-        }
-    });
 </script>
 </html>

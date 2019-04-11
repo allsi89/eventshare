@@ -3,6 +3,7 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.binding.OrganisationBindingModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
+import com.allsi.eventshare.domain.models.view.DeleteOrganisationViewModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
 import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.OrganisationService;
@@ -22,7 +23,7 @@ import java.security.Principal;
 @Controller
 @RequestMapping("/organisation")
 public class OrganisationController extends BaseController {
-  private static final String PLUS_CHAR = "+";
+
 
   private final OrganisationService organisationService;
   private final ImageService imageService;
@@ -45,9 +46,12 @@ public class OrganisationController extends BaseController {
     OrganisationViewModel viewModel = this.modelMapper
         .map(organisation, OrganisationViewModel.class);
 
-    viewModel.setCountry(organisation.getCountry().getNiceName());
 
-    viewModel.setPhone(PLUS_CHAR + organisation.getCountry().getPhonecode() + organisation.getPhone());
+    //TODO --- mappings -- work as is
+
+//    viewModel.setCountry(organisation.getCountry().getNiceName());
+//
+//    viewModel.setPhone(PLUS_CHAR + organisation.getCountry().getPhonecode() + organisation.getPhone());
 
     modelAndView.addObject("viewModel", viewModel);
 
@@ -71,13 +75,14 @@ public class OrganisationController extends BaseController {
                                                  OrganisationBindingModel bindingModel,
                                              BindingResult bindingResult,
                                              ModelAndView modelAndView) throws IOException {
+
     if (!bindingResult.hasErrors()) {
 
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
 
       this.organisationService
-          .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
+          .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId());
 
       return super.redirect("/organisation/details", true);
     }
@@ -111,9 +116,9 @@ public class OrganisationController extends BaseController {
           .map(bindingModel, OrganisationServiceModel.class);
 
       this.organisationService
-          .editOrganisation(serviceModel, principal.getName(), bindingModel.getCountry());
+          .editOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId());
 
-      return super.redirect("/organisation/view");
+      return super.redirect("/organisation/details");
     }
 
     modelAndView.addObject("bindingModel", bindingModel);
@@ -126,10 +131,15 @@ public class OrganisationController extends BaseController {
   public ModelAndView deleteOrganisation(Principal principal,
                                          ModelAndView modelAndView,
                                          @ModelAttribute("deleteModel")
-                                             OrganisationBindingModel deleteModel) {
+                                             DeleteOrganisationViewModel deleteModel) {
 
-    modelAndView.addObject("deleteModel",
-        getOrganisationBindingModel(principal.getName()));
+    OrganisationServiceModel serviceModel = this.organisationService
+        .getOrganisationByUsername(principal.getName());
+
+    deleteModel = this.modelMapper
+        .map(serviceModel, DeleteOrganisationViewModel.class);
+
+    modelAndView.addObject("deleteModel", deleteModel);
 
     return super.view("delete-organisation", modelAndView);
   }
@@ -138,7 +148,7 @@ public class OrganisationController extends BaseController {
   @PreAuthorize("hasRole('ROLE_CORP')")
   public ModelAndView deleteOrganisationConfirm(Principal principal,
                                                 @ModelAttribute("deleteModel")
-                                                    OrganisationBindingModel deleteModel) {
+                                                    DeleteOrganisationViewModel deleteModel) {
 
     this.organisationService.deleteOrganisation(principal.getName());
     return super.redirect("/home", false);
@@ -149,11 +159,8 @@ public class OrganisationController extends BaseController {
     OrganisationServiceModel serviceModel = this.organisationService
         .getOrganisationByUsername(name);
 
-    OrganisationBindingModel bindingModel = this.modelMapper
+    return this.modelMapper
         .map(serviceModel, OrganisationBindingModel.class);
-
-    bindingModel.setCountry(serviceModel.getCountry().getNiceName());
-    return bindingModel;
   }
 
   @PostMapping("/details/change-picture")

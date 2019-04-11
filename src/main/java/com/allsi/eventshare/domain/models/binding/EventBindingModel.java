@@ -8,7 +8,7 @@ import java.util.Date;
 public class EventBindingModel {
   private String name;
   private String description;
-  private String country;
+  private String countryNiceName;
   private String city;
   private String state;
   private String zip;
@@ -16,7 +16,6 @@ public class EventBindingModel {
   private String website;
   private Date startsOnDate;
   private LocalTime startsOnTime;
-  private boolean isNotOpenToRegister;
   private String imageUrl;
 
   public EventBindingModel() {
@@ -38,13 +37,21 @@ public class EventBindingModel {
     this.description = description;
   }
 
-  public String getCountry() {
-    return country;
+  public String getCountryNiceName() {
+    return countryNiceName;
   }
 
-  public void setCountry(String country) {
-    this.country = country;
+  public void setCountryNiceName(String countryNiceName) {
+    this.countryNiceName = countryNiceName;
   }
+
+  //  public String getCountry() {
+//    return country;
+//  }
+//
+//  public void setCountry(String country) {
+//    this.country = country;
+//  }
 
   public String getCity() {
     return city;
@@ -100,14 +107,6 @@ public class EventBindingModel {
 
   public void setStartsOnTime(LocalTime startsOnTime) {
     this.startsOnTime = startsOnTime;
-  }
-
-  public boolean getNotOpenToRegister() {
-    return isNotOpenToRegister;
-  }
-
-  public void setNotOpenToRegister(boolean notOpenToRegister) {
-    isNotOpenToRegister = notOpenToRegister;
   }
 
   public String getImageUrl() {

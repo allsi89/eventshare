@@ -7,14 +7,13 @@ public class EventViewModel {
   private String id;
   private String name;
   private String description;
-  private String country;
+  private String countryNiceName;
   private String zip;
   private String city;
   private String address;
   private String website;
   private LocalDate startsOnDate;
   private LocalTime startsOnTime;
-  private boolean isNotOpenToRegister;
   private int participantCount;
 
   public EventViewModel() {
@@ -44,13 +43,21 @@ public class EventViewModel {
     this.description = description;
   }
 
-  public String getCountry() {
-    return country;
+  public String getCountryNiceName() {
+    return countryNiceName;
   }
 
-  public void setCountry(String country) {
-    this.country = country;
+  public void setCountryNiceName(String countryNiceName) {
+    this.countryNiceName = countryNiceName;
   }
+
+  //  public String getCountry() {
+//    return country;
+//  }
+//
+//  public void setCountry(String country) {
+//    this.country = country;
+//  }
 
   public String getZip() {
     return zip;
@@ -98,14 +105,6 @@ public class EventViewModel {
 
   public void setStartsOnTime(LocalTime startsOnTime) {
     this.startsOnTime = startsOnTime;
-  }
-
-  public boolean isNotOpenToRegister() {
-    return isNotOpenToRegister;
-  }
-
-  public void setNotOpenToRegister(boolean notOpenToRegister) {
-    isNotOpenToRegister = notOpenToRegister;
   }
 
   public int getParticipantCount() {

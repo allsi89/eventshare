@@ -40,9 +40,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean register(UserServiceModel serviceModel) {
     this.roleService.seedRolesInDb();
+    serviceModel.setPassword(this.encoder.encode(serviceModel.getPassword()));
 
     User user = this.modelMapper
-        .map(this.setValuesToUserFields(serviceModel), User.class);
+        .map(serviceModel, User.class);
 
     this.assignRolesToUser(user);
 
@@ -53,16 +54,6 @@ public class UserServiceImpl implements UserService {
       e.printStackTrace();
       return false;
     }
-  }
-
-  private UserServiceModel setValuesToUserFields(UserServiceModel serviceModel) {
-    serviceModel.setPassword(this.encoder.encode(serviceModel.getPassword()));
-    serviceModel.setAccountNonExpired(true);
-    serviceModel.setAccountNonLocked(true);
-    serviceModel.setCredentialsNonExpired(true);
-    serviceModel.setEnabled(true);
-    serviceModel.setCorporate(false);
-    return serviceModel;
   }
 
   @Override
@@ -114,7 +105,6 @@ public class UserServiceImpl implements UserService {
     User toEdit = this.userRepository.findById(user.getId())
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    toEdit.setCorporate(true);
     toEdit.setRoles(user.getRoles());
 
     this.userRepository.saveAndFlush(toEdit);
@@ -124,8 +114,6 @@ public class UserServiceImpl implements UserService {
   public void setCorpUserInactive(String username) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-
-    user.setCorporate(false);
 
     RoleServiceModel roleServiceModel = this.roleService.findByAuthority(CORP);
 

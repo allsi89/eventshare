@@ -1,5 +1,7 @@
 package com.allsi.eventshare.domain.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +22,6 @@ public class Event extends BaseEntity{
 
   private LocalDate startsOnDate;
   private LocalTime startsOnTime;
-  private Boolean isNotOpenToRegister;
   private User creator;
   private List<User> attendees;
 
@@ -112,6 +113,7 @@ public class Event extends BaseEntity{
     this.address = address;
   }
 
+  @DateTimeFormat(pattern = "dd MM yyyy")
   @Column(name = "starts_on_date", nullable = false)
   public LocalDate getStartsOnDate() {
     return startsOnDate;
@@ -121,6 +123,7 @@ public class Event extends BaseEntity{
     this.startsOnDate = startsOnDate;
   }
 
+  @DateTimeFormat(pattern = "hh:mm")
   @Column(name = "starts_on_time", nullable = false)
   public LocalTime getStartsOnTime() {
     return startsOnTime;
@@ -128,15 +131,6 @@ public class Event extends BaseEntity{
 
   public void setStartsOnTime(LocalTime startsOnTime) {
     this.startsOnTime = startsOnTime;
-  }
-
-  @Column(name = "is_not_open_to_register", nullable = false, columnDefinition = "tinyint")
-  public Boolean getNotOpenToRegister() {
-    return isNotOpenToRegister;
-  }
-
-  public void setNotOpenToRegister(Boolean notOpenToRegister) {
-    isNotOpenToRegister = notOpenToRegister;
   }
 
   @ManyToOne(targetEntity = User.class)

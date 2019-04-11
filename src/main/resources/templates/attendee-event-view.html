@@ -33,8 +33,8 @@
 </div>
 
 <script>
-    let url = window.location.pathname;
-    let id = url.slice(26);
+    let id = [[${viewModel.id}]];
+    // let id = url.slice(26);
 
     $(document).ready(showGallery(id));
 </script>

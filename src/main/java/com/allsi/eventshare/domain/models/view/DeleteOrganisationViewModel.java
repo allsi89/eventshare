@@ -1,10 +1,11 @@
 package com.allsi.eventshare.domain.models.view;
 
-public class OrganisationViewModel {
+import org.springframework.web.multipart.MultipartFile;
+
+public class DeleteOrganisationViewModel {
   private String name;
-  private String imageUrl;
+  private MultipartFile image;
   private String countryNiceName;
-  private String countryPhonecode;
   private String city;
   private String state;
   private String zip;
@@ -13,7 +14,7 @@ public class OrganisationViewModel {
   private String email;
   private String phone;
 
-  public OrganisationViewModel() {
+  public DeleteOrganisationViewModel() {
   }
 
   public String getName() {
@@ -24,12 +25,12 @@ public class OrganisationViewModel {
     this.name = name;
   }
 
-  public String getImageUrl() {
-    return imageUrl;
+  public MultipartFile getImage() {
+    return image;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setImage(MultipartFile image) {
+    this.image = image;
   }
 
   public String getCountryNiceName() {
@@ -39,22 +40,6 @@ public class OrganisationViewModel {
   public void setCountryNiceName(String countryNiceName) {
     this.countryNiceName = countryNiceName;
   }
-
-  public String getCountryPhonecode() {
-    return countryPhonecode;
-  }
-
-  public void setCountryPhonecode(String countryPhonecode) {
-    this.countryPhonecode = countryPhonecode;
-  }
-
-  //  public String getCountry() {
-//    return country;
-//  }
-//
-//  public void setCountry(String country) {
-//    this.country = country;
-//  }
 
   public String getCity() {
     return city;
