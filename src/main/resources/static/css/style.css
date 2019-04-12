@@ -243,3 +243,50 @@ label {
     width: 200px;
     height: 40px;
 }
+
+
+/*.carousel-fade .carousel-inner .item {*/
+    /*opacity: 0;*/
+    /*transition-property: opacity;*/
+    /*transition-duration: 4s;*/
+    /*transition-timing-function:linear;*/
+/*}*/
+
+/*.carousel-fade .carousel-inner .active {*/
+    /*opacity: 1;*/
+/*}*/
+
+/*.carousel-fade .carousel-inner .active.left,*/
+/*.carousel-fade .carousel-inner .active.right {*/
+    /*left: 0;*/
+    /*opacity: 0;*/
+    /*z-index: 1;*/
+/*}*/
+
+/*.carousel-fade .carousel-inner .next.left,*/
+/*.carousel-fade .carousel-inner .prev.right {*/
+    /*opacity: 1;*/
+/*}*/
+
+/*.carousel-fade .carousel-control {*/
+    /*z-index: 2;*/
+/*}*/
+
+.carousel-item {
+    height: 70%;
+    max-height: 80%;
+    max-width: 100%;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 4s;
+    transition-timing-function:linear;
+
+}
+
+.carousel-picture {
+    height: 70%;
+    max-height: 80%;
+    width: 80%;
+    max-width: 100%;
+    opacity: 11%;
+}

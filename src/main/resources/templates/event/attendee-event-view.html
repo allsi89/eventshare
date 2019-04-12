@@ -15,13 +15,14 @@
             </div>
             <div>
                 <th:block th:replace="~{fragments/details :: event-details}"></th:block>
+                <input type="hidden" th:value="${viewModel.getId()}" id="event-id"/>
+                <button type="button" th:action="@{/events/my-events/attending/remove}"
+                        class="btn btn-danger">Cancel attendance
+                </button>
+                <a href="">Remove from my attendance list</a>
                 <div class="form-group mt-5">
-                    <!--<input hidden="hidden" th:text="${viewModel.id}" class="modelId">-->
-                    <!--<button type="button" id="load-attendees" class="button buttonBlue" th:action="participantsShow('${viewModel.id}')">Participants</button>-->
-                    <button type="button" id="load-images" class="button buttonBlue">Gallery
-                    </button>
+                    <button type="button" class="button buttonBlue">Gallery</button>
                 </div>
-                <th:block th:replace="~{fragments/modals :: event-picture-modal}"></th:block>
                 <div class="text-center mt-3">
                     <div class="custom-container">
                         <div id="content-container"></div>
@@ -34,28 +35,12 @@
 </div>
 
 <script>
-    let url = window.location.pathname;
-    let id = url.slice(26);
+    // let id = [[${viewModel.id}]];
+    // let id = url.slice(26);
 
-    function submitForm() {
-        $('#add-event-pictures-form').submit().then(showGallery(id));
-    }
-
-    function loadGallery() {
-        setTimeout(function () {
-                showGallery(id)
-            },
-            100);
-    }
+    const id = $('#event-id').val();
 
     $(document).ready(showGallery(id));
-
-    $('#modal').bind('hidden.bs.modal', function () {
-        $("html").css("margin-right", "0px");
-    });
-    $('#modal').bind('show.bs.modal', function () {
-        $("html").css("margin-right", "-15px");
-    });
 </script>
 </body>
 </html>

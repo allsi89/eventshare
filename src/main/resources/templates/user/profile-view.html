@@ -10,6 +10,7 @@
 <br/>
 <main class="mt-3">
     <div class="jumbotron jumbotron-fluid mt-4 bg-transparent">
+        <th:block th:replace="~{fragments/picture-fragments :: user-picture}"></th:block>
         <th:block th:replace="~{fragments/modals :: user-picture-modal}"></th:block>
         <th:block th:replace="~{fragments/details :: profile-details}"></th:block>
     </div>

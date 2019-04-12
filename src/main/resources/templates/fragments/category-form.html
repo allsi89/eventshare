@@ -1,0 +1,16 @@
+<th:block xmlns:th="http://www.thymeleaf.org">
+    <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom"
+          th:action="@{/categories/add}" th:object="${bindingModel}"
+          th:method="post" sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN, ROLE_MODERATOR')">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name"
+                   name="name" required>
+            <div class="invalid-tooltip"></div>
+        </div>
+        <hr/>
+        <button type="submit" id="submitButton" class="button buttonBlue">Submit</button>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+</th:block>
+

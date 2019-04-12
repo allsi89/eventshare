@@ -3,11 +3,12 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 public interface EventService {
-  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId);
+  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) throws ParseException;
 
   EventServiceModel findEventById(String id);
 

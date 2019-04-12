@@ -7,17 +7,17 @@
 <header>
     <th:block th:include="~{fragments/navbar}"></th:block>
 </header>
-<div class="container-fluid">
-    <main>
-        <div class="jumbotron mt-4 se-background">
-            <h1>Event Share</h1>
-            <hr/>
-            <p>Share what's important to you.</p>
-        </div>
-
-
-    </main>
-    <th:block th:include="~{fragments/footer}"></th:block>
-</div>
+<main>
+    <div class="container">
+        <h1>Event Share</h1>
+        <hr/>
+        <h1 class="text-darken-2 text-right">Submit your event!</h1>
+       <th:block th:include="~{fragments/slideshow}"></th:block>
+    </div>
+</main>
+<th:block th:include="~{fragments/footer}"></th:block>
+<script>
+    $(document).ready(slideshow());
+</script>
 </body>
 </html>

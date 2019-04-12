@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+</header>
+<div class="container-fluid justify-content-center">
+    <main>
+        <div class="jumbotron mt-4 se-background">
+            <h3 class="text-center teal-text">Categories</h3>
+            <hr/>
+            <div class="text-right mt-3 mb-4">
+                <a th:href="@{/categories/add}" class="btn btn-large fixed-action-btn" role="button">Add New</a>
+            </div>
+            <table class="table table-hover w-75 mx-auto">
+                <thead>
+                <tr class="row mx-auto">
+                    <th class="col-md-2 text-center">#</th>
+                    <th class="col-md-5 text-center">Name</th>
+                    <th class="col-md-5 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <th:block th:each="category, iter : ${categories}">
+                    <tr class="row mx-auto">
+                        <th class="col-md-2 text-center" th:text="${iter.index + 1}"></th>
+                        <td class="col-md-5 text-center" th:text="${category.name}"></td>
+                        <td class="col-md-5 text-center">
+                            <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-small green">Edit</a>
+                            <a th:href="@{/categories/delete/{id}(id=${category.id})}"  class="btn btn-small red">Delete</a>
+                        </td>
+                    </tr>
+                </th:block>
+
+
+                </tbody>
+            </table>
+            <div class="custom-container">
+                <div th:id="content-container"></div>
+            </div>
+        </div>
+
+    </main>
+    <th:block th:include="~{fragments/footer}"></th:block>
+</div>
+</body>
+</html>

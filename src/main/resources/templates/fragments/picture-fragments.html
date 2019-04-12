@@ -1,0 +1,11 @@
+<th:block th:fragment="user-picture">
+    <div class="text-center">
+        <img th:src="${userModel.imageUrl}" height="200" width="200" class="profile-pic"/>
+    </div>
+</th:block>
+
+<th:block th:fragment="organisation-picture">
+    <div class="text-center">
+        <img th:src="${viewModel.imageUrl}" height="200" width="200" class="profile-pic"/>
+    </div>
+</th:block>

@@ -15,9 +15,14 @@
             </div>
             <div>
                 <th:block th:replace="~{fragments/details :: event-details}"></th:block>
-                <th:block th:replace="~{fragments/modals :: remove-attendance-event-modal}"></th:block>
+                <form id="register-attendance-form" method="post" th:action="@{/events/my-events/attend}">
 
-                <a href="">Remove from my attendance list</a>
+                </form>
+                <input type="hidden" th:value="${viewModel.getId()}" id="event-id"/>
+                <button type="submit" th:action="@{/events/my-events/attend}"
+                        class="btn btn-danger">Attend
+                </button>
+                <a href="">Attend</a>
                 <div class="form-group mt-5">
                     <button type="button" class="button buttonBlue">Gallery</button>
                 </div>
@@ -33,8 +38,10 @@
 </div>
 
 <script>
-    let id = [[${viewModel.id}]];
+    // let id = [[${viewModel.id}]];
     // let id = url.slice(26);
+
+    const id = $('#event-id').val();
 
     $(document).ready(showGallery(id));
 </script>

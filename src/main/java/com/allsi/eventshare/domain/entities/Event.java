@@ -1,12 +1,8 @@
 package com.allsi.eventshare.domain.entities;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "events")
@@ -21,7 +17,7 @@ public class Event extends BaseEntity{
   private String website;
   private List<Image> images;
 
-  private LocalDateTime startsOn;
+  private Date startDatetime;
   private User creator;
   private List<User> attendees;
 
@@ -113,14 +109,14 @@ public class Event extends BaseEntity{
     this.address = address;
   }
 
-  @DateTimeFormat(pattern = "dd mmm yyyy hh:mm")
-  @Column(name = "starts_on", nullable = false)
-  public LocalDateTime getStartsOn() {
-    return startsOn;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "starts_on", nullable = false, columnDefinition = "TIMESTAMP")
+  public Date getStartDatetime() {
+    return startDatetime;
   }
 
-  public void setStartsOn(LocalDateTime startsOn) {
-    this.startsOn = startsOn;
+  public void setStartDatetime(Date startDatetime) {
+    this.startDatetime = startDatetime;
   }
 
   @ManyToOne(targetEntity = User.class)

@@ -10,8 +10,13 @@
 <div class="container-fluid">
     <main>
         <div class="jumbotron mt-4 se-background center">
+            <th:block th:replace="~{fragments/picture-fragments :: organisation-picture}"></th:block>
             <th:block th:replace="~{fragments/modals :: organisation-picture-modal}"></th:block>
             <th:block th:replace="~{fragments/details :: organisation-details}"></th:block>
+            <div class="text-center mt-3">
+                <a th:href="@{/organisation/edit}" class="btn custom-size-btn" role="button">Edit</a>
+                <a th:href="@{/organisation/delete}" class="btn custom-size-btn" role="button">Delete</a>
+            </div>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </main>

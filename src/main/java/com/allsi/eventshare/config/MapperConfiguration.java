@@ -31,6 +31,7 @@ public class MapperConfiguration {
         .addMappings(mapper -> mapper.skip((Organisation::setCountry)))
         .addMappings(mapper -> mapper.skip((Organisation::setUser)));
 
+
     modelMapper.validate();
     return modelMapper;
   }

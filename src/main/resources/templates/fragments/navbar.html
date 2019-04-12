@@ -60,10 +60,14 @@
                             Organisation
                         </a>
                         <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/organisation/details}" sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
-                            <a class="dropdown-item" th:href="@{/organisation/add}" sec:authorize="!hasRole('ROLE_CORP')">Add</a>
-                            <a class="dropdown-item" th:href="@{/organisation/edit}" sec:authorize="hasRole('ROLE_CORP')">Edit</a>
-                            <a class="dropdown-item" th:href="@{/organisation/delete}" sec:authorize="hasRole('ROLE_CORP')">Delete</a>
+                            <a class="dropdown-item" th:href="@{/organisation/details}"
+                               sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
+                            <a class="dropdown-item" th:href="@{/organisation/add}"
+                               sec:authorize="!hasRole('ROLE_CORP')">Add</a>
+                            <a class="dropdown-item" th:href="@{/organisation/edit}"
+                               sec:authorize="hasRole('ROLE_CORP')">Edit</a>
+                            <a class="dropdown-item" th:href="@{/organisation/delete}"
+                               sec:authorize="hasRole('ROLE_CORP')">Delete</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -80,17 +84,21 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/explore}">Explore</a>
                     </li>
+
                     <!--<li class="nav-item dropdown">-->
-                        <!--<a class="nav-link dropdown-toggle" href="#" id="navbarBrowseDropdown"-->
-                           <!--role="button" data-toggle="dropdown"-->
-                           <!--aria-haspopup="true" aria-expanded="false">-->
-                            <!--Explore-->
-                        <!--</a>-->
-                        <!--<div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">-->
-                            <!--<a class="dropdown-item" href="#">Events</a>-->
-                            <!--<a class="dropdown-item" href="#">Organisations</a>-->
-                        <!--</div>-->
+                    <!--<a class="nav-link dropdown-toggle" href="#" id="navbarBrowseDropdown"-->
+                    <!--role="button" data-toggle="dropdown"-->
+                    <!--aria-haspopup="true" aria-expanded="false">-->
+                    <!--Explore-->
+                    <!--</a>-->
+                    <!--<div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">-->
+                    <!--<a class="dropdown-item" href="#">Events</a>-->
+                    <!--<a class="dropdown-item" href="#">Organisations</a>-->
+                    <!--</div>-->
                     <!--</li>-->
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/all}">Categories</a>
+                    </li>
                     <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown"
                            role="button" data-toggle="dropdown"

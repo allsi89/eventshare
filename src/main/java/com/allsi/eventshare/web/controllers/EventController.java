@@ -103,7 +103,7 @@ public class EventController extends BaseController {
   @PostMapping("/add-pictures/{id}")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView addEventPictures(Principal principal,
-                                       @RequestParam("file") MultipartFile file,
+                                       @PathVariable("file") MultipartFile file,
                                        @PathVariable(name = "id") String id) throws IOException {
 
     this.eventService.fillGallery(id, principal.getName(), this.imageService.saveInDb(file));

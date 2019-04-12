@@ -7,14 +7,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
 
-//  @Query("SELECT e FROM Event e WHERE e.creator.username")
+
   List<Event> findAllByCreator_Username(String username);
+
+  List<Event> findAllByCreator_UsernameAndStartDatetimeAfterOrderByStartDatetime(String username, Date date);
+
+//  List<Event> findAllByCreator_UsernameAndStartsOnAfterOrderByStartsOn(String username, LocalDateTime date);
 
 //  List<Event> findAllByCountry_Id(int id);
 //

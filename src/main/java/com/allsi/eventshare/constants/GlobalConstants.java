@@ -28,10 +28,10 @@ public class GlobalConstants {
   Organisation-related views
    */
 
-  public static final String OWNER_ORG_DETAILS_VIEW = "organisation-view";
-  public static final String ADD_ORG_VIEW = "add-organisation";
-  public static final String EDIT_ORG_VIEW = "edit-organisation";
-  public static final String DELETE_ORG_VIEW = "delete-organisation";
+  public static final String OWNER_ORG_DETAILS_VIEW = "organisation/organisation-view";
+  public static final String ADD_ORG_VIEW = "organisation/add-organisation";
+  public static final String EDIT_ORG_VIEW = "organisation/edit-organisation";
+  public static final String DELETE_ORG_VIEW = "organisation/delete-organisation";
 
 
   /*
@@ -49,11 +49,11 @@ public class GlobalConstants {
   User-related views
    */
 
-  public static final String USER_LOGIN_VIEW = "login";
-  public static final String USER_REGISTER_VIEW = "register";
-  public static final String USER_PROFILE_VIEW = "profile-view";
-  public static final String USER_EDIT_PROFILE_VIEW = "edit-profile";
-  public static final String USER_CHANGE_PASSWORD_VIEW = "edit-password";
+  public static final String USER_LOGIN_VIEW = "user/login";
+  public static final String USER_REGISTER_VIEW = "user/register";
+  public static final String USER_PROFILE_VIEW = "user/profile-view";
+  public static final String USER_EDIT_PROFILE_VIEW = "user/edit-profile";
+  public static final String USER_CHANGE_PASSWORD_VIEW = "user/edit-password";
 
   /*
   Event-related routes
@@ -73,13 +73,30 @@ public class GlobalConstants {
  Event-related views
   */
 
-  public static final String ADD_EVENT_VIEW = "add-event";
-  public static final String EDIT_EVENT_VIEW = "";
-  public static final String DELETE_EVENT_VIEW = "";
+  public static final String ADD_EVENT_VIEW = "event/add-event";
+  public static final String EDIT_EVENT_VIEW = "event/edit-event";
+  public static final String DELETE_EVENT_VIEW = "event/delete-event";
   public static final String CREATED_EVENTS_VIEW = "";
-  public static final String ATTENDING_EVENTS_VIEW = "attendee-event-view";
-  public static final String OWNER_ALL_EVENTS_VIEW = "user-events";
-  public static final String OWNER_EVENT_DETAILS_VIEW = "creator-event-view";
+  public static final String ATTENDING_EVENTS_VIEW = "event/attendee-event-view";
+  public static final String OWNER_ALL_EVENTS_VIEW = "event/user-events";
+  public static final String OWNER_EVENT_DETAILS_VIEW = "event/creator-event-view";
   public static final String CHANGE_EVENT_PICTURE_VIEW = "";
 
+  /*
+  Category-related routes
+   */
+
+  public static final String ADD_CATEGORY_ROUTE = "/categories/add";
+  public static final String EDIT_CATEGORY_ROUTE = "/categories/edit";
+  public static final String DELETE_CATEGORY_ROUTE = "/categories/delete";
+  public static final String ALL_CATEGORIES_ROUTE = "/categories/all";
+
+  /*
+  Category-related views
+   */
+
+  public static final String ADD_CATEGORY_VIEW = "category/add-category";
+  public static final String EDIT_CATEGORY_VIEW = "category/edit-category";
+  public static final String DELETE_CATEGORY_VIEW = "category/delete-category";
+  public static final String ALL_CATEGORIES_VIEW = "category/all-categories";
 }

@@ -12,12 +12,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.Constants.COUNTRY_NOT_FOUND_ERR;
@@ -25,12 +22,13 @@ import static com.allsi.eventshare.constants.Constants.USER_NOT_FOUND_ERR;
 
 @Service
 public class EventServiceImpl implements EventService {
+  private static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
   private static final String EVENT_NOT_FOUND = "Event not found!";
   private static final String NOT_REGISTERED_FOR_EVENT_ERR = "You are not registered to attend this event!";
   private static final String ACCESS_DENIED_ERR = "You don't have permission to access this page!";
-  private static final String DATE_FORMAT = "dd-MMM-yyyy";
-  private static final String TIME_FORMAT = "hh:mm a";
-
+  private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy");
+  private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm a");
+  private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
   private final CountryRepository countryRepository;
@@ -45,15 +43,15 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) {
+  public EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) throws ParseException {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    LocalDateTime startOn = getLocalDateTime(eventServiceModel);
+    Date startOn = getDate(eventServiceModel);
 
     Event event = this.modelMapper.map(eventServiceModel, Event.class);
 
-    event.setStartsOn(startOn);
+    event.setStartDatetime(startOn);
 
     Country country = this.countryRepository.findById(countryId)
         .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
@@ -66,10 +64,11 @@ public class EventServiceImpl implements EventService {
     return this.modelMapper.map(event, EventServiceModel.class);
   }
 
-  private LocalDateTime getLocalDateTime(EventServiceModel eventServiceModel) {
-    return LocalDateTime.of(
-        LocalDate.parse(eventServiceModel.getStartsOnDate(), DateTimeFormatter.ofPattern(DATE_FORMAT)),
-        LocalTime.parse(eventServiceModel.getStartsOnTime(), DateTimeFormatter.ofPattern(TIME_FORMAT)));
+
+  private Date getDate(EventServiceModel esm) throws ParseException {
+    return FORMATTER.parse(String.format(DATE_TIME_STR_TO_FORMAT,
+        esm.getStartsOnDate(),
+        esm.getStartsOnTime()));
   }
 
   @Override
@@ -97,7 +96,10 @@ public class EventServiceImpl implements EventService {
   //TODO -- order by date -- check if mappings work
   @Override
   public List<EventServiceModel> findAllByCreator(String principalUsername) {
-    List<Event> events = this.eventRepository.findAllByCreator_Username(principalUsername);
+    List<Event> events = this.eventRepository.findAllByCreator_UsernameAndStartDatetimeAfterOrderByStartDatetime(
+        principalUsername,
+        new Date()
+    );
 
     return getProcessedEvents(events);
   }
@@ -111,14 +113,13 @@ public class EventServiceImpl implements EventService {
 
   private EventServiceModel getEventServiceModel(Event e) {
     EventServiceModel esm = this.modelMapper.map(e, EventServiceModel.class);
-    esm.setStartsOnDate(e.getStartsOn().toLocalDate()
-        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
-    esm.setStartsOnTime(e.getStartsOn().toLocalTime()
-        .format(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+
+    esm.setStartsOnDate(DATE_FORMATTER.format(e.getStartDatetime()));
+    esm.setStartsOnTime(TIME_FORMATTER.format(e.getStartDatetime()));
     return esm;
   }
 
-  //TODO -- order by date
+  //TODO -- order by date -- should be ordered now
   @Override
   public List<EventServiceModel> findAllById(List<String> eventsIds) {
     List<Event> events = new ArrayList<>();
@@ -126,6 +127,13 @@ public class EventServiceImpl implements EventService {
     for (String id : eventsIds) {
       this.eventRepository.findById(id).ifPresent(events::add);
     }
+
+    events = events
+        .stream()
+        .filter(e -> e.getStartDatetime().after(new Date()))
+        .collect(Collectors.toList());
+
+    events.sort(Comparator.comparing(Event::getStartDatetime));
 
     return getProcessedEvents(events);
   }
