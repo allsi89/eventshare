@@ -25,6 +25,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.allsi.eventshare.constants.GlobalConstants.*;
+
 @Controller
 @RequestMapping("/events")
 public class EventController extends BaseController {
@@ -51,7 +53,7 @@ public class EventController extends BaseController {
 
     modelAndView.addObject("bindingModel", bindingModel);
 
-    return super.view("add-event", modelAndView);
+    return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
   @PostMapping("/add")
@@ -67,13 +69,15 @@ public class EventController extends BaseController {
           .map(bindingModel, EventServiceModel.class);
 
       eventServiceModel = this.eventService
-          .addEvent(eventServiceModel, principal.getName(), bindingModel.getCountryNiceName(), bindingModel.getStartsOnDate());
+          .addEvent(eventServiceModel,
+              principal.getName(),
+              bindingModel.getCountryId());
 
-      return super.redirect("/events/my-events/created/" + eventServiceModel.getId());
+      return super.redirect(OWNER_EVENT_DETAILS_ROUTE + eventServiceModel.getId());
     }
 
     modelAndView.addObject("bindingModel", bindingModel);
-    return super.view("add-event", modelAndView);
+    return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
   @GetMapping("/my-events/created/{eventId}")
@@ -82,7 +86,8 @@ public class EventController extends BaseController {
                                        ModelAndView modelAndView,
                                        @PathVariable(name = "eventId") String eventId) {
 
-    EventServiceModel eventServiceModel = this.eventService.findEventByIdAndCreator(eventId, principal.getName());
+    EventServiceModel eventServiceModel = this.eventService
+        .findEventByIdAndCreator(eventId, principal.getName());
 
     EventViewModel viewModel = this.modelMapper
         .map(eventServiceModel, EventViewModel.class);
@@ -92,7 +97,7 @@ public class EventController extends BaseController {
 
     modelAndView.addObject("viewModel", viewModel);
 
-    return super.view("creator-event-view", modelAndView);
+    return super.view(OWNER_EVENT_DETAILS_VIEW, modelAndView);
   }
 
   @PostMapping("/add-pictures/{id}")
@@ -103,7 +108,7 @@ public class EventController extends BaseController {
 
     this.eventService.fillGallery(id, principal.getName(), this.imageService.saveInDb(file));
 
-    return super.redirect("/events/my-events/created/" + id);
+    return super.redirect(OWNER_EVENT_DETAILS_ROUTE + id);
   }
 
   @GetMapping(value = "/all-pictures/{id}", produces = "application/json")
@@ -143,7 +148,7 @@ public class EventController extends BaseController {
   @GetMapping("/my-events")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView allUserEvents() {
-    return super.view("user-events");
+    return super.view(OWNER_ALL_EVENTS_VIEW);
   }
 
   @GetMapping("/my-events/attending/{id}")
@@ -159,7 +164,7 @@ public class EventController extends BaseController {
 
     modelAndView.addObject("viewModel", eventBriefViewModel);
 
-    return super.view("attendee-event-view", modelAndView);
+    return super.view(ATTENDING_EVENTS_VIEW, modelAndView);
   }
 
   @PostMapping("/events/my-events/attending/remove/{id}")
@@ -168,7 +173,7 @@ public class EventController extends BaseController {
                                                @PathVariable(name = "id") String id) {
 
     this.eventService.removeAttendanceEvent(principal.getName(), id);
-    return super.redirect("/events/my-events");
+    return super.redirect(OWNER_ALL_EVENTS_ROUTE);
   }
 
 

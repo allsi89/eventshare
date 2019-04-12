@@ -1,21 +1,16 @@
 package com.allsi.eventshare.domain.models.binding;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
-
 public class EventBindingModel {
   private String name;
   private String description;
-  private String countryNiceName;
+  private String countryId;
   private String city;
   private String state;
   private String zip;
   private String address;
   private String website;
-  private Date startsOnDate;
-  private LocalTime startsOnTime;
+  private String startsOnDate;
+  private String startsOnTime;
   private String imageUrl;
 
   public EventBindingModel() {
@@ -37,12 +32,12 @@ public class EventBindingModel {
     this.description = description;
   }
 
-  public String getCountryNiceName() {
-    return countryNiceName;
+  public String getCountryId() {
+    return countryId;
   }
 
-  public void setCountryNiceName(String countryNiceName) {
-    this.countryNiceName = countryNiceName;
+  public void setCountryId(String countryId) {
+    this.countryId = countryId;
   }
 
   //  public String getCountry() {
@@ -93,19 +88,19 @@ public class EventBindingModel {
     this.website = website;
   }
 
-  public Date getStartsOnDate() {
+  public String getStartsOnDate() {
     return startsOnDate;
   }
 
-  public void setStartsOnDate(Date startsOnDate) {
+  public void setStartsOnDate(String startsOnDate) {
     this.startsOnDate = startsOnDate;
   }
 
-  public LocalTime getStartsOnTime() {
+  public String getStartsOnTime() {
     return startsOnTime;
   }
 
-  public void setStartsOnTime(LocalTime startsOnTime) {
+  public void setStartsOnTime(String startsOnTime) {
     this.startsOnTime = startsOnTime;
   }
 

@@ -1,13 +1,10 @@
 package com.allsi.eventshare.domain.models.view;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class EventBriefViewModel {
   private String id;
   private String name;
-  private LocalDate startsOnDate;
-  private LocalTime startsOnTime;
+  private String startsOnDate;
+  private String startsOnTime;
 
   public EventBriefViewModel() {
   }
@@ -28,19 +25,19 @@ public class EventBriefViewModel {
     this.name = name;
   }
 
-  public LocalDate getStartsOnDate() {
+  public String getStartsOnDate() {
     return startsOnDate;
   }
 
-  public void setStartsOnDate(LocalDate startsOnDate) {
+  public void setStartsOnDate(String startsOnDate) {
     this.startsOnDate = startsOnDate;
   }
 
-  public LocalTime getStartsOnTime() {
+  public String getStartsOnTime() {
     return startsOnTime;
   }
 
-  public void setStartsOnTime(LocalTime startsOnTime) {
+  public void setStartsOnTime(String startsOnTime) {
     this.startsOnTime = startsOnTime;
   }
 }

@@ -12,11 +12,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +28,8 @@ public class EventServiceImpl implements EventService {
   private static final String EVENT_NOT_FOUND = "Event not found!";
   private static final String NOT_REGISTERED_FOR_EVENT_ERR = "You are not registered to attend this event!";
   private static final String ACCESS_DENIED_ERR = "You don't have permission to access this page!";
+  private static final String DATE_FORMAT = "dd-MMM-yyyy";
+  private static final String TIME_FORMAT = "hh:mm a";
 
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
@@ -43,18 +45,15 @@ public class EventServiceImpl implements EventService {
   }
 
   @Override
-  public EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId, Date startsOnDate) {
+  public EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    LocalDate startDate = Instant
-        .ofEpochMilli(startsOnDate.getTime())
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate();
-
-    eventServiceModel.setStartsOnDate(startDate);
+    LocalDateTime startOn = getLocalDateTime(eventServiceModel);
 
     Event event = this.modelMapper.map(eventServiceModel, Event.class);
+
+    event.setStartsOn(startOn);
 
     Country country = this.countryRepository.findById(countryId)
         .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
@@ -67,13 +66,18 @@ public class EventServiceImpl implements EventService {
     return this.modelMapper.map(event, EventServiceModel.class);
   }
 
+  private LocalDateTime getLocalDateTime(EventServiceModel eventServiceModel) {
+    return LocalDateTime.of(
+        LocalDate.parse(eventServiceModel.getStartsOnDate(), DateTimeFormatter.ofPattern(DATE_FORMAT)),
+        LocalTime.parse(eventServiceModel.getStartsOnTime(), DateTimeFormatter.ofPattern(TIME_FORMAT)));
+  }
+
   @Override
   public EventServiceModel findEventById(String id) {
     Event event = this.eventRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND));
 
-    return this.modelMapper
-        .map(event, EventServiceModel.class);
+    return getEventServiceModel(event);
   }
 
   @Override
@@ -90,14 +94,28 @@ public class EventServiceImpl implements EventService {
     this.eventRepository.saveAndFlush(event);
   }
 
-  //TODO -- order by date
+  //TODO -- order by date -- check if mappings work
   @Override
   public List<EventServiceModel> findAllByCreator(String principalUsername) {
+    List<Event> events = this.eventRepository.findAllByCreator_Username(principalUsername);
 
-    return this.eventRepository.findAllByCreator_Username(principalUsername)
+    return getProcessedEvents(events);
+  }
+
+  private List<EventServiceModel> getProcessedEvents(List<Event> events) {
+    return events
         .stream()
-        .map(e -> this.modelMapper.map(e, EventServiceModel.class))
+        .map(this::getEventServiceModel)
         .collect(Collectors.toList());
+  }
+
+  private EventServiceModel getEventServiceModel(Event e) {
+    EventServiceModel esm = this.modelMapper.map(e, EventServiceModel.class);
+    esm.setStartsOnDate(e.getStartsOn().toLocalDate()
+        .format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
+    esm.setStartsOnTime(e.getStartsOn().toLocalTime()
+        .format(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+    return esm;
   }
 
   //TODO -- order by date
@@ -109,10 +127,7 @@ public class EventServiceImpl implements EventService {
       this.eventRepository.findById(id).ifPresent(events::add);
     }
 
-    return events
-        .stream()
-        .map(e -> this.modelMapper.map(e, EventServiceModel.class))
-        .collect(Collectors.toList());
+    return getProcessedEvents(events);
   }
 
   @Override
@@ -162,12 +177,12 @@ public class EventServiceImpl implements EventService {
         .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND));
 
     validateOwnership(event.getCreator().getUsername(), username);
-    return this.modelMapper.map(event, EventServiceModel.class);
 
+    return this.getEventServiceModel(event);
   }
 
-  private void validateOwnership(String username, String requesterUsername1) {
-    if (!username.equals(requesterUsername1)) {
+  private void validateOwnership(String username, String requesterUsername) {
+    if (!username.equals(requesterUsername)) {
       throw new AccessDeniedException(ACCESS_DENIED_ERR);
     }
   }

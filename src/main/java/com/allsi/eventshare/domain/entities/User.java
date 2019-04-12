@@ -130,28 +130,16 @@ public class User extends BaseEntity implements UserDetails {
     return true;
   }
 
-  public void setAccountNonLocked(boolean accountNonLocked) {
-    isAccountNonLocked = accountNonLocked;
-  }
-
   @Override
   @Transient
   public boolean isCredentialsNonExpired() {
     return true;
   }
 
-  public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-    isCredentialsNonExpired = credentialsNonExpired;
-  }
-
   @Override
   @Transient
   public boolean isEnabled() {
     return true;
-  }
-
-  public void setEnabled(boolean enabled) {
-    isEnabled = enabled;
   }
 
   @Override

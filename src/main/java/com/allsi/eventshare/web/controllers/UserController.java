@@ -3,7 +3,6 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.binding.UserEditBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserEditPasswordBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserRegisterBindingModel;
-import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.UserProfileViewModel;
 import com.allsi.eventshare.service.ImageService;
@@ -20,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+
+import static com.allsi.eventshare.constants.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/users")
@@ -38,13 +39,13 @@ public class UserController extends BaseController {
   @GetMapping("/login")
   @PreAuthorize("isAnonymous()")
   public ModelAndView login() {
-    return super.view("login");
+    return super.view(USER_LOGIN_VIEW);
   }
 
   @GetMapping("/register")
   @PreAuthorize("isAnonymous()")
   public ModelAndView register() {
-    return super.view("register");
+    return super.view(USER_REGISTER_VIEW);
   }
 
   @PostMapping("/register")
@@ -60,12 +61,12 @@ public class UserController extends BaseController {
       if (this.userService
           .register(this.modelMapper
               .map(bindingModel, UserServiceModel.class))) {
-        return super.redirect("/login");
+        return super.redirect(USER_LOGIN_ROUTE);
       }
     }
 
     modelAndView.addObject("bindingModel", bindingModel);
-    return super.view("register");
+    return super.view(USER_REGISTER_VIEW, modelAndView);
   }
 
   @GetMapping("/profile")
@@ -74,7 +75,7 @@ public class UserController extends BaseController {
     modelAndView
         .addObject("userModel", this.getProfileViewModel(principal));
 
-    return super.view("profile-view", modelAndView);
+    return super.view(USER_PROFILE_VIEW, modelAndView);
   }
 
   @GetMapping("/profile/edit")
@@ -83,7 +84,7 @@ public class UserController extends BaseController {
     modelAndView
         .addObject("userModel", this.getProfileViewModel(principal));
 
-    return super.view("edit-profile", modelAndView);
+    return super.view(USER_EDIT_PROFILE_VIEW, modelAndView);
   }
 
   @PostMapping("/profile/edit")
@@ -100,18 +101,18 @@ public class UserController extends BaseController {
 
       this.userService.editUserProfile(userServiceModel);
 
-      return super.redirect("/users/profile");
+      return super.redirect(USER_PROFILE_ROUTE);
     }
 
     modelAndView.addObject("userModel", userModel);
 
-    return super.view("edit-profile", modelAndView);
+    return super.view(USER_EDIT_PROFILE_VIEW, modelAndView);
   }
 
   @GetMapping("/password/edit")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView editPassword() {
-    return super.view("edit-password");
+    return super.view(USER_CHANGE_PASSWORD_VIEW);
   }
 
   @PostMapping("/password/edit")
@@ -127,13 +128,12 @@ public class UserController extends BaseController {
           principal.getName(),
           userModel.getOldPassword());
 
-      return super.redirect("/users/profile");
-
+      return super.redirect(USER_PROFILE_ROUTE);
     }
 
     modelAndView.addObject("userModel", userModel);
 
-    return super.view("edit-password");
+    return super.view(USER_CHANGE_PASSWORD_VIEW);
   }
 
   private UserProfileViewModel getProfileViewModel(Principal principal) {
@@ -151,7 +151,7 @@ public class UserController extends BaseController {
                                            @RequestParam("file") MultipartFile file) throws IOException {
 
     this.userService.editUserPicture(principal.getName(), this.imageService.saveInDb(file));
-    return super.redirect("/users/profile");
+    return super.redirect(USER_PROFILE_ROUTE);
   }
 
 

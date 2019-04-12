@@ -28,7 +28,7 @@ public class CountryController extends BaseController{
   @GetMapping("/fetch")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
-  public List<CountryViewModel> fetchCategories() {
+  public List<CountryViewModel> fetchCountries() {
     return this.countryService.findAllCountries()
         .stream()
         .map(c -> this.modelMapper.map(c, CountryViewModel.class))

@@ -67,7 +67,7 @@
     fetch('/countries/fetch')
         .then((response) => response.json())
         .then((json) => {
-            let countryNiceName = [[${bindingModel.countryNiceName}]];
+            let countryId = [[${bindingModel.countryId}]];
 
             json.forEach((country) => $('#country').append(`<option value="${country.id}">${country.niceName}</option>`));
         })

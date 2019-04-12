@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.Constants.*;
@@ -21,7 +20,6 @@ import static com.allsi.eventshare.constants.Constants.*;
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
   private static final String ORG_NOT_FOUND = "Organisation not found";
-//  private static final String PLUS_CHAR = "+";
 
   private final OrganisationRepository organisationRepository;
   private final UserRepository userRepository;
@@ -38,33 +36,19 @@ public class OrganisationServiceImpl implements OrganisationService {
     this.modelMapper = modelMapper;
   }
 
-
   @Override
   public OrganisationServiceModel getOrganisationByUsername(String username) {
-    User user= this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+    Organisation organisation =  this.findByUsername(username);
 
-    Organisation organisation =  this.organisationRepository.findByUser_Id(user.getId())
-        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
-
-    OrganisationServiceModel organisationServiceModel = this.modelMapper
+    return this.modelMapper
         .map(organisation, OrganisationServiceModel.class);
-
-    organisationServiceModel.setPhone(organisation.getPhone());
-    //TODO -- check image
-//    if (organisation.getImage() != null){
-//      organisationServiceModel.setImageUrl(organisation.getImage().getUrl());
-//    }
-
-    return organisationServiceModel;
   }
 
   @Override
   public void addOrganisation(OrganisationServiceModel serviceModel, String username, String countryId) {
-    User user= this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+    User user = this.findByUserName(username);
 
-    if (serviceModel.getEmail()== null){
+    if (serviceModel.getEmail() == null){
       serviceModel.setEmail(user.getEmail());
     }
 
@@ -86,16 +70,11 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public void deleteOrganisation(String username) {
-    User user= this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+    Organisation organisation =  this.findByUsername(username);
 
-    Organisation organisation =  this.organisationRepository
-        .findByUser_Id(user.getId())
-        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+    User user = this.findByUserName(username);
 
-    Set<Role> roles = user.getRoles();
-
-    user.setRoles(roles
+    user.setRoles(user.getRoles()
         .stream()
         .filter(r->!r.getAuthority().equals(CORP)).collect(Collectors.toSet()));
 
@@ -104,8 +83,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public void editOrganisation(OrganisationServiceModel organisationServiceModel, String username, String countryId) {
-    User user= this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+    Organisation original = this.findByUsername(username);
 
     Organisation organisation = this.modelMapper
         .map(organisationServiceModel, Organisation.class);
@@ -113,11 +91,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     organisation.setCountry(this.countryRepository.findById(countryId)
         .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR)));
 
-    organisation.setUser(user);
-
-    Organisation original = this.organisationRepository
-        .findByUser_Id(user.getId())
-        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+    organisation.setUser(original.getUser());
 
     organisation.setId(original.getId());
 
@@ -128,12 +102,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public void editOrganisationPicture(String username, ImageServiceModel imageServiceModel) throws IOException {
-    User user= this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-
-    Organisation organisation = this.organisationRepository
-        .findByUser_Id(user.getId())
-        .orElseThrow(() -> new IllegalArgumentException(ORG_NOT_FOUND));
+    Organisation organisation = this.findByUsername(username);
 
     Image image = this.modelMapper.map(imageServiceModel, Image.class);
 
@@ -142,4 +111,14 @@ public class OrganisationServiceImpl implements OrganisationService {
     this.organisationRepository.saveAndFlush(organisation);
   }
 
+
+  private User findByUserName(String username) {
+    return this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+  }
+
+  private Organisation findByUsername(String username) {
+    return this.organisationRepository.findByUser_Username(username)
+        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
+  }
 }

@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,7 @@ public class Event extends BaseEntity{
   private String website;
   private List<Image> images;
 
-  private LocalDate startsOnDate;
-  private LocalTime startsOnTime;
+  private LocalDateTime startsOn;
   private User creator;
   private List<User> attendees;
 
@@ -113,24 +113,14 @@ public class Event extends BaseEntity{
     this.address = address;
   }
 
-  @DateTimeFormat(pattern = "dd MM yyyy")
-  @Column(name = "starts_on_date", nullable = false)
-  public LocalDate getStartsOnDate() {
-    return startsOnDate;
+  @DateTimeFormat(pattern = "dd mmm yyyy hh:mm")
+  @Column(name = "starts_on", nullable = false)
+  public LocalDateTime getStartsOn() {
+    return startsOn;
   }
 
-  public void setStartsOnDate(LocalDate startsOnDate) {
-    this.startsOnDate = startsOnDate;
-  }
-
-  @DateTimeFormat(pattern = "hh:mm")
-  @Column(name = "starts_on_time", nullable = false)
-  public LocalTime getStartsOnTime() {
-    return startsOnTime;
-  }
-
-  public void setStartsOnTime(LocalTime startsOnTime) {
-    this.startsOnTime = startsOnTime;
+  public void setStartsOn(LocalDateTime startsOn) {
+    this.startsOn = startsOn;
   }
 
   @ManyToOne(targetEntity = User.class)

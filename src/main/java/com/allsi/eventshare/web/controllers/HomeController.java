@@ -7,6 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 
+import static com.allsi.eventshare.constants.GlobalConstants.HOME_VIEW;
+import static com.allsi.eventshare.constants.GlobalConstants.INDEX_VIEW;
+
 @Controller
 public class HomeController extends BaseController {
   public HomeController() {
@@ -25,7 +28,7 @@ public class HomeController extends BaseController {
   @GetMapping("/")
   @PreAuthorize("isAnonymous()")
   public ModelAndView index() {
-    return super.view("index");
+    return super.view(INDEX_VIEW);
   }
 
   @GetMapping("/home")
@@ -33,9 +36,14 @@ public class HomeController extends BaseController {
   public ModelAndView home(Principal principal, ModelAndView modelAndView) {
     if (principal != null){
       modelAndView.addObject("username", principal.getName());
-      return super.view("home", modelAndView);
+      return super.view(HOME_VIEW, modelAndView);
     } else {
-      return super.view("index", modelAndView);
+      return super.view(INDEX_VIEW, modelAndView);
     }
+  }
+
+  @GetMapping("/test")
+  public ModelAndView modelAndView(){
+    return super.view("test");
   }
 }

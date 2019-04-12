@@ -166,7 +166,7 @@
         </div>
         <div class="col-md-6 mb-2 form-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" class="form-control" th:field="*{phone}"
+            <input type="tel" class="form-control" th:value="'+' + *{countryPhonecode} + *{phone}"
                    name="phone" id="phone">
         </div>
     </div>

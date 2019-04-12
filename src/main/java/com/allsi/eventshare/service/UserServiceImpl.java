@@ -40,10 +40,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean register(UserServiceModel serviceModel) {
     this.roleService.seedRolesInDb();
+
     serviceModel.setPassword(this.encoder.encode(serviceModel.getPassword()));
 
-    User user = this.modelMapper
-        .map(serviceModel, User.class);
+    User user = this.modelMapper.map(serviceModel, User.class);
 
     this.assignRolesToUser(user);
 
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    RoleServiceModel roleServiceModel = this.roleService.findByAuthority(CORP);
+//    RoleServiceModel roleServiceModel = this.roleService.findByAuthority(CORP);
 
     Set<Role> roles = user.getRoles()
         .stream()

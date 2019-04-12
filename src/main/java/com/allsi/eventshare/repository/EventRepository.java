@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
 
+//  @Query("SELECT e FROM Event e WHERE e.creator.username")
   List<Event> findAllByCreator_Username(String username);
 
 //  List<Event> findAllByCountry_Id(int id);

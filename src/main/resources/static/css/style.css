@@ -112,11 +112,9 @@ hgroup {
     margin-top: 4em;
 }
 
-h1,
-h3,
-h4,
-h5 {
-    font-weight: 300;
+h3 {
+    font-size: 18px;
+    font-max-size: 22%;
 }
 
 h1,
@@ -126,19 +124,26 @@ h3 {
 
 h2 {
     color: #4a89dc;
+    font-max-size: 20%;
 }
 
 h4,
 h5 {
     color: #636363;
+    font-size: 15px;
+    font-max-size: 18%;
 }
 
 h1 {
     font-family: "Brush Script MT", "Helvetica Neue", Century, 'DejaVu Sans', Arial, sans-serif;
+    font-size: 25px;
+    font-max-size: 30%;
 }
 
 h2 {
     font-family: "Times New Roman", Helvetica, 'DejaVu Sans', Arial, sans-serif;
+    font-size: 20px;
+    font-max-size: 25%;
 }
 
 

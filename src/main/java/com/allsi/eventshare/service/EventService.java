@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface EventService {
-  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId, Date startsOnDate);
+  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId);
 
   EventServiceModel findEventById(String id);
 

@@ -1,9 +1,6 @@
 package com.allsi.eventshare.domain.models.service;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 public class EventServiceModel {
@@ -17,8 +14,8 @@ public class EventServiceModel {
   private String address;
   private String website;
   private List<ImageServiceModel> images;
-  private LocalDate startsOnDate;
-  private LocalTime startsOnTime;
+  private String startsOnDate;
+  private String startsOnTime;
   private UserServiceModel creator;
   private List<UserServiceModel> attendees;
 
@@ -107,19 +104,19 @@ public class EventServiceModel {
     this.images = images;
   }
 
-  public LocalDate getStartsOnDate() {
+  public String getStartsOnDate() {
     return startsOnDate;
   }
 
-  public void setStartsOnDate(LocalDate startsOnDate) {
+  public void setStartsOnDate(String startsOnDate) {
     this.startsOnDate = startsOnDate;
   }
 
-  public LocalTime getStartsOnTime() {
+  public String getStartsOnTime() {
     return startsOnTime;
   }
 
-  public void setStartsOnTime(LocalTime startsOnTime) {
+  public void setStartsOnTime(String startsOnTime) {
     this.startsOnTime = startsOnTime;
   }
 

@@ -28,7 +28,7 @@ function showAttendingEvents() {
 
             json.forEach((event, index) => {
                 $('#content-container').append(
-                    `<h4>Event: ${event.name}</h4> <h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h2>
+                    `<h4>Event: ${event.name}</h4> <h5>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h2>
  <a href="/events/my-events/attending/${event.id}" class="btn btn-info">View</a>`);
             });
         })
@@ -49,7 +49,7 @@ function showCreatedEvents() {
 
             json.forEach((event, index) => {
                 $('#content-container').append(
-                    `<h4> Event: ${event.name}</h4><h5>Date: ${event.startsOnDate.toString()} ${event.startsOnTime.toString()} </h5>
+                    `<h4> Event: ${event.name}</h4><h5>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h5>
 <a href="/events/my-events/created/${event.id}" class="btn btn-info">View</a>
 <a href="/events/my-events/created/edit/${event.id}" class="btn btn-info">Edit</a>
 <a href="/events/my-events/created/delete/${event.id}" class="btn btn-info">Delete</a><hr/>`);
