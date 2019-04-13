@@ -1,5 +1,5 @@
 <th:block th:fragment="profile-details" xmlns:th="http://www.thymeleaf.org">
-    <div class="row mt-1">
+    <div class="row">
         <div class="col col-md-12 text-center">
             <h2 th:text="${userModel.username}"></h2>
         </div>
@@ -18,11 +18,7 @@
 </th:block>
 
 <th:block th:fragment="organisation-details" xmlns:th="http://www.thymeleaf.org">
-
-
-    <hr/>
-
-    <table class="table mt-5 table-hover table-responsive-lg text-center"
+    <table class="table mt-5 table-hover table-responsive-lg text-center w-75 mx-auto"
            border="0" width="100%" th:object="${viewModel}">
         <tbody >
         <tr>
@@ -59,8 +55,6 @@
         </tr>
         </tbody>
     </table>
-    <br/>
-    <hr/>
 </th:block>
 
 <th:block th:fragment="event-details">

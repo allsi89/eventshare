@@ -1,5 +1,8 @@
 package com.allsi.eventshare.domain.models.binding;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class EventBindingModel {
   private String name;
   private String description;
@@ -11,7 +14,7 @@ public class EventBindingModel {
   private String website;
   private String startsOnDate;
   private String startsOnTime;
-  private String imageUrl;
+  private String categoryName;
 
   public EventBindingModel() {
   }
@@ -104,13 +107,13 @@ public class EventBindingModel {
     this.startsOnTime = startsOnTime;
   }
 
-  public String getImageUrl() {
-    return imageUrl;
+  @NotNull
+  @NotEmpty
+  public String getCategoryName() {
+    return categoryName;
   }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
-
-
 }

@@ -3,8 +3,6 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.util.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 public abstract class BaseController {
 

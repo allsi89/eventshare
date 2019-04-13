@@ -6,8 +6,6 @@ public class UserProfileViewModel {
   private String email;
   private String about;
   private String imageUrl;
-  private boolean isCorporate;
-  private OrganisationViewModel organisation;
 
   public UserProfileViewModel() {
   }
@@ -52,19 +50,4 @@ public class UserProfileViewModel {
     this.imageUrl = imageUrl;
   }
 
-  public boolean isCorporate() {
-    return isCorporate;
-  }
-
-  public void setCorporate(boolean corporate) {
-    isCorporate = corporate;
-  }
-
-  public OrganisationViewModel getOrganisation() {
-    return organisation;
-  }
-
-  public void setOrganisation(OrganisationViewModel organisation) {
-    this.organisation = organisation;
-  }
 }

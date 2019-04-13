@@ -1,8 +1,8 @@
 package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity(name = "events")
@@ -17,7 +17,8 @@ public class Event extends BaseEntity{
   private String website;
   private List<Image> images;
 
-  private Date startDatetime;
+  private LocalDateTime startDatetime;
+  private Category category;
   private User creator;
   private List<User> attendees;
 
@@ -44,9 +45,7 @@ public class Event extends BaseEntity{
   }
 
   @ManyToOne(targetEntity = Country.class)
-  @JoinTable(name = "events_countries",
-      joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "country_id", referencedColumnName = "id"))
+  @JoinColumn(name = "country_id", referencedColumnName = "id")
   public Country getCountry() {
     return country;
   }
@@ -109,20 +108,27 @@ public class Event extends BaseEntity{
     this.address = address;
   }
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "starts_on", nullable = false, columnDefinition = "TIMESTAMP")
-  public Date getStartDatetime() {
+  @Column(name = "starts_on", nullable = false)
+  public LocalDateTime getStartDatetime() {
     return startDatetime;
   }
 
-  public void setStartDatetime(Date startDatetime) {
+  public void setStartDatetime(LocalDateTime startDatetime) {
     this.startDatetime = startDatetime;
   }
 
+  @ManyToOne(targetEntity = Category.class)
+  @JoinColumn(name = "category_id", referencedColumnName = "id")
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
   @ManyToOne(targetEntity = User.class)
-  @JoinTable(name = "users_created_events",
-      joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
   public User getCreator() {
     return creator;
   }

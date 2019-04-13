@@ -9,7 +9,6 @@ import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
 public class OrganisationBindingModel {
   private String name;
-  private MultipartFile image;
   private String countryId;
   private String city;
   private String state;
@@ -26,14 +25,6 @@ public class OrganisationBindingModel {
   @Length(min = 3, max = 50)
   public String getName() {
     return name;
-  }
-
-  public MultipartFile getImage() {
-    return image;
-  }
-
-  public void setImage(MultipartFile image) {
-    this.image = image;
   }
 
   public void setName(String name) {

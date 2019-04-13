@@ -11,21 +11,16 @@
     <main>
         <div align="center">
             <div class="mt-6">
-                <h1 th:text="${viewModel.name}"></h1>
+                <h2 th:text="${viewModel.name}"></h2>
             </div>
             <div>
                 <th:block th:replace="~{fragments/details :: event-details}"></th:block>
-                <form id="register-attendance-form" method="post" th:action="@{/events/my-events/attend}">
-
-                </form>
-                <input type="hidden" th:value="${viewModel.getId()}" id="event-id"/>
-                <button type="submit" th:action="@{/events/my-events/attend}"
-                        class="btn btn-danger">Attend
-                </button>
-                <a href="">Attend</a>
                 <div class="form-group mt-5">
-                    <button type="button" class="button buttonBlue">Gallery</button>
+                    <!--<input hidden="hidden" th:text="${viewModel.id}" class="modelId">-->
+                    <!--<button type="button" id="load-attendees" class="button buttonBlue" th:action="participantsShow('${viewModel.id}')">Participants</button>-->
+                    <p id="load-images" class="alert-info">Gallery</p>
                 </div>
+                <th:block th:replace="~{fragments/modals :: event-picture-modal}"></th:block>
                 <div class="text-center mt-3">
                     <div class="custom-container">
                         <div id="content-container"></div>
@@ -38,13 +33,33 @@
 </div>
 
 <script>
-    // let id = [[${viewModel.id}]];
+    // let url = window.location.pathname;
     // let id = url.slice(26);
 
-    const id = $('#event-id').val();
+    const id = $('#btn-id').val();
+
+    function submitForm() {
+        $('#add-event-pictures-form').submit().then(showGallery(id));
+    }
+
+    function loadGallery() {
+        setTimeout(function () {
+                showGallery(id)
+            },
+            100);
+    }
 
     $(document).ready(showGallery(id));
+
+    $('#modal').bind('hidden.bs.modal', function () {
+        $("html").css("margin-right", "0px");
+    });
+    $('#modal').bind('show.bs.modal', function () {
+        $("html").css("margin-right", "-15px");
+    });
 </script>
 </body>
 </html>
+
+
 

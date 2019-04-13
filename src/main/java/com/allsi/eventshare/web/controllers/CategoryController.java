@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -67,6 +64,19 @@ public class CategoryController extends BaseController {
 
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
+  }
+
+
+
+
+  @GetMapping("/fetch")
+  @PreAuthorize("isAuthenticated()")
+  @ResponseBody
+  public List<CategoryViewModel> fetchCategories() {
+    return this.categoryService.findAllCategories()
+        .stream()
+        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
+        .collect(Collectors.toList());
   }
 
 

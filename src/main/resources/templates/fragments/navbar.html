@@ -82,24 +82,12 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/explore}">Explore</a>
+                        <a class="nav-link" th:href="@{/explore/options}">Explore</a>
                     </li>
-
-                    <!--<li class="nav-item dropdown">-->
-                    <!--<a class="nav-link dropdown-toggle" href="#" id="navbarBrowseDropdown"-->
-                    <!--role="button" data-toggle="dropdown"-->
-                    <!--aria-haspopup="true" aria-expanded="false">-->
-                    <!--Explore-->
-                    <!--</a>-->
-                    <!--<div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">-->
-                    <!--<a class="dropdown-item" href="#">Events</a>-->
-                    <!--<a class="dropdown-item" href="#">Organisations</a>-->
-                    <!--</div>-->
-                    <!--</li>-->
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ROOT_ADMIN, ROLE_ADMIN, ROLE_MODERATOR')">
                         <a class="nav-link" th:href="@{/categories/all}">Categories</a>
                     </li>
-                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN')">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown"
                            role="button" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">

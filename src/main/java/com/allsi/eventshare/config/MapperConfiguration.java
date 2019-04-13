@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class MapperConfiguration {
-  private static final String DATE_FORMAT = "dd-MMM-yyyy";
-  private static final String TIME_FORMAT = "hh:mm a";
-  public static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
 
   @Bean
   public ModelMapper modelMapper() {
@@ -21,7 +18,6 @@ public class MapperConfiguration {
     modelMapper.createTypeMap(UserServiceModel.class, User.class)
         .addMappings(mapper -> mapper.skip((User::setImage)))
         .addMappings(mapper -> mapper.skip(User::setId))
-        .addMappings(mapper -> mapper.skip(User::setCreatedEvents))
         .addMappings(mapper -> mapper.skip(User::setAttendanceEvents))
         .addMappings(mapper -> mapper.skip(User::setRoles));
 
@@ -30,6 +26,10 @@ public class MapperConfiguration {
         .addMappings(mapper -> mapper.skip((Organisation::setImage)))
         .addMappings(mapper -> mapper.skip((Organisation::setCountry)))
         .addMappings(mapper -> mapper.skip((Organisation::setUser)));
+
+//    modelMapper.createTypeMap(EventBindingModel.class, EventServiceModel.class)
+//        .addMappings(mapper -> mapper.skip(EventServiceModel::setCountry))
+//        .addMappings(mapper -> mapper.skip(EventServiceModel::setCategory));
 
 
     modelMapper.validate();

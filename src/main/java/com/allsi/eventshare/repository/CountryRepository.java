@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CountryRepository extends JpaRepository<Country, String> {
@@ -17,5 +16,5 @@ public interface CountryRepository extends JpaRepository<Country, String> {
   @Query("SELECT c FROM countries c ORDER BY c.niceName")
   List<Country> getAllCountriesOrOrderByNiceName();
 
-  Optional<Country> findByName(String name);
+//  Optional<Country> findByName(String name);
 }

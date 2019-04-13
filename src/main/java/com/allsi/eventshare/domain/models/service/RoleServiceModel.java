@@ -1,7 +1,6 @@
 package com.allsi.eventshare.domain.models.service;
 
-public class RoleServiceModel {
-  private String id;
+public class RoleServiceModel extends BaseServiceModel{
   private String authority;
 
   public RoleServiceModel() {
@@ -9,14 +8,6 @@ public class RoleServiceModel {
 
   public RoleServiceModel(String authority) {
     this.authority = authority;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public String getAuthority() {

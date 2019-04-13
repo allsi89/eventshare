@@ -15,7 +15,6 @@ public class User extends BaseEntity implements UserDetails {
   private String email;
   private String about;
   private Image image;
-  private List<Event> createdEvents;
   private List<Event> attendanceEvents;
   private Set<Role> roles;
 
@@ -75,15 +74,6 @@ public class User extends BaseEntity implements UserDetails {
 
   public void setImage(Image image) {
     this.image = image;
-  }
-
-  @OneToMany(targetEntity = Event.class, mappedBy = "creator")
-  public List<Event> getCreatedEvents() {
-    return createdEvents;
-  }
-
-  public void setCreatedEvents(List<Event> createdEvents) {
-    this.createdEvents = createdEvents;
   }
 
   @ManyToMany(targetEntity = Event.class)

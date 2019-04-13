@@ -1,3 +1,135 @@
+function showEventCategories() {
+    fetch("/explore/categories")
+        .then((response) => response.json()
+            .then((json) => {
+                $('#customText').text('Categories');
+                $('#content-container').remove();
+                $('.custom-container').append(`<div id="content-container"></div>`);
+
+                let table = `<table class="table table-hover w-75 mx-auto">
+                <thead>
+                <tr class="row mx-auto">
+                    <th class="col-md-2 text-center">#</th>
+                    <th class="col-md-5 text-center">Name</th>
+                    <th class="col-md-5 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>`;
+
+                console.log(json);
+
+                json.forEach((category, index) => {
+                    table += ` <tr class="row mx-auto">
+                        <th class="col-md-2 text-center">${index + 1}</th>
+                        <th class="col-md-5 text-center">${category.name}</th>
+                        <th class="col-md-5 text-center">
+                            <a href="/explore/categories/${category.id}" 
+                            class="btn btn-small green">View Events</a>
+                        </th>
+                    </tr>`;
+                });
+
+                table += `</tbody>
+            </table>`;
+
+                $('#content-container')
+                    .append(table);
+            }))
+        .catch(() => {
+            $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
+        })
+}
+
+function showEventCountries() {
+    fetch("/explore/countries")
+        .then((response) => response.json()
+            .then((json) => {
+                $('#customText').text('Countries');
+                $('#content-container').remove();
+                $('.custom-container').append(`<div id="content-container"></div>`);
+
+                let table = `<table class="table table-hover w-75 mx-auto">
+                <thead>
+                <tr class="row mx-auto">
+                    <th class="col-md-2 text-center">#</th>
+                    <th class="col-md-5 text-center">Name</th>
+                    <th class="col-md-5 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>`;
+
+                console.log(json);
+
+                json.forEach((country, index) => {
+                    table += ` <tr class="row mx-auto">
+                        <th class="col-md-2 text-center">${index + 1}</th>
+                        <th class="col-md-5 text-center">${country.niceName}</th>
+                        <th class="col-md-5 text-center">
+                            <a href="/explore/countries/${country.id}" 
+                            class="btn btn-small green">View Events</a>
+                        </th>
+                    </tr>`;
+                });
+
+                table += `</tbody>
+            </table>`;
+
+                $('#content-container')
+                    .append(table);
+            }))
+        .catch(() => {
+            $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
+        })
+}
+
+function showEventOrganisations() {
+    fetch("/explore/organisations")
+        .then((response) => response.json()
+            .then((json) => {
+                $('#customText').text('Organisations');
+                $('#content-container').remove();
+                $('.custom-container').append(`<div id="content-container"></div>`);
+
+                let table = `<table class="table table-hover w-75 mx-auto">
+                <thead>
+                <tr class="row mx-auto">
+                    <th class="col-md-1 text-center">#</th>
+                    <th class="col-md-3 text-center">Picture</th>
+                    <th class="col-md-4 text-center">Name</th>
+                    <th class="col-md-4 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>`;
+
+                console.log(json);
+
+                json.forEach((organisation, index) => {
+                    table += ` <tr class="row mx-auto">
+                        <th class="col-md-1 text-center">${index + 1}</th>
+                        <th class="col-md-3 text-center">
+                        <img src="${organisation.imageUrl}" class="thumbnail" width="30" height="30"
+                        alt="Organisation Picture"></th>
+                        <th class="col-md-4 text-center"> ${organisation.name}</th>
+                        <th class="col-md-4 text-center">
+                            <a href="/explore/categories/${organisation.id}" 
+                            class="btn btn-small green">View Events</a>
+                        </th>
+                    </tr>`;
+                });
+
+                table += `</tbody>
+            </table>`;
+
+                $('#content-container')
+                    .append(table);
+            }))
+        .catch(() => {
+            $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
+        })
+
+}
+
+
 // function post() {
 //     const http =(function () {
 //         const send = (url, method, body) => fetch(url, {method, body: JSON.stringify(body)})
@@ -20,7 +152,6 @@
 // }
 
 
-
 function slideshow() {
     $('.carousel').carousel({
             dist: 0,
@@ -39,12 +170,12 @@ function slideshow() {
 }
 
 function post() {
-    const http =(function () {
+    const http = (function () {
         const send = (url, method, body) => fetch(url, {method, body: JSON.stringify(body)})
             .then(response => response.json());
-        const post = (url, body) =>send(url, 'POST', body);
-        const get = (url) => send (url, 'GET', null);
-        return{
+        const post = (url, body) => send(url, 'POST', body);
+        const get = (url) => send(url, 'GET', null);
+        return {
             send, post, get
         };
 
@@ -121,9 +252,9 @@ function showCreatedEvents() {
                     `<h2> Event: ${event.name}</h2>
 <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
 <hr class="border"/>
-<a href="/events/my-events/created/${event.id}" class="btn-flat btn-info ml-3">View</a>
-<a href="/events/my-events/created/edit/${event.id}" class="btn-flat btn-success rounded ml-3">Edit</a>
-<a href="/events/my-events/created/delete/${event.id}" class="btn-flat btn-danger rounded ml-3">Delete</a><hr/>`);
+<a href="/events/my-events/created/${event.id}" class="btn-flat btn-primary">View</a>
+<a href="/events/my-events/created/edit/${event.id}" class="btn-flat btn-info">Edit</a>
+<a href="/events/my-events/created/delete/${event.id}" class="btn-flat btn-danger">Delete</a><hr/>`);
             });
         })
         .catch(() => {

@@ -14,8 +14,8 @@
             <th:block th:replace="~{fragments/modals :: organisation-picture-modal}"></th:block>
             <th:block th:replace="~{fragments/details :: organisation-details}"></th:block>
             <div class="text-center mt-3">
-                <a th:href="@{/organisation/edit}" class="btn custom-size-btn" role="button">Edit</a>
-                <a th:href="@{/organisation/delete}" class="btn custom-size-btn" role="button">Delete</a>
+                <a th:href="@{/organisation/edit}" class="btn btn-small blue" role="button">Edit</a>
+                <a th:href="@{/organisation/delete}" class="btn btn-small red" role="button">Delete</a>
             </div>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

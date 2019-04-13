@@ -5,7 +5,6 @@ import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
-import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,7 +76,7 @@ public class UserServiceImpl implements UserService {
     user.setEmail(userServiceModel.getEmail());
     user.setAbout(userServiceModel.getAbout());
 
-    this.userRepository.saveAndFlush(user);
+    this.userRepository.save(user);
   }
 
   @Override
@@ -92,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     user.setPassword(this.encoder.encode(model.getPassword()));
 
-    this.userRepository.saveAndFlush(user);
+    this.userRepository.save(user);
   }
 
   @Override
@@ -107,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     toEdit.setRoles(user.getRoles());
 
-    this.userRepository.saveAndFlush(toEdit);
+    this.userRepository.save(toEdit);
   }
 
   @Override
@@ -124,11 +122,11 @@ public class UserServiceImpl implements UserService {
 
     user.setRoles(roles);
 
-    this.userRepository.saveAndFlush(user);
+    this.userRepository.save(user);
   }
 
   @Override
-  public void editUserPicture(String username, ImageServiceModel imageServiceModel) throws IOException {
+  public void editUserPicture(String username, ImageServiceModel imageServiceModel) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
@@ -136,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
     user.setImage(image);
 
-    this.userRepository.saveAndFlush(user);
+    this.userRepository.save(user);
   }
 
   @Override

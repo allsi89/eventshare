@@ -3,8 +3,7 @@ package com.allsi.eventshare.domain.models.service;
 
 import java.util.ArrayList;
 import java.util.List;
-public class EventServiceModel {
-  private String id;
+public class EventServiceModel extends BaseServiceModel{
   private String name;
   private String description;
   private CountryServiceModel country;
@@ -16,20 +15,13 @@ public class EventServiceModel {
   private List<ImageServiceModel> images;
   private String startsOnDate;
   private String startsOnTime;
+  private CategoryServiceModel category;
   private UserServiceModel creator;
   private List<UserServiceModel> attendees;
 
   public EventServiceModel() {
     this.images = new ArrayList<>();
     this.attendees = new ArrayList<>();
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public String getName() {
@@ -118,6 +110,14 @@ public class EventServiceModel {
 
   public void setStartsOnTime(String startsOnTime) {
     this.startsOnTime = startsOnTime;
+  }
+
+  public CategoryServiceModel getCategory() {
+    return category;
+  }
+
+  public void setCategory(CategoryServiceModel category) {
+    this.category = category;
   }
 
   public UserServiceModel getCreator() {

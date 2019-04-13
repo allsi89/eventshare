@@ -13,7 +13,7 @@
             <h3 class="text-center teal-text">Categories</h3>
             <hr/>
             <div class="text-right mt-3 mb-4">
-                <a th:href="@{/categories/add}" class="btn btn-large fixed-action-btn" role="button">Add New</a>
+                <th:block th:replace="~{fragments/modals :: add-category-modal}"></th:block>
             </div>
             <table class="table table-hover w-75 mx-auto">
                 <thead>
@@ -35,8 +35,6 @@
                         </td>
                     </tr>
                 </th:block>
-
-
                 </tbody>
             </table>
             <div class="custom-container">

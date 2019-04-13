@@ -92,7 +92,7 @@ public class UserController extends BaseController {
   public ModelAndView editProfileConfirm(@Valid @ModelAttribute(name = "userModel")
                                              UserEditBindingModel userModel,
                                          BindingResult bindingResult,
-                                         ModelAndView modelAndView) throws IOException {
+                                         ModelAndView modelAndView) {
 
     if (!bindingResult.hasErrors()) {
 

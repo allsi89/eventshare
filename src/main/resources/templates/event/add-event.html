@@ -61,5 +61,13 @@
         })
         .catch((err) => console.log(err));
 
+
+    fetch('/categories/fetch')
+        .then((response) => response.json())
+        .then((json) => {
+            json.forEach((category) => $('#category').append(`<option value="${category.name}">${category.name}</option>`));
+        })
+        .catch((err) => console.log(err));
+
 </script>
 </html>

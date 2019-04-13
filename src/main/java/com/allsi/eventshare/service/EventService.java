@@ -4,11 +4,10 @@ import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 public interface EventService {
-  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) throws ParseException;
+  EventServiceModel addEvent(EventServiceModel eventServiceModel, String username);
 
   EventServiceModel findEventById(String id);
 
@@ -23,4 +22,6 @@ public interface EventService {
   void removeAttendanceEvent(String username, String id);
 
   EventServiceModel findEventByIdAndCreator(String eventId, String name);
+
+  List<EventServiceModel> findAvailableToRegEventsByCategory(String categoryName, String username);
 }

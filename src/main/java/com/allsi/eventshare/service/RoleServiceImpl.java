@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
       for (String authority : authorities) {
         Role role = new Role(authority);
-        this.roleRepository.saveAndFlush(role);
+        this.roleRepository.save(role);
       }
 
     }

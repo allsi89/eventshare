@@ -1,6 +1,6 @@
 <th:block th:fragment="event-picture-modal">
     <div class="text-center mt-3">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal"
+        <button type="button" class="btn btn-large fixed-action-btn blue" data-toggle="modal" data-target="#modal"
                 sec:authorize="isAuthenticated()">
             Add Picture
         </button>
@@ -16,15 +16,7 @@
                       th:action="@{/events/add-pictures/{id}(id=${viewModel.id})}"
                       th:method="post"
                       enctype="multipart/form-data">
-                    <div class="file-field">
-                        <div class="btn">
-                            <span>Choose a file</span>
-                            <input type="file" name="file" required/>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text"/>
-                        </div>
-                    </div>
+                    <th:block th:replace="~{fragments/change-picture}"></th:block>
                 </form>
             </div>
             <div class="modal-footer">
@@ -40,7 +32,7 @@
 
 <th:block th:fragment="organisation-picture-modal">
     <div class="text-center mt-3">
-        <a href="#" class="btn custom-size-btn" data-toggle="modal" role="button" data-target="#modal">Change
+        <a href="#" class="btn btn-large fixed-action-btn blue" data-toggle="modal" role="button" data-target="#modal">Change
             Picture</a>
         <div id="modal" class="modal modal-fixed-footer se-background" tabindex="-1" role="document">
             <div class="modal-header">
@@ -52,15 +44,7 @@
                 <form id="change-organisation-picture-form" class="form"
                       th:action="@{/organisation/details/change-picture}" th:method="post"
                       enctype="multipart/form-data">
-                    <div class="file-field">
-                        <div class="btn">
-                            <span>Choose a file</span>
-                            <input type="file" name="file" required>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
+                    <th:block th:replace="~{fragments/change-picture}"></th:block>
                 </form>
             </div>
             <div class="modal-footer">
@@ -75,7 +59,7 @@
 
 <th:block th:fragment="user-picture-modal">
     <div class="text-center mt-3">
-        <a href="#" class="btn custom-size-btn" data-toggle="modal" role="button" data-target="#modal">Edit Picture</a>
+        <a href="#" class="btn btn-large fixed-action-btn blue" data-toggle="modal" role="button" data-target="#modal">Change Picture</a>
         <div id="modal" class="modal modal-fixed-footer se-background" tabindex="-1" role="document">
             <div class="modal-header">
                 <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
@@ -86,15 +70,7 @@
                 <form id="change-profile-picture-form" class="form" th:action="@{/users/profile/change-picture}"
                       th:method="post"
                       enctype="multipart/form-data">
-                    <div class="file-field">
-                        <div class="btn">
-                            <span>Choose a file</span>
-                            <input type="file" name="file" required>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
+                    <th:block th:replace="~{fragments/change-picture}"></th:block>
                 </form>
             </div>
             <div class="modal-footer">
@@ -110,7 +86,7 @@
 
 <th:block th:fragment="remove-attendance-event-modal">
     <div class="text-right mt-3">
-        <a href="#" class="btn custom-size-btn" data-toggle="modal" role="button" data-target="#modal">Remove from my
+        <a href="#" class="btn btn-large fixed-action-btn blue" data-toggle="modal" role="button" data-target="#modal">Remove from my
             attendance list</a>
         <div id="modal" class="modal modal-fixed-footer se-background" tabindex="-1" role="document">
             <div class="modal-header">
@@ -137,6 +113,45 @@
                 <input id="btn-id" type="hidden" name="id" th:value="${viewModel.getId()}"/>
                 <button type="submit" class="btn-flat btn-success rounded" data-dismiss="modal"
                         onclick="$('#remove-attendance-event-form').submit()">Save
+                </button>
+                <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+
+<th:block th:fragment="add-category-modal">
+    <div class="text-center mt-3">
+        <button type="button"  class="btn btn-large fixed-action-btn blue" data-toggle="modal" data-target="#modal"
+                sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN, ROLE_MODERATOR')">
+            Add Category
+        </button>
+
+        <div id="modal" class="modal se-background modal-fixed-footer" tabindex="-1" role="document">
+            <div class="modal-header">
+                <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-content">
+                <h2>Add Category</h2>
+                <hr/>
+                <form id="add-category-form" class="se-form se-form-text mt-3 mb-3 col-md-6 form-custom"
+                      th:action="@{/categories/add}"
+                      th:method="post">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name"
+                               name="name" required>
+                        <div class="invalid-tooltip"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <button type="submit" class="btn-flat btn-success rounded func-button"
+                        data-dismiss="modal" onclick="$('#add-category-form').submit()">Save
                 </button>
                 <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
             </div>

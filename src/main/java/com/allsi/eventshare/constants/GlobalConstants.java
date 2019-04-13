@@ -56,7 +56,7 @@ public class GlobalConstants {
   public static final String USER_CHANGE_PASSWORD_VIEW = "user/edit-password";
 
   /*
-  Event-related routes
+  Event-related routes (owner)
    */
 
   public static final String ADD_EVENT_ROUTE = "/events/add";
@@ -70,7 +70,7 @@ public class GlobalConstants {
   public static final String CHANGE_EVENT_PICTURE_ROUTE ="/events/all-pictures/"; // + eventId
 
   /*
- Event-related views
+ Event-related views (owner)
   */
 
   public static final String ADD_EVENT_VIEW = "event/add-event";
@@ -99,4 +99,17 @@ public class GlobalConstants {
   public static final String EDIT_CATEGORY_VIEW = "category/edit-category";
   public static final String DELETE_CATEGORY_VIEW = "category/delete-category";
   public static final String ALL_CATEGORIES_VIEW = "category/all-categories";
+
+  /*
+  Explore-related routes
+   */
+  public static final String EXPLORE_ROUTE = "/explore/options";
+  public static final String EXPLORE_EVENT_ROUTE = "/explore/event/"; //+ id
+
+  /*
+  Explore-related views
+   */
+
+  public static final String EXPLORE_VIEW = "explore/explore";
+  public static final String EXPLORE_EVENT_VIEW = "explore/event-guest-view";
 }

@@ -67,7 +67,7 @@ public class OrganisationController extends BaseController {
                                              @Valid @ModelAttribute(name = "bindingModel")
                                                  OrganisationBindingModel bindingModel,
                                              BindingResult bindingResult,
-                                             ModelAndView modelAndView) throws IOException {
+                                             ModelAndView modelAndView){
 
     if (!bindingResult.hasErrors()) {
 
@@ -104,6 +104,7 @@ public class OrganisationController extends BaseController {
                                                   OrganisationBindingModel bindingModel,
                                               ModelAndView modelAndView,
                                               BindingResult bindingResult) {
+
     if (!bindingResult.hasErrors()) {
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
@@ -122,14 +123,12 @@ public class OrganisationController extends BaseController {
   @GetMapping("/delete")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
   public ModelAndView deleteOrganisation(Principal principal,
-                                         ModelAndView modelAndView,
-                                         @ModelAttribute("deleteModel")
-                                             OrganisationViewModel deleteModel) {
+                                         ModelAndView modelAndView) {
 
     OrganisationServiceModel serviceModel = this.organisationService
         .getOrganisationByUsername(principal.getName());
 
-    deleteModel = this.modelMapper
+    OrganisationViewModel deleteModel = this.modelMapper
         .map(serviceModel, OrganisationViewModel.class);
 
     modelAndView.addObject("deleteModel", deleteModel);

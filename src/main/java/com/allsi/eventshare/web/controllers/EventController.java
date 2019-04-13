@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +61,7 @@ public class EventController extends BaseController {
                                       ModelAndView modelAndView,
                                       @Valid @ModelAttribute(name = "bindingModel")
                                           EventBindingModel bindingModel,
-                                      BindingResult bindingResult) throws ParseException {
+                                      BindingResult bindingResult){
 
     if (!bindingResult.hasErrors()) {
       EventServiceModel eventServiceModel = this.modelMapper
@@ -70,8 +69,7 @@ public class EventController extends BaseController {
 
       eventServiceModel = this.eventService
           .addEvent(eventServiceModel,
-              principal.getName(),
-              bindingModel.getCountryId());
+              principal.getName());
 
       return super.redirect(OWNER_EVENT_DETAILS_ROUTE + eventServiceModel.getId());
     }
@@ -103,7 +101,7 @@ public class EventController extends BaseController {
   @PostMapping("/add-pictures/{id}")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView addEventPictures(Principal principal,
-                                       @PathVariable("file") MultipartFile file,
+                                       @RequestParam("file") MultipartFile file,
                                        @PathVariable(name = "id") String id) throws IOException {
 
     this.eventService.fillGallery(id, principal.getName(), this.imageService.saveInDb(file));

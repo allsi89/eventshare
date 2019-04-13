@@ -1,7 +1,6 @@
 package com.allsi.eventshare.domain.models.service;
 
-public class OrganisationServiceModel {
-  private String id;
+public class OrganisationServiceModel extends BaseServiceModel {
   private String name;
   private String imageUrl;
   private CountryServiceModel country;
@@ -14,14 +13,6 @@ public class OrganisationServiceModel {
   private String phone;
 
   public OrganisationServiceModel() {
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public String getName() {

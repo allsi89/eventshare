@@ -5,6 +5,13 @@
             <input type="text" th:value="*{name}" name="name" id="name" required>
             <div class="invalid-tooltip"></div>
         </div>
+        <div class="col-md-6 mb-2 form-group selects-container">
+            <label for="category">Category</label>
+            <select class="form-control select-dropdown validate" id="category"
+                    name="categoryName" required>
+                <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
+            </select>
+        </div>
     </div>
     <hr/>
     <div class="form-row">
@@ -73,3 +80,5 @@
     <button type="submit" id="submitButton" class="button buttonBlue">Add</button>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </th:block>
+
+

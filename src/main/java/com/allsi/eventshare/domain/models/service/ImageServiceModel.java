@@ -1,18 +1,9 @@
 package com.allsi.eventshare.domain.models.service;
 
-public class ImageServiceModel {
-  private String id;
+public class ImageServiceModel extends BaseServiceModel{
   private String url;
 
   public ImageServiceModel() {
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   public String getUrl() {

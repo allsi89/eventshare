@@ -9,4 +9,6 @@ public interface CountryService {
   List<CountryServiceModel> findAllCountries();
 
   CountryServiceModel findByCountryId(String id);
+
+  List<CountryServiceModel> findAllCountriesWithEvents();
 }

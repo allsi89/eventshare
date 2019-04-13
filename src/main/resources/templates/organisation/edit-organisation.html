@@ -21,6 +21,8 @@
 <th:block th:include="~{fragments/footer}"></th:block>
 </body>
 <script th:inline="javascript">
+
+
     fetch('/countries/fetch')
         .then((response) => response.json())
         .then((json) => {

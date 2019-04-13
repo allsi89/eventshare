@@ -3,6 +3,7 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.entities.*;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
+import com.allsi.eventshare.repository.CategoryRepository;
 import com.allsi.eventshare.repository.CountryRepository;
 import com.allsi.eventshare.repository.EventRepository;
 import com.allsi.eventshare.repository.UserRepository;
@@ -12,8 +13,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,49 +27,53 @@ public class EventServiceImpl implements EventService {
   private static final String EVENT_NOT_FOUND = "Event not found!";
   private static final String NOT_REGISTERED_FOR_EVENT_ERR = "You are not registered to attend this event!";
   private static final String ACCESS_DENIED_ERR = "You don't have permission to access this page!";
-  private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy");
-  private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm a");
-  private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+  private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+  private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
+//  private static final String TIME_FORMAT = "hh:mm a";
+  private static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
+  private static final String CATEGORY_NOT_FOUND = "Category not found!";
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
   private final CountryRepository countryRepository;
+  private final CategoryRepository categoryRepository;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, CountryRepository countryRepository, ModelMapper modelMapper) {
+  public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, CountryRepository countryRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
     this.eventRepository = eventRepository;
     this.userRepository = userRepository;
     this.countryRepository = countryRepository;
+    this.categoryRepository = categoryRepository;
     this.modelMapper = modelMapper;
   }
 
   @Override
-  public EventServiceModel addEvent(EventServiceModel eventServiceModel, String username, String countryId) throws ParseException {
+  public EventServiceModel addEvent(EventServiceModel eventServiceModel,
+                                    String username) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    Date startOn = getDate(eventServiceModel);
-
     Event event = this.modelMapper.map(eventServiceModel, Event.class);
 
-    event.setStartDatetime(startOn);
+    event.setStartDatetime(
+        LocalDateTime.parse(String.format(DATE_TIME_STR_TO_FORMAT,
+            eventServiceModel.getStartsOnDate(),
+            eventServiceModel.getStartsOnTime()),
+            DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
 
-    Country country = this.countryRepository.findById(countryId)
+    Country country = this.countryRepository.findById(eventServiceModel.getCountry().getId())
         .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
+
+    Category category = this.categoryRepository.findByName(eventServiceModel.getCategory().getName())
+        .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
 
     event.setCreator(user);
     event.setCountry(country);
+    event.setCategory(category);
 
     event = this.eventRepository.saveAndFlush(event);
 
     return this.modelMapper.map(event, EventServiceModel.class);
-  }
-
-
-  private Date getDate(EventServiceModel esm) throws ParseException {
-    return FORMATTER.parse(String.format(DATE_TIME_STR_TO_FORMAT,
-        esm.getStartsOnDate(),
-        esm.getStartsOnTime()));
   }
 
   @Override
@@ -90,15 +95,16 @@ public class EventServiceImpl implements EventService {
 
     event.getImages().add(image);
 
-    this.eventRepository.saveAndFlush(event);
+    this.eventRepository.save(event);
   }
 
   //TODO -- order by date -- check if mappings work
   @Override
   public List<EventServiceModel> findAllByCreator(String principalUsername) {
-    List<Event> events = this.eventRepository.findAllByCreator_UsernameAndStartDatetimeAfterOrderByStartDatetime(
+    List<Event> events = this.eventRepository
+        .findAllByCreator_UsernameAndStartDatetimeAfterOrderByStartDatetime(
         principalUsername,
-        new Date()
+        LocalDateTime.now()
     );
 
     return getProcessedEvents(events);
@@ -113,9 +119,8 @@ public class EventServiceImpl implements EventService {
 
   private EventServiceModel getEventServiceModel(Event e) {
     EventServiceModel esm = this.modelMapper.map(e, EventServiceModel.class);
-
-    esm.setStartsOnDate(DATE_FORMATTER.format(e.getStartDatetime()));
-    esm.setStartsOnTime(TIME_FORMATTER.format(e.getStartDatetime()));
+    esm.setStartsOnDate(e.getStartDatetime().format(DATE_FORMATTER));
+    esm.setStartsOnTime(e.getStartDatetime().format(TIME_FORMATTER));
     return esm;
   }
 
@@ -124,14 +129,18 @@ public class EventServiceImpl implements EventService {
   public List<EventServiceModel> findAllById(List<String> eventsIds) {
     List<Event> events = new ArrayList<>();
 
+    LocalDateTime dateTime = LocalDateTime.now();
+
     for (String id : eventsIds) {
-      this.eventRepository.findById(id).ifPresent(events::add);
+      this.eventRepository
+          .findByIdAndStartDatetimeAfter(id, dateTime)
+          .ifPresent(events::add);
     }
 
-    events = events
-        .stream()
-        .filter(e -> e.getStartDatetime().after(new Date()))
-        .collect(Collectors.toList());
+//    events = events
+//        .stream()
+//        .filter(e -> e.getStartDatetime().isAfter(LocalDateTime.now()))
+//        .collect(Collectors.toList());
 
     events.sort(Comparator.comparing(Event::getStartDatetime));
 
@@ -176,7 +185,7 @@ public class EventServiceImpl implements EventService {
 
     event.setAttendees(attendees);
 
-    this.eventRepository.saveAndFlush(event);
+    this.eventRepository.save(event);
   }
 
   @Override
@@ -187,6 +196,11 @@ public class EventServiceImpl implements EventService {
     validateOwnership(event.getCreator().getUsername(), username);
 
     return this.getEventServiceModel(event);
+  }
+
+  @Override
+  public List<EventServiceModel> findAvailableToRegEventsByCategory(String categoryName, String username) {
+    return null;
   }
 
   private void validateOwnership(String username, String requesterUsername) {

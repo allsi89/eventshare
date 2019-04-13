@@ -13,8 +13,6 @@ public class Country extends BaseEntity{
   public Country() {
   }
 
-
-
   @Column(name = "name", nullable = false)
   public String getName() {
     return name;
