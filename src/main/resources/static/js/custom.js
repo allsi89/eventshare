@@ -1,5 +1,5 @@
 function showEventCategories() {
-    fetch("/explore/categories")
+    fetch("/categories/fetch-all-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Categories');
@@ -15,8 +15,6 @@ function showEventCategories() {
                 </tr>
                 </thead>
                 <tbody>`;
-
-                console.log(json);
 
                 json.forEach((category, index) => {
                     table += ` <tr class="row mx-auto">
@@ -41,7 +39,7 @@ function showEventCategories() {
 }
 
 function showEventCountries() {
-    fetch("/explore/countries")
+    fetch("/countries/fetch-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Countries');
@@ -82,8 +80,10 @@ function showEventCountries() {
         })
 }
 
+
+
 function showEventOrganisations() {
-    fetch("/explore/organisations")
+    fetch("/organisations/fetch-all-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Organisations');
@@ -111,7 +111,7 @@ function showEventOrganisations() {
                         alt="Organisation Picture"></th>
                         <th class="col-md-4 text-center"> ${organisation.name}</th>
                         <th class="col-md-4 text-center">
-                            <a href="/explore/categories/${organisation.id}" 
+                        <a href="/explore/organisations/${organisation.id}" 
                             class="btn btn-small green">View Events</a>
                         </th>
                     </tr>`;
@@ -128,29 +128,6 @@ function showEventOrganisations() {
         })
 
 }
-
-
-// function post() {
-//     const http =(function () {
-//         const send = (url, method, body) => fetch(url, {method, body: JSON.stringify(body)})
-//             .then(response => response.json());
-//         const post = (url, body) =>send(url, 'POST', body);
-//         const get = (url) => send (url, 'GET', null);
-//         return{
-//             send, post, get
-//         };
-//
-//     }());
-//     $('#form').on('submit', (ev) => {
-//         const id = $('#btn-id').val();
-//         // const id = $(this).attr('data-id');
-//         http.post(url, id)
-//             .then(() => f(id));
-//         ev.preventDefault();
-//         return false;
-//     })
-// }
-
 
 function slideshow() {
     $('.carousel').carousel({
@@ -190,12 +167,6 @@ function post() {
     })
 }
 
-// function f(id) {
-//     http.get(url, id).send(url, {method: 'GET', id})
-//
-// }
-
-
 function showGallery(id) {
     fetch("/events/all-pictures/" + id)
         .then((response) => response.json()
@@ -216,72 +187,48 @@ function showGallery(id) {
 
 }
 
-function showAttendingEvents() {
-    fetch("/events/my-events/attending")
-        .then((response) => response.json())
-        .then((json) => {
-            $('#customText').text('Attending events');
-            $('#content-container').remove();
-            $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
-
-            json.forEach((event, index) => {
-                $('#content-container').append(
-                    `<h2>Event: ${event.name}</h2>
- <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h2>
- <hr class="border"/>
- <a href="/events/my-events/attending/${event.id}" class="btn-flat btn-info rounded">View</a>`);
-            });
-        })
-        .catch(() => {
-            $('#customText').text('Attending events');
-        });
-
-}
-
-
 function showCreatedEvents() {
     fetch("/events/my-events/created")
         .then((response) => response.json())
         .then((json) => {
-            $('#customText').text('Created events');
             $('#content-container').remove();
             $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
 
             json.forEach((event, index) => {
                 $('#content-container').append(
                     `<h2> Event: ${event.name}</h2>
-<h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
-<hr class="border"/>
-<a href="/events/my-events/created/${event.id}" class="btn-flat btn-primary">View</a>
-<a href="/events/my-events/created/edit/${event.id}" class="btn-flat btn-info">Edit</a>
-<a href="/events/my-events/created/delete/${event.id}" class="btn-flat btn-danger">Delete</a><hr/>`);
+                     <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
+                     <hr class="border"/>
+                     <a href="/events/my-events/created/${event.id}" class="btn-flat btn-primary">View</a>
+                     <a href="/events/my-events/created/edit/${event.id}" class="btn-flat btn-info">Edit</a>
+                     <a href="/events/my-events/created/delete/${event.id}" class="btn-flat btn-danger">Delete</a><hr/>`);
             });
         })
         .catch(() => {
-            $('#customText').text('Created events');
+           alert("No events found!")
         });
 
 
 }
 
-function myFunction() {
-    $('input').focus(function () {
-        $(this).prev().addClass('stylee');
-    }).blur(function () {
-        if ($(this).val()) {
-            $(this).prev().addClass('stylee');
-        } else {
-            $(this).prev().removeClass('stylee');
-        }
-    });
-
-    $('select').focus(function () {
-        $(this).prev().addClass('stylee');
-    }).blur(function () {
-        if ($(this).val()) {
-            $(this).prev().addClass('stylee');
-        } else {
-            $(this).prev().removeClass('stylee');
-        }
-    });
-}
+// function myFunction() {
+//     $('input').focus(function () {
+//         $(this).prev().addClass('stylee');
+//     }).blur(function () {
+//         if ($(this).val()) {
+//             $(this).prev().addClass('stylee');
+//         } else {
+//             $(this).prev().removeClass('stylee');
+//         }
+//     });
+//
+//     $('select').focus(function () {
+//         $(this).prev().addClass('stylee');
+//     }).blur(function () {
+//         if ($(this).val()) {
+//             $(this).prev().addClass('stylee');
+//         } else {
+//             $(this).prev().removeClass('stylee');
+//         }
+//     });
+// }

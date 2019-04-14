@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "users")
@@ -15,7 +14,6 @@ public class User extends BaseEntity implements UserDetails {
   private String email;
   private String about;
   private Image image;
-  private List<Event> attendanceEvents;
   private Set<Role> roles;
 
   private boolean isAccountNonExpired;
@@ -74,22 +72,6 @@ public class User extends BaseEntity implements UserDetails {
 
   public void setImage(Image image) {
     this.image = image;
-  }
-
-  @ManyToMany(targetEntity = Event.class)
-  @JoinTable(name = "users_attendance_events",
-      joinColumns = @JoinColumn(
-          name = "used_id",
-          referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(
-          name = "event_id",
-          referencedColumnName = "id"))
-  public List<Event> getAttendanceEvents() {
-    return attendanceEvents;
-  }
-
-  public void setAttendanceEvents(List<Event> attendanceEvents) {
-    this.attendanceEvents = attendanceEvents;
   }
 
   @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)

@@ -53,13 +53,10 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
   }
 
 
-
   private CsrfTokenRepository csrfTokenRepository() {
     HttpSessionCsrfTokenRepository repository =
         new HttpSessionCsrfTokenRepository();
     repository.setSessionAttributeName("_csrf");
     return repository;
   }
-
-
 }

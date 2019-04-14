@@ -11,7 +11,7 @@
 <main class="mt-3">
     <h1 class="mb-3 mb-3 text-center se-form-text">Edit Organisation</h1>
     <div class="container">
-        <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom" th:action="@{/organisation/edit}" th:object="${bindingModel}"
+        <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom" th:action="@{/organisations/edit}" th:object="${bindingModel}"
               th:method="post" enctype="multipart/form-data">
             <th:block th:replace="~{fragments/organisation-form :: modify-organisation}"></th:block>
             <th:block th:replace="~{fragments/organisation-form :: edit-option}"></th:block>
@@ -23,7 +23,7 @@
 <script th:inline="javascript">
 
 
-    fetch('/countries/fetch')
+    fetch('/countries/fetch-all')
         .then((response) => response.json())
         .then((json) => {
             let countryId = [[${bindingModel.countryId}]];

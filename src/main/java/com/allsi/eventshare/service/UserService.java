@@ -5,10 +5,11 @@ import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-  boolean register(UserServiceModel serviceModel);
+  void register(UserServiceModel serviceModel);
 
   UserServiceModel findUserByUsername(String name);
 
@@ -16,12 +17,9 @@ public interface UserService extends UserDetailsService {
 
   void editUserPassword(UserServiceModel userModel, String name, String oldPassword);
 
-  void addCorpToUserRoles(String name);
-
-  void setCorpUserInactive(String username);
-
   void editUserPicture(String username, ImageServiceModel imageServiceModel) throws IOException;
 
-  List<String> findUserAttendingEvents(String principalUsername);
+  List<UserServiceModel> findAllUsers(String username);
 
+  UserServiceModel findUserById(String id);
 }

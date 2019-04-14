@@ -18,6 +18,7 @@ import static com.allsi.eventshare.constants.Constants.*;
 
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
+  private static final String ORGANISATION_NOT_FOUND_ERR = "Organisation not found!";
   private final OrganisationRepository organisationRepository;
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -111,7 +112,7 @@ public class OrganisationServiceImpl implements OrganisationService {
   }
 
   @Override
-  public List<OrganisationServiceModel> findAllOrganisationsWithEvents() {
+  public List<OrganisationServiceModel> findAllOrganisationsWithEvents(String username) {
     List<Event> events = this.eventRepository
         .findAllGroupByCreator();
 
@@ -131,6 +132,17 @@ public class OrganisationServiceImpl implements OrganisationService {
         .sort(Comparator.comparing(OrganisationServiceModel::getName));
 
     return organisations;
+  }
+
+  @Override
+  public OrganisationServiceModel findById(String id) {
+    Organisation organisation = this.organisationRepository
+        .findById(id)
+        .orElseThrow(() ->
+            new IllegalArgumentException(ORGANISATION_NOT_FOUND_ERR));
+
+    return this.modelMapper
+        .map(organisation, OrganisationServiceModel.class);
   }
 
 

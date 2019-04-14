@@ -2,13 +2,9 @@ package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.binding.EventBindingModel;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
-import com.allsi.eventshare.domain.models.view.EventBriefViewModel;
 import com.allsi.eventshare.domain.models.view.EventViewModel;
-import com.allsi.eventshare.domain.models.view.ImageViewModel;
 import com.allsi.eventshare.service.EventService;
 import com.allsi.eventshare.service.ImageService;
-import com.allsi.eventshare.service.UserService;
-import com.allsi.eventshare.util.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.GlobalConstants.*;
 
@@ -31,19 +25,16 @@ import static com.allsi.eventshare.constants.GlobalConstants.*;
 public class EventController extends BaseController {
   private final EventService eventService;
   private final ImageService imageService;
-  private final UserService userService;
-  private final AuthService authService;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public EventController(EventService eventService, ModelMapper modelMapper, ImageService imageService, UserService userService, AuthService authService) {
+  public EventController(EventService eventService, ModelMapper modelMapper, ImageService imageService) {
     this.eventService = eventService;
     this.modelMapper = modelMapper;
     this.imageService = imageService;
-    this.userService = userService;
-    this.authService = authService;
   }
 
+  //ADD event - works
   @GetMapping("/add")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView addEvent(ModelAndView modelAndView,
@@ -55,6 +46,7 @@ public class EventController extends BaseController {
     return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
+  //ADD event post works
   @PostMapping("/add")
   @PreAuthorize(("isAuthenticated()"))
   public ModelAndView addEventConfirm(Principal principal,
@@ -78,6 +70,7 @@ public class EventController extends BaseController {
     return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
+  //IT works
   @GetMapping("/my-events/created/{eventId}")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView creatorEventView(Principal principal,
@@ -90,14 +83,12 @@ public class EventController extends BaseController {
     EventViewModel viewModel = this.modelMapper
         .map(eventServiceModel, EventViewModel.class);
 
-    //TODO - mappings -- check if these work
-//    viewModel.setCountry(eventServiceModel.getCountry().getNiceName());
-
     modelAndView.addObject("viewModel", viewModel);
 
     return super.view(OWNER_EVENT_DETAILS_VIEW, modelAndView);
   }
 
+  //IT works
   @PostMapping("/add-pictures/{id}")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView addEventPictures(Principal principal,
@@ -109,70 +100,10 @@ public class EventController extends BaseController {
     return super.redirect(OWNER_EVENT_DETAILS_ROUTE + id);
   }
 
-  @GetMapping(value = "/all-pictures/{id}", produces = "application/json")
-  @ResponseBody
-  public Object fetchEventPictures(@PathVariable(name = "id") String id) {
-
-    EventServiceModel eventServiceModel = this.eventService.findEventById(id);
-
-    return eventServiceModel.getImages()
-        .stream()
-        .map(img -> this.modelMapper
-            .map(img, ImageViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @GetMapping(value = "/my-events/created", produces = "application/json")
-  @ResponseBody
-  public Object fetchCreated() {
-    return this.eventService.findAllByCreator(this.authService.getPrincipalUsername())
-        .stream()
-        .map(e -> this.modelMapper.map(e, EventBriefViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @GetMapping(value = "/my-events/attending", produces = "application/json")
-  @ResponseBody
-  public Object fetchAttending() {
-
-    List<String> eventsIds = this.userService.findUserAttendingEvents(this.authService.getPrincipalUsername());
-
-    return this.eventService.findAllById(eventsIds)
-        .stream()
-        .map(e -> this.modelMapper.map(e, EventBriefViewModel.class))
-        .collect(Collectors.toList());
-  }
-
+  //It Works
   @GetMapping("/my-events")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView allUserEvents() {
     return super.view(OWNER_ALL_EVENTS_VIEW);
   }
-
-  @GetMapping("/my-events/attending/{id}")
-  @PreAuthorize("isAuthenticated()")
-  public ModelAndView attendingEventView(Principal principal,
-                                         @PathVariable(name = "id") String id,
-                                         ModelAndView modelAndView) {
-
-    this.eventService.checkRegistrationForEvent(id, principal.getName());
-
-    EventBriefViewModel eventBriefViewModel = this.modelMapper
-        .map(this.eventService.findEventById(id), EventBriefViewModel.class);
-
-    modelAndView.addObject("viewModel", eventBriefViewModel);
-
-    return super.view(ATTENDING_EVENTS_VIEW, modelAndView);
-  }
-
-  @PostMapping("/events/my-events/attending/remove/{id}")
-  @PreAuthorize("isAuthenticated()")
-  public ModelAndView removeFromAttendanceList(Principal principal,
-                                               @PathVariable(name = "id") String id) {
-
-    this.eventService.removeAttendanceEvent(principal.getName(), id);
-    return super.redirect(OWNER_ALL_EVENTS_ROUTE);
-  }
-
-
 }

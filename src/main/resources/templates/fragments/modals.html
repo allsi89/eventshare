@@ -42,7 +42,7 @@
             </div>
             <div class="modal-content">
                 <form id="change-organisation-picture-form" class="form"
-                      th:action="@{/organisation/details/change-picture}" th:method="post"
+                      th:action="@{/organisations/details/change-picture}" th:method="post"
                       enctype="multipart/form-data">
                     <th:block th:replace="~{fragments/change-picture}"></th:block>
                 </form>
@@ -67,7 +67,8 @@
                 </button>
             </div>
             <div class="modal-content">
-                <form id="change-profile-picture-form" class="form" th:action="@{/users/profile/change-picture}"
+                <form id="change-profile-picture-form" class="form"
+                      th:action="@{/users/profile/change-picture}"
                       th:method="post"
                       enctype="multipart/form-data">
                     <th:block th:replace="~{fragments/change-picture}"></th:block>
@@ -83,11 +84,10 @@
     </div>
 </th:block>
 
-
 <th:block th:fragment="remove-attendance-event-modal">
     <div class="text-right mt-3">
-        <a href="#" class="btn btn-large fixed-action-btn blue" data-toggle="modal" role="button" data-target="#modal">Remove from my
-            attendance list</a>
+        <a href="#" class="btn btn-large fixed-action-btn blue" data-toggle="modal" role="button" data-target="#modal">
+           Cancel Attendance</a>
         <div id="modal" class="modal modal-fixed-footer se-background" tabindex="-1" role="document">
             <div class="modal-header">
                 <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
@@ -98,18 +98,11 @@
                 <form id="remove-attendance-event-form" class="form"
                       th:action="@{/events/my-events/attending/remove/{id}(id=${viewModel.id})}"
                       th:method="post">
-                    <div class="file-field">
-                        <div class="btn">
-                            <span>Choose a file</span>
-                            <input type="file" name="file" required>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
                 </form>
+                <h2 class="red">Are you sure you want to cancel your attendance?</h2>
             </div>
             <div class="modal-footer">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <input id="btn-id" type="hidden" name="id" th:value="${viewModel.getId()}"/>
                 <button type="submit" class="btn-flat btn-success rounded" data-dismiss="modal"
                         onclick="$('#remove-attendance-event-form').submit()">Save
@@ -119,7 +112,6 @@
         </div>
     </div>
 </th:block>
-
 
 <th:block th:fragment="add-category-modal">
     <div class="text-center mt-3">
@@ -158,4 +150,3 @@
         </div>
     </div>
 </th:block>
-

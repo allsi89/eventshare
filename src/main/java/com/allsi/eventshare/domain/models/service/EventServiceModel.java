@@ -17,11 +17,9 @@ public class EventServiceModel extends BaseServiceModel{
   private String startsOnTime;
   private CategoryServiceModel category;
   private UserServiceModel creator;
-  private List<UserServiceModel> attendees;
 
   public EventServiceModel() {
     this.images = new ArrayList<>();
-    this.attendees = new ArrayList<>();
   }
 
   public String getName() {
@@ -126,14 +124,6 @@ public class EventServiceModel extends BaseServiceModel{
 
   public void setCreator(UserServiceModel creator) {
     this.creator = creator;
-  }
-
-  public List<UserServiceModel> getAttendees() {
-    return attendees;
-  }
-
-  public void setAttendees(List<UserServiceModel> attendees) {
-    this.attendees = attendees;
   }
 
 }

@@ -52,7 +52,7 @@
         }
     }
 
-    fetch('/countries/fetch')
+    fetch('/countries/fetch-all')
         .then((response) => response.json())
         .then((json) => {
             let countryId = [[${bindingModel.countryId}]];
@@ -62,7 +62,7 @@
         .catch((err) => console.log(err));
 
 
-    fetch('/categories/fetch')
+    fetch('/categories/fetch-all')
         .then((response) => response.json())
         .then((json) => {
             json.forEach((category) => $('#category').append(`<option value="${category.name}">${category.name}</option>`));

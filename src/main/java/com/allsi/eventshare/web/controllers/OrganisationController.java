@@ -22,7 +22,7 @@ import java.security.Principal;
 import static com.allsi.eventshare.constants.GlobalConstants.*;
 
 @Controller
-@RequestMapping("/organisation")
+@RequestMapping("/organisations")
 public class OrganisationController extends BaseController {
   private final OrganisationService organisationService;
   private final ImageService imageService;

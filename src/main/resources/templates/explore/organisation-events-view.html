@@ -11,12 +11,9 @@
     <main>
         <div class="jumbotron mt-4 se-background center">
             <th:block th:replace="~{fragments/picture-fragments :: organisation-picture}"></th:block>
-            <th:block th:replace="~{fragments/modals :: organisation-picture-modal}"></th:block>
             <th:block th:replace="~{fragments/details :: organisation-details}"></th:block>
-            <div class="text-center mt-3">
-                <a th:href="@{/organisations/edit}" class="btn btn-small blue" role="button">Edit</a>
-                <a th:href="@{/organisations/delete}" class="btn btn-small red" role="button">Delete</a>
-            </div>
+<hr/>
+            <th:block th:replace="~{fragments/available-events}"></th:block>
         </div>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </main>

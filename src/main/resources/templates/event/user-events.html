@@ -10,18 +10,8 @@
 <div class="container-fluid justify-content-center">
     <main>
         <div class="jumbotron mt-4 se-background">
-            <h1 th:id="customText">Select what data you want to visualize!</h1>
+            <h1 th:id="customText">Created events</h1>
             <hr/>
-            <form>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <button type="button" class="button buttonBlue" id="created" data-th-onclick="showCreatedEvents()">Created</button>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <button type="button" class="button buttonBlue" id="attending" data-th-onclick="showAttendingEvents()">Attending</button>
-                    </div>
-                </div>
-            </form>
             <div class="custom-container">
                 <div th:id="content-container"></div>
             </div>
@@ -30,5 +20,14 @@
     </main>
     <th:block th:include="~{fragments/footer}"></th:block>
 </div>
+<script>
+    setTimeout(() =>{
+            showCreatedEvents()
+    }, 1000);
+
+    window.onload(()=> {
+            showCreatedEvents()
+    })
+</script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 
-import java.text.ParseException;
 import java.util.List;
 
 public interface EventService {
@@ -13,15 +12,13 @@ public interface EventService {
 
   void fillGallery(String eventId, String username, ImageServiceModel imageServiceModel);
 
-  List<EventServiceModel> findAllByCreator(String principalUsername);
+  List<EventServiceModel> findAllByCreator(String username);
 
-  List<EventServiceModel> findAllById(List<String> eventsIds);
-
-  void checkRegistrationForEvent(String id, String username);
-
-  void removeAttendanceEvent(String username, String id);
+  List<EventServiceModel> findAllByIds(List<String> eventsIds);
 
   EventServiceModel findEventByIdAndCreator(String eventId, String name);
 
-  List<EventServiceModel> findAvailableToRegEventsByCategory(String categoryName, String username);
+  List<EventServiceModel> findAllByCountry(String countryId);
+
+  List<EventServiceModel> findAllByCategory(String id);
 }

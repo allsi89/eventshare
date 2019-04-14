@@ -18,7 +18,6 @@ public class MapperConfiguration {
     modelMapper.createTypeMap(UserServiceModel.class, User.class)
         .addMappings(mapper -> mapper.skip((User::setImage)))
         .addMappings(mapper -> mapper.skip(User::setId))
-        .addMappings(mapper -> mapper.skip(User::setAttendanceEvents))
         .addMappings(mapper -> mapper.skip(User::setRoles));
 
     modelMapper.createTypeMap(OrganisationServiceModel.class, Organisation.class)
@@ -26,11 +25,6 @@ public class MapperConfiguration {
         .addMappings(mapper -> mapper.skip((Organisation::setImage)))
         .addMappings(mapper -> mapper.skip((Organisation::setCountry)))
         .addMappings(mapper -> mapper.skip((Organisation::setUser)));
-
-//    modelMapper.createTypeMap(EventBindingModel.class, EventServiceModel.class)
-//        .addMappings(mapper -> mapper.skip(EventServiceModel::setCountry))
-//        .addMappings(mapper -> mapper.skip(EventServiceModel::setCategory));
-
 
     modelMapper.validate();
     return modelMapper;

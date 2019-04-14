@@ -11,6 +11,7 @@ public class OrganisationServiceModel extends BaseServiceModel {
   private String website;
   private String email;
   private String phone;
+  private UserServiceModel user;
 
   public OrganisationServiceModel() {
   }
@@ -93,5 +94,13 @@ public class OrganisationServiceModel extends BaseServiceModel {
 
   public void setPhone(String phone) {
     this.phone = phone;
+  }
+
+  public UserServiceModel getUser() {
+    return user;
+  }
+
+  public void setUser(UserServiceModel user) {
+    this.user = user;
   }
 }

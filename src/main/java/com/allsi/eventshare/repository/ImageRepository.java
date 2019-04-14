@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, String> {
-
-//  List<Image> findAllByEvent_Id(String id);
 }

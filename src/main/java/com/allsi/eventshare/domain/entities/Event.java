@@ -2,7 +2,6 @@ package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "events")
@@ -20,10 +19,8 @@ public class Event extends BaseEntity{
   private LocalDateTime startDatetime;
   private Category category;
   private User creator;
-  private List<User> attendees;
 
   public Event() {
-    this.attendees = new ArrayList<>();
   }
 
   @Column(name = "name", nullable = false)
@@ -135,14 +132,5 @@ public class Event extends BaseEntity{
 
   public void setCreator(User creator) {
     this.creator = creator;
-  }
-
-  @ManyToMany(targetEntity = User.class, mappedBy = "attendanceEvents")
-  public List<User> getAttendees() {
-    return attendees;
-  }
-
-  public void setAttendees(List<User> attendees) {
-    this.attendees = attendees;
   }
 }

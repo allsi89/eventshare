@@ -50,6 +50,10 @@
             <th scope="row" th:text="${viewModel.city}  + ' ' + ${viewModel.zip}"></th>
         </tr>
         <tr>
+            <th scope="row" class="text-center">State</th>
+            <th scope="row" th:text="${viewModel.state}"></th>
+        </tr>
+        <tr>
             <th scope="row" class="text-center">Address</th>
             <th scope="row" th:text="${viewModel.address}"></th>
         </tr>
@@ -74,20 +78,20 @@
             <th scope="row" th:text="|*{city} *{zip}|"></th>
         </tr>
         <tr>
+            <th scope="row">State</th>
+            <th scope="row" th:text="*{state}"></th>
+        </tr>
+        <tr>
             <th scope="row">Address</th>
             <th scope="row" th:text="*{address}"></th>
         </tr>
         <tr>
             <th scope="row">Website</th>
-            <th scope="row"><a th:href="${viewModel.website}">Click Here</a></th>
+            <th scope="row"><a th:href="*{website}">Click Here</a></th>
         </tr>
         <tr>
             <th scope="row">Starts On</th>
             <th scope="row" th:text="|*{startsOnDate.toString()} *{startsOnTime.toString()}|"></th>
-        </tr>
-        <tr>
-            <th scope="row">Users registered for the event</th>
-            <th scope="row" th:text="*{participantCount}"></th>
         </tr>
         </tbody>
     </table>

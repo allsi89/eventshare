@@ -54,7 +54,6 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public void addCategory(CategoryServiceModel serviceModel) {
-    //TODO validate
     Category category = this.modelMapper.map(serviceModel, Category.class);
     this.categoryRepository.save(category);
   }

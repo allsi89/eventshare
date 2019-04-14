@@ -112,9 +112,9 @@ public class Organisation extends BaseEntity {
   }
 
   @OneToOne(targetEntity = User.class)
-  @JoinColumn(
-          name = "user_id",
-          referencedColumnName = "id")
+  @JoinTable(name = "users_organisations",
+  joinColumns = @JoinColumn(name = "organisation_id", referencedColumnName = "id"),
+  inverseJoinColumns =  @JoinColumn(name = "user_id", referencedColumnName = "id"))
   public User getUser() {
     return user;
   }

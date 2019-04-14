@@ -35,9 +35,4 @@ public class AuthServiceImpl implements AuthService {
         updatedAuthorities);
     SecurityContextHolder.getContext().setAuthentication(newAuth);
   }
-
-  @Override
-  public String getPrincipalUsername() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
 }

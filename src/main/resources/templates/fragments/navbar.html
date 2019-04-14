@@ -1,4 +1,3 @@
-<script src="../../static/js/custom.js"></script>
 <th:block th:fragment xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <th:block sec:authorize="isAnonymous()">
         <nav class="navbar navbar-expand-lg se-nav">
@@ -60,13 +59,13 @@
                             Organisation
                         </a>
                         <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/organisation/details}"
+                            <a class="dropdown-item" th:href="@{/organisations/details}"
                                sec:authorize="hasRole('ROLE_CORP')">My organisation</a>
-                            <a class="dropdown-item" th:href="@{/organisation/add}"
+                            <a class="dropdown-item" th:href="@{/organisations/add}"
                                sec:authorize="!hasRole('ROLE_CORP')">Add</a>
-                            <a class="dropdown-item" th:href="@{/organisation/edit}"
+                            <a class="dropdown-item" th:href="@{/organisations/edit}"
                                sec:authorize="hasRole('ROLE_CORP')">Edit</a>
-                            <a class="dropdown-item" th:href="@{/organisation/delete}"
+                            <a class="dropdown-item" th:href="@{/organisations/delete}"
                                sec:authorize="hasRole('ROLE_CORP')">Delete</a>
                         </div>
                     </li>

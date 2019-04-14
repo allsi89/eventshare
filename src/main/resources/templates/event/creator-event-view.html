@@ -16,8 +16,6 @@
             <div>
                 <th:block th:replace="~{fragments/details :: event-details}"></th:block>
                 <div class="form-group mt-5">
-                    <!--<input hidden="hidden" th:text="${viewModel.id}" class="modelId">-->
-                    <!--<button type="button" id="load-attendees" class="button buttonBlue" th:action="participantsShow('${viewModel.id}')">Participants</button>-->
                     <p id="load-images" class="alert-info">Gallery</p>
                 </div>
                 <th:block th:replace="~{fragments/modals :: event-picture-modal}"></th:block>
@@ -33,9 +31,6 @@
 </div>
 
 <script>
-    // let url = window.location.pathname;
-    // let id = url.slice(26);
-
     const id = $('#btn-id').val();
 
     function submitForm() {
@@ -51,12 +46,12 @@
 
     $(document).ready(showGallery(id));
 
-    $('#modal').bind('hidden.bs.modal', function () {
-        $("html").css("margin-right", "0px");
-    });
-    $('#modal').bind('show.bs.modal', function () {
-        $("html").css("margin-right", "-15px");
-    });
+    // $('#modal').bind('hidden.bs.modal', function () {
+    //     $("html").css("margin-right", "0px");
+    // });
+    // $('#modal').bind('show.bs.modal', function () {
+    //     $("html").css("margin-right", "-15px");
+    // });
 </script>
 </body>
 </html>

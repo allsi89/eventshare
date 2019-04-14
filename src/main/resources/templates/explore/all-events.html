@@ -18,8 +18,8 @@
                 <thead>
                 <tr class="row mx-auto">
                     <th class="col-md-1 text-center">#</th>
-                    <th class="col-md-4 text-center">Name</th>
-                    <th class="col-md-7 text-center">Actions</th>
+                    <th class="col-md-7 text-center">Name</th>
+                    <th class="col-md-4 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,17 +27,10 @@
                 <th:block th:each="event, iter : ${events}">
                     <tr class="row mx-auto">
                         <th class="col-md-1 text-center" th:text="${iter.index + 1}"></th>
-                        <td class="col-md-4 text-center" th:text="${event.name}"></td>
-                        <td class="col-md-3 text-center">
-                            <a th:href="@{/explore/event/{id}(id=${event.id})}"
-                               class="btn custom-size-btn green">Register attendance</a>
-                        </td>
+                        <td class="col-md-7 text-center" th:text="${event.name}"></td>
                         <td class="col-md-4 text-center">
-                            <form th:action="@{/events/register-attendance}" th:method="post">
-                                <input type="hidden" name="id" th:value="${event.id}">
-                                <button type="submit"
-                                        class="btn custom-size-btn blue">Register attendance</button>
-                            </form>
+                            <a th:href="@{/explore/event/{id}(id=${event.id})}"
+                               class="btn custom-size-btn green">View</a>
                         </td>
                     </tr>
                 </th:block>

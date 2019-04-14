@@ -44,7 +44,7 @@ public class CountryServiceImpl implements CountryService {
   }
 
   @Override
-  public List<CountryServiceModel> findAllCountriesWithEvents() {
+  public List<CountryServiceModel> findAllCountriesWithEvents(String username) {
     List<Event> events = this.eventRepository.findAllGroupByCountry();
 
     List<CountryServiceModel> countries = new ArrayList<>();

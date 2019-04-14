@@ -57,12 +57,11 @@ public class UserController extends BaseController {
 
     if (bindingModel.getPassword().equals(bindingModel.getConfirmPassword()) &&
         !bindingResult.hasErrors()) {
-
-      if (this.userService
+      this.userService
           .register(this.modelMapper
-              .map(bindingModel, UserServiceModel.class))) {
-        return super.redirect(USER_LOGIN_ROUTE);
-      }
+              .map(bindingModel, UserServiceModel.class));
+
+      return super.redirect(USER_LOGIN_ROUTE);
     }
 
     modelAndView.addObject("bindingModel", bindingModel);

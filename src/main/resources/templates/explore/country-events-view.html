@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+</header>
+<div class="container-fluid">
+    <main>
+        <div class="jumbotron mt-4 se-background center">
+            <h2 th:text="${countryName}"></h2>
+            <hr/>
+            <th:block th:replace="~{fragments/available-events}"></th:block>
+        </div>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </main>
+    <th:block th:include="~{fragments/footer}"></th:block>
+</div>
+</body>
+</html>

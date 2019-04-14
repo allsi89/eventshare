@@ -19,10 +19,10 @@ public class GlobalConstants {
   /*
   Organisation-related routes
    */
-  public static final String ADD_ORG_ROUTE = "/organisation/add";
-  public static final String EDIT_ORG_ROUTE = "/organisation/edit";
-  public static final String CHANGE_PIC_ORG_ROUTE = "/organisation/details/change-picture";
-  public static final String OWNER_ORG_DETAILS_ROUTE = "/organisation/details";
+  public static final String ADD_ORG_ROUTE = "/organisations/add";
+  public static final String EDIT_ORG_ROUTE = "/organisations/edit";
+  public static final String CHANGE_PIC_ORG_ROUTE = "/organisations/details/change-picture";
+  public static final String OWNER_ORG_DETAILS_ROUTE = "/organisations/details";
 
   /*
   Organisation-related views
@@ -63,7 +63,6 @@ public class GlobalConstants {
   public static final String EDIT_EVENT_ROUTE = "/events";
   public static final String DELETE_EVENT_ROUTE = "/events";
   public static final String CREATED_EVENTS_ROUTE = "/events";
-  public static final String ATTENDING_EVENTS_ROUTE = "/events/my-events/attending"; //json
   public static final String OWNER_ALL_EVENTS_ROUTE = "/events/my-events";
   public static final String
       OWNER_EVENT_DETAILS_ROUTE = "/events/my-events/created/"; // + eventId
@@ -77,7 +76,6 @@ public class GlobalConstants {
   public static final String EDIT_EVENT_VIEW = "event/edit-event";
   public static final String DELETE_EVENT_VIEW = "event/delete-event";
   public static final String CREATED_EVENTS_VIEW = "";
-  public static final String ATTENDING_EVENTS_VIEW = "event/attendee-event-view";
   public static final String OWNER_ALL_EVENTS_VIEW = "event/user-events";
   public static final String OWNER_EVENT_DETAILS_VIEW = "event/creator-event-view";
   public static final String CHANGE_EVENT_PICTURE_VIEW = "";
@@ -106,10 +104,16 @@ public class GlobalConstants {
   public static final String EXPLORE_ROUTE = "/explore/options";
   public static final String EXPLORE_EVENT_ROUTE = "/explore/event/"; //+ id
 
+  public static final String EXPLORE_ORG_EVENTS_ROUTE = "/explore/organisations/"; //+ org.id
+
   /*
   Explore-related views
    */
 
   public static final String EXPLORE_VIEW = "explore/explore";
+  public static final String EXPLORE_ORG_EVENTS_VIEW = "explore/organisation-events-view";
   public static final String EXPLORE_EVENT_VIEW = "explore/event-guest-view";
+  public static final String EXPLORE_COUNTRY_EVENTS_VIEW = "explore/country-events-view";
+  public static final String EXPLORE_CATEGORY_EVENTS_VIEW = "explore/category-events-view";
+  public static final String EXPLORE_CREATOR_EVENTS_VIEW = "explore/creator-guest-events-view";
 }

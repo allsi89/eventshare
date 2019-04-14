@@ -1,11 +1,12 @@
 package com.allsi.eventshare.service;
 
-import com.allsi.eventshare.domain.entities.BaseEntity;
+import com.allsi.eventshare.domain.entities.Event;
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.entities.User;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
+import com.allsi.eventshare.repository.EventRepository;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.constants.Constants.*;
@@ -23,20 +24,23 @@ import static com.allsi.eventshare.constants.Constants.*;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
+  private final EventRepository eventRepository;
   private final RoleService roleService;
   private final ModelMapper modelMapper;
   private final BCryptPasswordEncoder encoder;
 
+
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
+  public UserServiceImpl(UserRepository userRepository, EventRepository eventRepository, RoleService roleService, ModelMapper modelMapper, BCryptPasswordEncoder encoder) {
     this.userRepository = userRepository;
+    this.eventRepository = eventRepository;
     this.roleService = roleService;
     this.modelMapper = modelMapper;
     this.encoder = encoder;
   }
 
   @Override
-  public boolean register(UserServiceModel serviceModel) {
+  public void register(UserServiceModel serviceModel) {
     this.roleService.seedRolesInDb();
 
     serviceModel.setPassword(this.encoder.encode(serviceModel.getPassword()));
@@ -44,14 +48,7 @@ public class UserServiceImpl implements UserService {
     User user = this.modelMapper.map(serviceModel, User.class);
 
     this.assignRolesToUser(user);
-
-    try {
-      this.userRepository.saveAndFlush(user);
-      return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+    this.userRepository.save(user);
   }
 
   @Override
@@ -94,38 +91,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void addCorpToUserRoles(String name) {
-    UserServiceModel userServiceModel = this.findUserByUsername(name);
-
-    userServiceModel.getRoles().add(this.roleService.findByAuthority(CORP));
-
-    User user = this.modelMapper.map(userServiceModel, User.class);
-    User toEdit = this.userRepository.findById(user.getId())
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-
-    toEdit.setRoles(user.getRoles());
-
-    this.userRepository.save(toEdit);
-  }
-
-  @Override
-  public void setCorpUserInactive(String username) {
-    User user = this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-
-//    RoleServiceModel roleServiceModel = this.roleService.findByAuthority(CORP);
-
-    Set<Role> roles = user.getRoles()
-        .stream()
-        .filter(role -> !role.getAuthority().equals(CORP))
-        .collect(Collectors.toSet());
-
-    user.setRoles(roles);
-
-    this.userRepository.save(user);
-  }
-
-  @Override
   public void editUserPicture(String username, ImageServiceModel imageServiceModel) {
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
@@ -137,15 +102,22 @@ public class UserServiceImpl implements UserService {
     this.userRepository.save(user);
   }
 
+  //TODO  find rootAdmin and remove it from list
+
   @Override
-  public List<String> findUserAttendingEvents(String username) {
-    User user = this.userRepository.findByUsername(username)
+  public List<UserServiceModel> findAllUsers(String username) {
+    return this.userRepository.listAllUsersExceptAdmin(username)
+        .stream()
+        .map(u->this.modelMapper.map(u, UserServiceModel.class))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public UserServiceModel findUserById(String id) {
+    User user = this.userRepository.findById(id)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
-    return user.getAttendanceEvents()
-        .stream()
-        .map(BaseEntity::getId)
-        .collect(Collectors.toList());
+    return this.modelMapper.map(user, UserServiceModel.class);
   }
 
   private void assignRolesToUser(User user) {

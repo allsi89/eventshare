@@ -65,19 +65,4 @@ public class CategoryController extends BaseController {
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
   }
-
-
-
-
-  @GetMapping("/fetch")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public List<CategoryViewModel> fetchCategories() {
-    return this.categoryService.findAllCategories()
-        .stream()
-        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-
 }
