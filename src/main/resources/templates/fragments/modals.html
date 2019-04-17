@@ -12,18 +12,19 @@
                 </button>
             </div>
             <div class="modal-content">
-                <form id="add-event-pictures-form" class="form"
-                      th:action="@{/events/add-pictures/{id}(id=${viewModel.id})}"
-                      th:method="post"
-                      enctype="multipart/form-data">
+                <form id="add-event-pictures-form" class="form" method="post"
+                th:action="@{/events/add-pictures/{id}(id=${viewModel.id})}"
+                enctype="multipart/form-data">
                     <th:block th:replace="~{fragments/change-picture}"></th:block>
+                    <input id="btn-id" type="hidden" name="id" th:value="${viewModel.getId()}"/>
+                    <input type="hidden" id="token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit" class="btn-flat btn-success rounded func-button"
+                            onclick="$('#add-event-pictures-form').submit()"
+                            data-dismiss="modal" id="submit-pic-btn">Save
+                        </button>
                 </form>
             </div>
             <div class="modal-footer">
-                <input id="btn-id" type="hidden" name="id" th:value="${viewModel.getId()}"/>
-                <button type="submit" class="btn-flat btn-success rounded func-button"
-                        data-dismiss="modal" onclick="$('#add-event-pictures-form').submit()">Save
-                </button>
                 <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -134,7 +135,7 @@
                       th:method="post">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name"
+                        <input type="text" class="form-control validate" id="name"
                                name="name" required>
                         <div class="invalid-tooltip"></div>
                     </div>
@@ -144,6 +145,44 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <button type="submit" class="btn-flat btn-success rounded func-button"
                         data-dismiss="modal" onclick="$('#add-category-form').submit()">Save
+                </button>
+                <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="edit-category-modal">
+    <div class="text-center mt-3">
+        <button type="button"  class="btn btn-large blue" data-toggle="modal" data-target="#edit-modal"
+                sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN)">
+            Edit Category
+        </button>
+
+        <div id="edit-category-modal" class="modal se-background modal-fixed-footer" tabindex="-1" role="document">
+            <div class="modal-header">
+                <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-content">
+                <h2>Edit Category</h2>
+                <hr/>
+                <form id="edit-category-form" class="se-form se-form-text mt-3 mb-3 col-md-6 form-custom"
+                      th:action="@{/categories/edit}"
+                      th:method="post">
+                    <div class="form-group">
+                        <label for="name">New Name</label>
+                        <input type="text" class="form-control validate" id="name"
+                               name="name" required>
+                        <div class="invalid-tooltip"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <button type="submit" class="btn-flat btn-success rounded func-button"
+                        data-dismiss="modal" onclick="$('#edit-category-form').submit()">Save
                 </button>
                 <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
             </div>

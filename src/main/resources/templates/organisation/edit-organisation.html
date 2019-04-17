@@ -15,15 +15,14 @@
               th:method="post" enctype="multipart/form-data">
             <th:block th:replace="~{fragments/organisation-form :: modify-organisation}"></th:block>
             <th:block th:replace="~{fragments/organisation-form :: edit-option}"></th:block>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
 </main>
 <th:block th:include="~{fragments/footer}"></th:block>
 </body>
 <script th:inline="javascript">
-
-
-    fetch('/countries/fetch-all')
+    fetch('/fetch/all-countries')
         .then((response) => response.json())
         .then((json) => {
             let countryId = [[${bindingModel.countryId}]];

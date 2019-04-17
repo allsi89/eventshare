@@ -2,6 +2,7 @@ package com.allsi.eventshare.service;
 
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
+import com.allsi.eventshare.errors.InvalidFileException;
 import com.allsi.eventshare.repository.ImageRepository;
 import com.allsi.eventshare.util.CloudService;
 import org.modelmapper.ModelMapper;
@@ -31,7 +32,7 @@ public class ImageServiceImpl implements ImageService {
     String url = this.cloudService.uploadImage(file);
 
     if (url == null){
-      throw new IllegalArgumentException(INVALID_FILE);
+      throw new InvalidFileException();
     }
 
     Image image = new Image(url);

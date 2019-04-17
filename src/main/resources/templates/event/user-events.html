@@ -12,22 +12,62 @@
         <div class="jumbotron mt-4 se-background">
             <h1 th:id="customText">Created events</h1>
             <hr/>
-            <div class="custom-container">
-                <div th:id="content-container"></div>
-            </div>
+            <table class="tab table-hover mx-auto">
+                <thead>
+                <tr class="row mx-auto">
+                    <th class="col-md-1 text-center">#</th>
+                    <th class="col-md-4 text-center">Name</th>
+                    <th class="col-md-4 text-center">Starts On</th>
+                    <th class="col-md-3 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="event, iter : ${events}">
+                <tr class="row mx-auto">
+                    <th class="col-md-1 text-center" th:text="${iter.index + 1}"></th>
+                    <td class="col-md-4 text-center" th:text="${event.name}">Name</td>
+                    <td class="col-md-4 text-center" th:text="${event.startsOnDate}
+                    + ' at '
+                    + ${event.startsOnTime}"></td>
+                    <td class="col-md-3 text-center">
+                            <a th:href="@{/events/my-events/view/{id}(id=${event.id})}" class="btn btn-secondary mt-2">
+                                View
+                            </a>
+                        <form th:action="@{/events/my-events/edit}" method="get">
+                            <button name="editId" class="btn btn-secondary green mt-2" th:value="${event.id}">
+                                Edit
+                            </button>
+                        </form>
+                        <form th:action="@{/events/my-events/delete}" method="post">
+                            <input type="hidden" name="deleteId" th:value="${event.id}">
+                            <button type="submit" class="btn btn-secondary red mt-2">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+            <!--<div class="custom-container">-->
+                <!--<div th:id="content-container"></div>-->
+            <!--</div>-->
         </div>
 
     </main>
     <th:block th:include="~{fragments/footer}"></th:block>
 </div>
 <script>
-    setTimeout(() =>{
-            showCreatedEvents()
-    }, 1000);
+    showCreatedEvents();
 
-    window.onload(()=> {
-            showCreatedEvents()
-    })
+    setTimeout(() => {
+        showCreatedEvents()
+    }, 100);
+
+    // window.onload(()=> {
+    //         showCreatedEvents()
+    // })
 </script>
 </body>
 </html>

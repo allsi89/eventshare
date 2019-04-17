@@ -14,11 +14,15 @@ public interface EventService {
 
   List<EventServiceModel> findAllByCreator(String username);
 
-  List<EventServiceModel> findAllByIds(List<String> eventsIds);
+//  List<EventServiceModel> findAllByIds(List<String> eventsIds);
 
   EventServiceModel findEventByIdAndCreator(String eventId, String name);
 
   List<EventServiceModel> findAllByCountry(String countryId);
 
   List<EventServiceModel> findAllByCategory(String id);
+
+  void deleteEvent(String id, String name);
+
+  void editEvent(EventServiceModel serviceModel, String name);
 }

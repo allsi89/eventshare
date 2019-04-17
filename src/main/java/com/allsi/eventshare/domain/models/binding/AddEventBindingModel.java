@@ -1,9 +1,8 @@
 package com.allsi.eventshare.domain.models.binding;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
-public class EventBindingModel {
+public class AddEventBindingModel {
   private String name;
   private String description;
   private String countryId;
@@ -16,9 +15,10 @@ public class EventBindingModel {
   private String startsOnTime;
   private String categoryName;
 
-  public EventBindingModel() {
+  public AddEventBindingModel() {
   }
 
+  @NotBlank
   public String getName() {
     return name;
   }
@@ -35,6 +35,7 @@ public class EventBindingModel {
     this.description = description;
   }
 
+  @NotBlank
   public String getCountryId() {
     return countryId;
   }
@@ -42,14 +43,6 @@ public class EventBindingModel {
   public void setCountryId(String countryId) {
     this.countryId = countryId;
   }
-
-  //  public String getCountry() {
-//    return country;
-//  }
-//
-//  public void setCountry(String country) {
-//    this.country = country;
-//  }
 
   public String getCity() {
     return city;
@@ -91,6 +84,7 @@ public class EventBindingModel {
     this.website = website;
   }
 
+  @NotBlank
   public String getStartsOnDate() {
     return startsOnDate;
   }
@@ -99,6 +93,7 @@ public class EventBindingModel {
     this.startsOnDate = startsOnDate;
   }
 
+  @NotBlank
   public String getStartsOnTime() {
     return startsOnTime;
   }
@@ -107,8 +102,7 @@ public class EventBindingModel {
     this.startsOnTime = startsOnTime;
   }
 
-  @NotNull
-  @NotEmpty
+  @NotBlank
   public String getCategoryName() {
     return categoryName;
   }

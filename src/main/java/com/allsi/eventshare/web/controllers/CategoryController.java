@@ -30,7 +30,7 @@ public class CategoryController extends BaseController {
   }
 
   @GetMapping("/all")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT_ADMIN', 'ROLE_MODERATOR')")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   public ModelAndView allCategories(ModelAndView modelAndView) {
     List<CategoryViewModel> categories = this.categoryService.findAllCategories()
         .stream()
@@ -41,16 +41,16 @@ public class CategoryController extends BaseController {
   }
 
   @GetMapping("/add")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT_ADMIN', 'ROLE_MODERATOR')")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   public ModelAndView addCategory(ModelAndView modelAndView,
                                   @ModelAttribute(name = "bindingModel")
                                       CategoryBindingModel bindingModel) {
-    modelAndView.addObject("bindingModel", bindingModel);
+
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
   }
 
   @PostMapping("/add")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT_ADMIN', 'ROLE_MODERATOR')")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   public ModelAndView addCategoryConfirm(ModelAndView modelAndView,
                                          @ModelAttribute(name = "bindingModel")
                                              CategoryBindingModel bindingModel,
@@ -65,4 +65,42 @@ public class CategoryController extends BaseController {
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
   }
+
+  @GetMapping("/edit")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  public ModelAndView editCategory(ModelAndView modelAndView,
+                                   @RequestParam(name = "categoryId") String id) {
+
+    CategoryBindingModel bindingModel = this.modelMapper
+        .map(this.categoryService.findById(id), CategoryBindingModel.class);
+
+    modelAndView.addObject("bindingModel", bindingModel);
+    return super.view(EDIT_CATEGORY_VIEW, modelAndView);
+  }
+
+  @PostMapping("/edit")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  public ModelAndView editCategoryConfirm(ModelAndView modelAndView,
+                                          @RequestParam(name = "id") String id,
+                                          @ModelAttribute(name = "bindingModel")
+                                              CategoryBindingModel bindingModel,
+                                          BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      modelAndView.addObject("bindingModel", bindingModel);
+      return super.view(EDIT_CATEGORY_VIEW, modelAndView);
+    }
+
+    this.categoryService.editCategory(bindingModel.getName(), id);
+    return super.redirect(ALL_CATEGORIES_ROUTE);
+  }
+
+  @PostMapping("/delete/{id}")
+  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  public ModelAndView deleteCategoryConfirm(@PathVariable(name = "id") String id) {
+
+    this.categoryService.deleteCategory(id);
+    return super.redirect(ALL_CATEGORIES_ROUTE);
+  }
+
+
 }

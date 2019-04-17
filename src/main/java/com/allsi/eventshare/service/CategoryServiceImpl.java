@@ -3,6 +3,7 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.entities.Category;
 import com.allsi.eventshare.domain.entities.Event;
 import com.allsi.eventshare.domain.models.service.CategoryServiceModel;
+import com.allsi.eventshare.errors.CategoryNotFoundException;
 import com.allsi.eventshare.repository.CategoryRepository;
 import com.allsi.eventshare.repository.EventRepository;
 import org.modelmapper.ModelMapper;
@@ -32,17 +33,17 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryServiceModel findById(String id) {
     Category category = this.categoryRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
+        .orElseThrow(CategoryNotFoundException::new);
 
     return this.modelMapper.map(category, CategoryServiceModel.class);
   }
 
-  @Override
-  public CategoryServiceModel findByName(String name) {
-    Category category = this.categoryRepository.findByName(name)
-        .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
-    return this.modelMapper.map(category, CategoryServiceModel.class);
-  }
+//  @Override
+//  public CategoryServiceModel findByName(String name) {
+//    Category category = this.categoryRepository.findByName(name)
+//        .orElseThrow(() -> new CategoryNotFoundException());
+//    return this.modelMapper.map(category, CategoryServiceModel.class);
+//  }
 
   @Override
   public List<CategoryServiceModel> findAllCategories() {
@@ -75,5 +76,18 @@ public class CategoryServiceImpl implements CategoryService {
     categories.sort(Comparator.comparing(CategoryServiceModel::getName));
 
     return categories;
+  }
+
+  @Override
+  public void editCategory(String categoryName, String id) {
+    Category category = this.categoryRepository.findById(id)
+        .orElseThrow(CategoryNotFoundException::new);
+    category.setName(categoryName);
+    this.categoryRepository.save(category);
+  }
+
+  @Override
+  public void deleteCategory(String id) {
+    this.categoryRepository.deleteById(id);
   }
 }

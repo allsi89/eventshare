@@ -4,7 +4,7 @@ import com.allsi.eventshare.domain.models.binding.UserEditBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserEditPasswordBindingModel;
 import com.allsi.eventshare.domain.models.binding.UserRegisterBindingModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
-import com.allsi.eventshare.domain.models.view.UserProfileViewModel;
+import com.allsi.eventshare.domain.models.view.UserViewModel;
 import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,8 +45,11 @@ public class UserController extends BaseController {
 
   @GetMapping("/register")
   @PreAuthorize("isAnonymous()")
-  public ModelAndView register() {
-    return super.view(USER_REGISTER_VIEW);
+  public ModelAndView register(ModelAndView modelAndView,
+                               @ModelAttribute("bindingModel")
+                                   UserRegisterBindingModel bindingModel) {
+    modelAndView.addObject("bindingModel", bindingModel);
+    return super.view(USER_REGISTER_VIEW, modelAndView);
   }
 
   @PostMapping("/register")
@@ -55,8 +59,13 @@ public class UserController extends BaseController {
                                       BindingResult bindingResult,
                                       ModelAndView modelAndView) {
 
-    if (bindingModel.getPassword().equals(bindingModel.getConfirmPassword()) &&
-        !bindingResult.hasErrors()) {
+    if (!bindingModel.getPassword().equals(bindingModel.getConfirmPassword())) {
+      bindingResult.addError(new FieldError(
+          "bindingModel", "password", "Passwords don't match."));
+
+    }
+
+    if (!bindingResult.hasErrors()) {
       this.userService
           .register(this.modelMapper
               .map(bindingModel, UserServiceModel.class));
@@ -72,7 +81,7 @@ public class UserController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   public ModelAndView profile(Principal principal, ModelAndView modelAndView) {
     modelAndView
-        .addObject("userModel", this.getProfileViewModel(principal));
+        .addObject("userModel", this.getUserViewModel(principal));
 
     return super.view(USER_PROFILE_VIEW, modelAndView);
   }
@@ -81,7 +90,7 @@ public class UserController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   public ModelAndView editProfile(Principal principal, ModelAndView modelAndView) {
     modelAndView
-        .addObject("userModel", this.getProfileViewModel(principal));
+        .addObject("userModel", this.getUserViewModel(principal));
 
     return super.view(USER_EDIT_PROFILE_VIEW, modelAndView);
   }
@@ -121,7 +130,8 @@ public class UserController extends BaseController {
                                               UserEditPasswordBindingModel userModel,
                                           BindingResult bindingResult,
                                           ModelAndView modelAndView) {
-    if (!bindingResult.hasErrors()) {
+    if (!bindingResult.hasErrors() &&
+        userModel.getPassword().equals(userModel.getConfirmPassword())) {
       this.userService.editUserPassword(this.modelMapper
               .map(userModel, UserServiceModel.class),
           principal.getName(),
@@ -135,22 +145,23 @@ public class UserController extends BaseController {
     return super.view(USER_CHANGE_PASSWORD_VIEW);
   }
 
-  private UserProfileViewModel getProfileViewModel(Principal principal) {
-    UserServiceModel userServiceModel = this.userService
-        .findUserByUsername(principal.getName());
-
-    return this.modelMapper
-        .map(userServiceModel, UserProfileViewModel.class);
-  }
-
 
   @PostMapping("/profile/change-picture")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView changeProfilePicture(Principal principal,
                                            @RequestParam("file") MultipartFile file) throws IOException {
 
-    this.userService.editUserPicture(principal.getName(), this.imageService.saveInDb(file));
+    this.userService.editUserPicture(principal.getName(),
+        this.imageService.saveInDb(file));
     return super.redirect(USER_PROFILE_ROUTE);
+  }
+
+  private UserViewModel getUserViewModel(Principal principal) {
+    UserServiceModel userServiceModel = this.userService
+        .findUserByUsername(principal.getName());
+
+    return this.modelMapper
+        .map(userServiceModel, UserViewModel.class);
   }
 
 

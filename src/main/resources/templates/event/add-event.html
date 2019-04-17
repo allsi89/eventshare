@@ -13,17 +13,14 @@
     <div class="container">
         <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom" th:action="@{/events/add}"
               th:object="${bindingModel}"
-              th:method="post" enctype="multipart/form-data" sec:authorize="isAuthenticated()">
+              th:method="post" sec:authorize="isAuthenticated()">
             <th:block th:replace="~{fragments/event-form :: add-event}"></th:block>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
 </main>
-<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <th:block th:include="~{fragments/footer}"></th:block>
-
-</body>
 <script th:inline="javascript">
-    myFunction();
     $(document).ready(function () {
         $('.timepicker').timepicker({
             format: 'hh:mm'
@@ -43,16 +40,7 @@
 
     });
 
-
-    function toggleVal() {
-        if($("input[type=checkbox]").is(":checked")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    fetch('/countries/fetch-all')
+    fetch('/fetch/all-countries')
         .then((response) => response.json())
         .then((json) => {
             let countryId = [[${bindingModel.countryId}]];
@@ -62,7 +50,7 @@
         .catch((err) => console.log(err));
 
 
-    fetch('/categories/fetch-all')
+    fetch('/fetch/all-categories')
         .then((response) => response.json())
         .then((json) => {
             json.forEach((category) => $('#category').append(`<option value="${category.name}">${category.name}</option>`));
@@ -70,4 +58,5 @@
         .catch((err) => console.log(err));
 
 </script>
+</body>
 </html>

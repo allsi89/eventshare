@@ -11,7 +11,20 @@
 <main class="mt-3">
     <h1 class="mb-3 mb-3 text-center se-form-text">Add Category</h1>
     <div class="container">
-        <th:block th:replace="~{fragments/category-form}"></th:block>
+        <form id="edit-category-form" class="se-form se-form-text mt-3 mb-3 col-md-6 form-custom"
+              th:action="@{/categories/add}"
+              th:method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control validate" id="name" th:value="${bindingModel.name}"
+                       name="name" required>
+                <div class="invalid-tooltip"></div>
+            </div>
+            <hr/>
+            <button type="submit" id="submitButton" class="button buttonBlue">Save
+            </button>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        </form>
     </div>
 </main>
 <th:block th:include="~{fragments/footer}"></th:block>

@@ -3,6 +3,7 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.entities.Country;
 import com.allsi.eventshare.domain.entities.Event;
 import com.allsi.eventshare.domain.models.service.CountryServiceModel;
+import com.allsi.eventshare.errors.CountryNotFoundException;
 import com.allsi.eventshare.repository.CountryRepository;
 import com.allsi.eventshare.repository.EventRepository;
 import org.modelmapper.ModelMapper;
@@ -39,7 +40,7 @@ public class CountryServiceImpl implements CountryService {
   @Override
   public CountryServiceModel findByCountryId(String id) {
     Country country = this.countryRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND));
+        .orElseThrow(CountryNotFoundException::new);
     return this.modelMapper.map(country, CountryServiceModel.class);
   }
 

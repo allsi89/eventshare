@@ -1,10 +1,7 @@
 package com.allsi.eventshare.domain.models.binding;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
+import javax.validation.constraints.NotBlank;
 
 public class UserEditBindingModel {
   private String username;
@@ -14,6 +11,7 @@ public class UserEditBindingModel {
   public UserEditBindingModel() {
   }
 
+  @NotBlank
   public String getUsername() {
     return username;
   }
@@ -22,10 +20,8 @@ public class UserEditBindingModel {
     this.username = username;
   }
 
-  @NotNull(message = NULL_ERR_MSG)
-  @NotEmpty
+  @NotBlank
   @Email
-  //TODO Email PAttern here too
   public String getEmail() {
     return email;
   }

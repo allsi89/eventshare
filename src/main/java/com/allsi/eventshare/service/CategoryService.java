@@ -7,11 +7,15 @@ import java.util.List;
 public interface CategoryService {
   CategoryServiceModel findById(String id);
 
-  CategoryServiceModel findByName(String name);
+//  CategoryServiceModel findByName(String name);
 
   List<CategoryServiceModel> findAllCategories();
 
   void addCategory(CategoryServiceModel serviceModel);
 
   List<CategoryServiceModel> findAllCategoriesWithEvents();
+
+  void editCategory(String categoryName, String id);
+
+  void deleteCategory(String id);
 }

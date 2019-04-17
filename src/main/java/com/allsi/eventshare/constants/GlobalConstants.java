@@ -60,12 +60,11 @@ public class GlobalConstants {
    */
 
   public static final String ADD_EVENT_ROUTE = "/events/add";
-  public static final String EDIT_EVENT_ROUTE = "/events";
-  public static final String DELETE_EVENT_ROUTE = "/events";
-  public static final String CREATED_EVENTS_ROUTE = "/events";
+  public static final String EDIT_EVENT_ROUTE = "/events/my-events/edit";
+  public static final String DELETE_EVENT_ROUTE = "/events/my-events/delete";
+  public static final String CREATED_EVENTS_ROUTE = "/events/my-events";
   public static final String OWNER_ALL_EVENTS_ROUTE = "/events/my-events";
-  public static final String
-      OWNER_EVENT_DETAILS_ROUTE = "/events/my-events/created/"; // + eventId
+  public static final String OWNER_EVENT_DETAILS_ROUTE = "/events/my-events/view/";
   public static final String CHANGE_EVENT_PICTURE_ROUTE ="/events/all-pictures/"; // + eventId
 
   /*
@@ -85,8 +84,8 @@ public class GlobalConstants {
    */
 
   public static final String ADD_CATEGORY_ROUTE = "/categories/add";
-  public static final String EDIT_CATEGORY_ROUTE = "/categories/edit";
-  public static final String DELETE_CATEGORY_ROUTE = "/categories/delete";
+  public static final String EDIT_CATEGORY_ROUTE = "/categories/edit/"; // + id
+  public static final String DELETE_CATEGORY_ROUTE = "/categories/delete/"; // + id - only post
   public static final String ALL_CATEGORIES_ROUTE = "/categories/all";
 
   /*
@@ -116,4 +115,17 @@ public class GlobalConstants {
   public static final String EXPLORE_COUNTRY_EVENTS_VIEW = "explore/country-events-view";
   public static final String EXPLORE_CATEGORY_EVENTS_VIEW = "explore/category-events-view";
   public static final String EXPLORE_CREATOR_EVENTS_VIEW = "explore/creator-guest-events-view";
+
+
+  /*
+  Admin-related routes
+   */
+
+  public static final String ADMIN_ALL_USERS_ROUTE = "/admin/all-users";
+  public static final String ADMIN_EDIT_USER_ROUTE = "/admin/users/edit/"; // + id
+
+   /*
+  Admin-related views
+   */
+   public static final String ADMIN_ALL_USERS_VIEW = "/admin/all-users";
 }

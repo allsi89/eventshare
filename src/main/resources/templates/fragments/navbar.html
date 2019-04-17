@@ -86,16 +86,8 @@
                     <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ROOT_ADMIN, ROLE_ADMIN, ROLE_MODERATOR')">
                         <a class="nav-link" th:href="@{/categories/all}">Categories</a>
                     </li>
-                    <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN')">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown"
-                           role="button" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            Admin
-                        </a>
-                        <div class="dropdown-menu navbar-expand se-nav" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Users</a>
-                            <a class="dropdown-item" href="#">Logger</a>
-                        </div>
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN')">
+                        <a class="nav-link" th:href="@{/admin/all-users}">Admin</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav float-left">

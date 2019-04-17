@@ -19,30 +19,35 @@
 </th:block>
 
 <th:block th:fragment="register" xmlns:th="http://www.thymeleaf.org">
-<form th:action="@{/users/register}" th:method="post" class="form-custom register">
-    <div class="form-group">
-        <label for="inputUsername">Username</label>
-        <input type="text" class="form-control" id="inputUsername"
+<form th:action="@{/users/register}" th:method="post" class="form-custom register"
+      th:object="${bindingModel}" id="reg-form">
+    <div class="form-group" th:classappend="${#fields.hasErrors('username')}?'text-danger'">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username"
+               th:field="*{username}"
                name="username" required>
-        <div class="invalid-tooltip"></div>
+        <small th:each="error : ${#fields.errors('username')}" th:text="${error}"></small>
     </div>
-    <div class="form-group">
-        <label for="inputEmail">Email</label>
-        <input type="email" class="form-control" id="inputEmail"
+    <div class="form-group" th:classappend="${#fields.hasErrors('email')}?'text-danger'">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email"
+               th:field="*{email}"
                name="email" required>
-        <div class="invalid-tooltip"></div>
+        <small th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
     </div>
-    <div class="form-group">
-        <label for="inputPassword">Password</label>
-        <input type="password" class="form-control" id="inputPassword"
+    <div class="form-group" th:classappend="${#fields.hasErrors('password')}?'text-danger'">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password"
+               th:field="*{password}"
                name="password" required>
-        <div class="invalid-tooltip"></div>
+        <small th:each="error : ${#fields.errors('password')}" th:text="${error}"></small>
     </div>
-    <div class="form-group">
-        <label for="inputConfirmPassword">Password</label>
-        <input type="password" class="form-control" id="inputConfirmPassword"
+    <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}?'text-danger'">
+        <label for="confirmPassword">Password</label>
+        <input type="password" class="form-control" id="confirmPassword"
+               th:field="*{confirmPassword}"
                name="confirmPassword" required>
-        <div class="invalid-tooltip"></div>
+        <small th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></small>
     </div>
     <hr>
     <button type="submit" id="submitButton" class="button buttonBlue">Register

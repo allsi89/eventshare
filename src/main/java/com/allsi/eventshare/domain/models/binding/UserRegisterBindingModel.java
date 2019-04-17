@@ -15,6 +15,7 @@ public class UserRegisterBindingModel {
   private static final String USERNAME_LENGTH_ERR_MSG = "Username must be 5-15 symbols long.";
   private static final String USERNAME_NOT_ALLOWED_CHARS_ERR_MSG = "Invalid username. " +
       "Allowed symbols are lowercase letters, digits, '_' and '.'";
+  private static final String EMPTY_ERROR_MESSAGE = "Field cannot be empty!";
 
   private String username;
   private String password;
@@ -24,7 +25,7 @@ public class UserRegisterBindingModel {
   public UserRegisterBindingModel() {
   }
 
-  @NotNull(message = NULL_ERR_MSG)
+  @NotNull(message = EMPTY_ERROR_MESSAGE)
   @Length(min = 5, max = 15, message = USERNAME_LENGTH_ERR_MSG)
   @Pattern(regexp = USERNAME_REGEX_PATTERN, message = USERNAME_NOT_ALLOWED_CHARS_ERR_MSG)
   public String getUsername() {
@@ -35,7 +36,7 @@ public class UserRegisterBindingModel {
     this.username = username;
   }
 
-  @NotNull(message = NULL_ERR_MSG)
+  @NotEmpty(message = EMPTY_ERROR_MESSAGE)
   @Length(min = 3, max = 16, message = PASS_LENGTH_ERR_MGS)
   public String getPassword() {
     return password;
@@ -45,7 +46,7 @@ public class UserRegisterBindingModel {
     this.password = password;
   }
 
-  @NotNull(message = NULL_ERR_MSG)
+  @NotEmpty(message = EMPTY_ERROR_MESSAGE)
   @Length(min = 3, max = 16, message = PASS_LENGTH_ERR_MGS)
   public String getConfirmPassword() {
     return confirmPassword;
@@ -55,8 +56,7 @@ public class UserRegisterBindingModel {
     this.confirmPassword = confirmPassword;
   }
 
-  @NotNull(message = NULL_ERR_MSG)
-  @NotEmpty
+  @NotEmpty(message = EMPTY_ERROR_MESSAGE)
   @Email
   //TODO Email Pattern
   public String getEmail() {

@@ -1,11 +1,7 @@
 package com.allsi.eventshare.domain.models.binding;
 
-import org.hibernate.validator.constraints.Length;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
-
-import static com.allsi.eventshare.constants.Constants.NULL_ERR_MSG;
 
 public class OrganisationBindingModel {
   private String name;
@@ -21,8 +17,7 @@ public class OrganisationBindingModel {
   public OrganisationBindingModel() {
   }
 
-  @NotNull(message = NULL_ERR_MSG)
-  @Length(min = 3, max = 50)
+  @NotBlank
   public String getName() {
     return name;
   }
@@ -32,7 +27,7 @@ public class OrganisationBindingModel {
   }
 
 
-  @NotNull(message = NULL_ERR_MSG)
+  @NotBlank
   public String getCountryId() {
     return countryId;
   }
@@ -41,16 +36,7 @@ public class OrganisationBindingModel {
     this.countryId = countryNiceName;
   }
 
-//  public String getCountry() {
-//    return country;
-//  }
-//
-//  public void setCountry(String country) {
-//    this.country = country;
-//  }
-
-  @NotNull(message = NULL_ERR_MSG)
-  @NotEmpty
+ @NotBlank
   public String getCity() {
     return city;
   }

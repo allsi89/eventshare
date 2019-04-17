@@ -24,8 +24,8 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .authorizeRequests()
         .antMatchers("/js/**", "/css/**", "/images/**").permitAll()
         .antMatchers("/", "/users/login", "/users/register").anonymous()
-        .antMatchers("/organisation/edit", "/organisation/delete", "/organisation/view")
-        .hasRole("CORP")
+//        .antMatchers("/organisation/edit", "/organisation/delete", "/organisation/view")
+//        .hasRole("CORP")
 
 //        .antMatchers("/admin", "admin/edit/**").hasRole("ADMIN")
 //        .antMatchers("/viruses/delete/**", "/viruses/edit/**", "viruses/add/**")
@@ -45,11 +45,11 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .logout()
         .invalidateHttpSession(true)
         .deleteCookies("JSESSIONID")
-        .logoutSuccessUrl("/users/login?logout")
-        .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout")).permitAll()
-
+        .logoutSuccessUrl("/")
+        .logoutRequestMatcher(new AntPathRequestMatcher("/users/logout"))
         .and()
-        .exceptionHandling().accessDeniedPage("/unauthorized");
+        .exceptionHandling()
+        .accessDeniedPage("/");
   }
 
 

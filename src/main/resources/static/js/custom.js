@@ -1,5 +1,5 @@
 function showEventCategories() {
-    fetch("/categories/fetch-all-with-events")
+    fetch("/fetch/categories-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Categories');
@@ -39,7 +39,7 @@ function showEventCategories() {
 }
 
 function showEventCountries() {
-    fetch("/countries/fetch-with-events")
+    fetch("/fetch/countries-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Countries');
@@ -83,7 +83,7 @@ function showEventCountries() {
 
 
 function showEventOrganisations() {
-    fetch("/organisations/fetch-all-with-events")
+    fetch("/fetch/organisations-with-events")
         .then((response) => response.json()
             .then((json) => {
                 $('#customText').text('Organisations');
@@ -168,7 +168,7 @@ function post() {
 }
 
 function showGallery(id) {
-    fetch("/events/all-pictures/" + id)
+    fetch("/fetch/created-events/all-pictures/" + id)
         .then((response) => response.json()
             .then((json) => {
                 $('#content-container').remove();
@@ -188,24 +188,30 @@ function showGallery(id) {
 }
 
 function showCreatedEvents() {
-    fetch("/events/my-events/created")
+    fetch("/fetch/created-events")
         .then((response) => response.json())
         .then((json) => {
             $('#content-container').remove();
             $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
 
-            json.forEach((event, index) => {
-                $('#content-container').append(
-                    `<h2> Event: ${event.name}</h2>
+            $('#content-container').append(
+                `<h2> Event: ${event.name}</h2>
                      <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
                      <hr class="border"/>
-                     <a href="/events/my-events/created/${event.id}" class="btn-flat btn-primary">View</a>
-                     <a href="/events/my-events/created/edit/${event.id}" class="btn-flat btn-info">Edit</a>
-                     <a href="/events/my-events/created/delete/${event.id}" class="btn-flat btn-danger">Delete</a><hr/>`);
+                     <a href="/events/my-events/${event.id}" class="btn-flat btn-primary">View</a>
+                     <form action="/events/my-events/edit/">
+                     <button value="${event.id}" name="id" class="btn-flat btn-info">Edit</button>
+                     </form>
+                     <form action="/events/my-events/delete">
+                     <button value="${event.id}" name="deleteId" class="btn-flat btn-danger">Delete</a><hr/>
+                     </form>
+
+                     `);
+            json.forEach((event, index) => {
             });
         })
         .catch(() => {
-           alert("No events found!")
+           console.log("No events found!")
         });
 
 

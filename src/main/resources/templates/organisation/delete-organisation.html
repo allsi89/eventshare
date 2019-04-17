@@ -15,6 +15,7 @@
               th:method="post">
             <th:block th:replace="~{fragments/organisation-form :: modify-organisation}"></th:block>
             <th:block th:replace="~{fragments/organisation-form :: delete-option}"></th:block>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
 </main>

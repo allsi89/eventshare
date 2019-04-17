@@ -3,7 +3,8 @@
         <thead>
         <tr class="row mx-auto">
             <th class="col-md-1 text-center">#</th>
-            <th class="col-md-7 text-center">Name</th>
+            <th class="col-md-3 text-center">Name</th>
+            <th class="col-md-4 text-center">Starts</th>
             <th class="col-md-4 text-center">Actions</th>
         </tr>
         </thead>
@@ -12,7 +13,10 @@
         <th:block th:each="event, iter : ${events}">
             <tr class="row mx-auto">
                 <th class="col-md-1 text-center" th:text="${iter.index + 1}"></th>
-                <td class="col-md-7 text-center" th:text="${event.name}"></td>
+                <td class="col-md-3 text-center" th:text="${event.name}"></td>
+                <td class="col-md-4 text-center" th:text="${event.startsOnDate}
+                    + ' at '
+                    + ${event.startsOnTime}"></td>
                 <td class="col-md-4 text-center">
                     <a th:href="@{/explore/event/{id}(id=${event.id})}"
                        class="btn custom-size-btn blue">View</a>

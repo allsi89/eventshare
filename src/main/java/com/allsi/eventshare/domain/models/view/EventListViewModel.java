@@ -1,12 +1,12 @@
 package com.allsi.eventshare.domain.models.view;
 
-public class EventBriefViewModel {
+public class EventListViewModel {
   private String id;
   private String name;
   private String startsOnDate;
   private String startsOnTime;
 
-  public EventBriefViewModel() {
+  public EventListViewModel() {
   }
 
   public String getId() {

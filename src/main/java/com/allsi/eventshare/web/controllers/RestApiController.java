@@ -6,86 +6,46 @@ import com.allsi.eventshare.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequestMapping("/fetch")
 @RestController
 public class RestApiController {
+  private final EventService eventService;
   private final CategoryService categoryService;
   private final CountryService countryService;
   private final OrganisationService organisationService;
-  private final EventService eventService;
   private final ModelMapper modelMapper;
+  private final ImageService imageService;
 
   @Autowired
-  public RestApiController(CategoryService categoryService, CountryService countryService, OrganisationService organisationService, EventService eventService, ModelMapper modelMapper) {
+  public RestApiController(EventService eventService, CategoryService categoryService, CountryService countryService, OrganisationService organisationService, ModelMapper modelMapper, ImageService imageService) {
+    this.eventService = eventService;
     this.categoryService = categoryService;
     this.countryService = countryService;
     this.organisationService = organisationService;
-    this.eventService = eventService;
     this.modelMapper = modelMapper;
+    this.imageService = imageService;
   }
 
-  @GetMapping("/categories/fetch-all")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public List<CategoryViewModel> fetchCategories() {
-    return this.categoryService.findAllCategories()
-        .stream()
-        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
-        .collect(Collectors.toList());
-  }
 
-  @GetMapping("/categories/fetch-all-with-events")
+  @GetMapping("/organisations-with-events")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
-  public List<CategoryViewModel> fetchCategoriesWithEvents() {
-    return this.categoryService
-        .findAllCategoriesWithEvents()
-        .stream()
-        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @GetMapping("/countries/fetch-all")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public List<CountryViewModel> fetchCountries() {
-    return this.countryService.findAllCountries()
-        .stream()
-        .map(c -> this.modelMapper.map(c, CountryViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @GetMapping("/countries/fetch-with-events")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public List<CountryViewModel> fetchCountries(Principal principal) {
-    return this.countryService
-        .findAllCountriesWithEvents(principal.getName())
-        .stream()
-        .map(c -> this.modelMapper.map(c, CountryViewModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @GetMapping("/organisations/fetch-all-with-events")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public List<OrganisationViewModel> fetchOrganisations(Principal principal) {
+  public List<OrganisationBriefViewModel> fetchOrganisations(Principal principal) {
     return this.organisationService
         .findAllOrganisationsWithEvents(principal.getName())
         .stream()
-        .map(o -> this.modelMapper.map(o, OrganisationViewModel.class))
+        .map(o -> this.modelMapper.map(o, OrganisationBriefViewModel.class))
         .collect(Collectors.toList());
   }
 
-  @GetMapping(value = "events/all-pictures/{id}", produces = "application/json")
+  @GetMapping(value = "/created-events/all-pictures/{id}", produces = "application/json")
+  @PreAuthorize("isAuthenticated()")
   @ResponseBody
   public Object fetchEventPictures(@PathVariable(name = "id") String id) {
 
@@ -98,12 +58,58 @@ public class RestApiController {
         .collect(Collectors.toList());
   }
 
-  @GetMapping(value = "/events/my-events/created", produces = "application/json")
+  @GetMapping(value = "/created-events", produces = "application/json")
+  @PreAuthorize("isAuthenticated()")
   @ResponseBody
   public Object fetchCreated(Principal principal) {
     return this.eventService.findAllByCreator(principal.getName())
         .stream()
-        .map(e -> this.modelMapper.map(e, EventBriefViewModel.class))
+        .map(e -> this.modelMapper.map(e, EventListViewModel.class))
         .collect(Collectors.toList());
   }
+
+  @GetMapping("/countries-with-events")
+  @PreAuthorize("isAuthenticated()")
+  @ResponseBody
+  public List<CountryViewModel> fetchCountries(Principal principal) {
+    return this.countryService
+        .findAllCountriesWithEvents(principal.getName())
+        .stream()
+        .map(c -> this.modelMapper.map(c, CountryViewModel.class))
+        .collect(Collectors.toList());
+  }
+
+  @GetMapping("/all-countries")
+  @PreAuthorize("isAuthenticated()")
+  @ResponseBody
+  public List<CountryViewModel> fetchCountries() {
+    System.out.println();
+    return this.countryService.findAllCountries()
+        .stream()
+        .map(c -> this.modelMapper.map(c, CountryViewModel.class))
+        .collect(Collectors.toList());
+  }
+
+  @GetMapping("/all-categories")
+  @PreAuthorize("isAuthenticated()")
+  @ResponseBody
+  public List<CategoryViewModel> fetchCategories() {
+    return this.categoryService.findAllCategories()
+        .stream()
+        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
+        .collect(Collectors.toList());
+  }
+
+  @GetMapping("/categories-with-events")
+  @PreAuthorize("isAuthenticated()")
+  @ResponseBody
+  public List<CategoryViewModel> fetchCategoriesWithEvents() {
+    return this.categoryService
+        .findAllCategoriesWithEvents()
+        .stream()
+        .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
+        .collect(Collectors.toList());
+  }
+
+
 }

@@ -3,6 +3,10 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.entities.*;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
+import com.allsi.eventshare.errors.AuthorisationNotFoundException;
+import com.allsi.eventshare.errors.CountryNotFoundException;
+import com.allsi.eventshare.errors.IllegalOperationException;
+import com.allsi.eventshare.errors.OrganisationNotFoundException;
 import com.allsi.eventshare.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,6 @@ import static com.allsi.eventshare.constants.Constants.*;
 
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
-  private static final String ORGANISATION_NOT_FOUND_ERR = "Organisation not found!";
   private final OrganisationRepository organisationRepository;
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -44,6 +47,7 @@ public class OrganisationServiceImpl implements OrganisationService {
         .map(organisation, OrganisationServiceModel.class);
   }
 
+  //TODO - check user with this email exists + check org with this email exists
   @Override
   public void addOrganisation(OrganisationServiceModel serviceModel, String username, String countryId) {
     User user = this.findByUserName(username);
@@ -52,14 +56,16 @@ public class OrganisationServiceImpl implements OrganisationService {
       serviceModel.setEmail(user.getEmail());
     }
 
+    validateEmail(serviceModel.getEmail(), username);
+
     Organisation organisation = this.modelMapper
         .map(serviceModel, Organisation.class);
 
     organisation.setCountry(this.countryRepository.findById(countryId)
-        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR)));
+        .orElseThrow(CountryNotFoundException::new));
 
     Role role = this.roleRepository.findByAuthority(CORP)
-        .orElseThrow(() -> new IllegalArgumentException(ROLE_NOT_FOUND_ERR));
+        .orElseThrow(AuthorisationNotFoundException::new);
 
     user.getRoles().add(role);
 
@@ -83,13 +89,16 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   @Override
   public void editOrganisation(OrganisationServiceModel organisationServiceModel, String username, String countryId) {
+
+    this.validateEmail(organisationServiceModel.getEmail(), username);
+
     Organisation original = this.findByUsername(username);
 
     Organisation organisation = this.modelMapper
         .map(organisationServiceModel, Organisation.class);
 
     organisation.setCountry(this.countryRepository.findById(countryId)
-        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR)));
+        .orElseThrow(CountryNotFoundException::new));
 
     organisation.setUser(original.getUser());
 
@@ -138,8 +147,7 @@ public class OrganisationServiceImpl implements OrganisationService {
   public OrganisationServiceModel findById(String id) {
     Organisation organisation = this.organisationRepository
         .findById(id)
-        .orElseThrow(() ->
-            new IllegalArgumentException(ORGANISATION_NOT_FOUND_ERR));
+        .orElseThrow(OrganisationNotFoundException::new);
 
     return this.modelMapper
         .map(organisation, OrganisationServiceModel.class);
@@ -153,6 +161,14 @@ public class OrganisationServiceImpl implements OrganisationService {
 
   private Organisation findByUsername(String username) {
     return this.organisationRepository.findByUser_Username(username)
-        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
+        .orElseThrow(OrganisationNotFoundException::new);
+  }
+
+  private void validateEmail(String email, String requesterUsername) {
+    User existing = this.userRepository.findByEmail(email)
+        .orElse(null);
+    if (existing != null && !existing.getUsername().equals(requesterUsername)){
+      throw new IllegalOperationException();
+    }
   }
 }

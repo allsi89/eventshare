@@ -13,7 +13,10 @@
             <h3 class="text-center teal-text">Categories</h3>
             <hr/>
             <div class="text-right mt-3 mb-4">
-                <th:block th:replace="~{fragments/modals :: add-category-modal}"></th:block>
+                <a href="/categories/add" type="button" class="btn btn-large fixed-action-btn blue"
+                   sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT, ROLE_MODERATOR')">
+                    Add Category
+                </a>
             </div>
             <table class="table table-hover w-75 mx-auto">
                 <thead>
@@ -24,14 +27,22 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 <th:block th:each="category, iter : ${categories}">
                     <tr class="row mx-auto">
                         <th class="col-md-2 text-center" th:text="${iter.index + 1}"></th>
                         <td class="col-md-5 text-center" th:text="${category.name}"></td>
                         <td class="col-md-5 text-center">
-                            <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-small green">Edit</a>
-                            <a th:href="@{/categories/delete/{id}(id=${category.id})}"  class="btn btn-small red">Delete</a>
+                            <form th:action="@{/categories/edit}" method="get">
+                                <button name="categoryId" class="btn btn-secondary green" th:value="${category.id}"
+                                        sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT')">
+                                    Edit
+                                </button>
+                            </form>
+                            <form th:action="@{/categories/delete/{id}(id=${category.id})}" method="post">
+                                <button class="btn btn-secondary mt-2"
+                                        sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT')">Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 </th:block>

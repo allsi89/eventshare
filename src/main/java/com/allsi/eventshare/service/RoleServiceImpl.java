@@ -28,9 +28,9 @@ public class RoleServiceImpl implements RoleService {
 
   @Override
   public void seedRolesInDb() {
-    if (this.roleRepository.count() == 0){
+    if (this.roleRepository.count() == 0) {
 
-      List<String> authorities = new ArrayList<>(){{
+      List<String> authorities = new ArrayList<>() {{
         add(ROOT_ADMIN);
         add(ADMIN);
         add(MODERATOR);
@@ -55,21 +55,39 @@ public class RoleServiceImpl implements RoleService {
     return this.modelMapper.map(role, RoleServiceModel.class);
   }
 
-  @Override
-  public List<RoleServiceModel> getAllRoles() {
-    return this.roleRepository.findAll()
-        .stream()
-        .map(r->this.modelMapper.map(r, RoleServiceModel.class))
-        .collect(Collectors.toList());
-  }
+//  @Override
+//  public List<RoleServiceModel> getAllRoles() {
+//    return this.roleRepository.findAll()
+//        .stream()
+//        .map(r -> this.modelMapper.map(r, RoleServiceModel.class))
+//        .collect(Collectors.toList());
+//  }
 
   @Override
   public List<RoleServiceModel> getAllRolesNotCorp() {
     return this.roleRepository.findAllByAuthorityNot(CORP)
         .stream()
-        .map(r->this.modelMapper.map(r, RoleServiceModel.class))
+        .map(r -> this.modelMapper.map(r, RoleServiceModel.class))
         .collect(Collectors.toList());
   }
 
+  @Override
+  public List<RoleServiceModel> getAllRolesNotRoot() {
+    return this.roleRepository
+        .findAllByAuthorityNot(ROOT_ADMIN)
+        .stream()
+        .map(r-> this.modelMapper.map(r, RoleServiceModel.class))
+        .collect(Collectors.toList());
+  }
 
+  //TODO - may not work
+
+  @Override
+  public List<RoleServiceModel> listAvailableRoles() {
+    return this.roleRepository
+        .findAllByAuthorityNotAndAuthorityNot(CORP, ROOT_ADMIN)
+        .stream()
+        .map(r->this.modelMapper.map(r, RoleServiceModel.class))
+        .collect(Collectors.toList());
+  }
 }

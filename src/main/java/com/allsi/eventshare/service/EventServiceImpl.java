@@ -3,6 +3,7 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.domain.entities.*;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
+import com.allsi.eventshare.errors.*;
 import com.allsi.eventshare.repository.CategoryRepository;
 import com.allsi.eventshare.repository.CountryRepository;
 import com.allsi.eventshare.repository.EventRepository;
@@ -23,12 +24,10 @@ import static com.allsi.eventshare.constants.Constants.*;
 @Service
 public class EventServiceImpl implements EventService {
   private static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
-  private static final String EVENT_NOT_FOUND = "Event not found!";
   private static final String ACCESS_DENIED_ERR = "You don't have permission to access this page!";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
   private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
   private static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
-  private static final String CATEGORY_NOT_FOUND = "Category not found!";
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
   private final CountryRepository countryRepository;
@@ -59,10 +58,10 @@ public class EventServiceImpl implements EventService {
             DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
 
     Country country = this.countryRepository.findById(eventServiceModel.getCountry().getId())
-        .orElseThrow(() -> new IllegalArgumentException(COUNTRY_NOT_FOUND_ERR));
+        .orElseThrow(CountryNotFoundException::new);
 
     Category category = this.categoryRepository.findByName(eventServiceModel.getCategory().getName())
-        .orElseThrow(() -> new IllegalArgumentException(CATEGORY_NOT_FOUND));
+        .orElseThrow(CategoryNotFoundException::new);
 
     event.setCreator(user);
     event.setCountry(country);
@@ -76,7 +75,7 @@ public class EventServiceImpl implements EventService {
   @Override
   public EventServiceModel findEventById(String id) {
     Event event = this.eventRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND));
+        .orElseThrow(EventNotFoundException::new);
 
     return getEventServiceModel(event);
   }
@@ -84,9 +83,11 @@ public class EventServiceImpl implements EventService {
   @Override
   public void fillGallery(String eventId, String username, ImageServiceModel imageServiceModel) {
     Event event = this.eventRepository.findById(eventId)
-        .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND));
+        .orElseThrow(EventNotFoundException::new);
 
-    validateOwnership(event.getCreator().getUsername(), username);
+    if (!event.getCreator().getUsername().equals(username)){
+      throw new AccessDeniedException(ACCESS_DENIED_ERR);
+    }
 
     Image image = this.modelMapper.map(imageServiceModel, Image.class);
 
@@ -106,47 +107,10 @@ public class EventServiceImpl implements EventService {
     return getProcessedEvents(events);
   }
 
-  private List<EventServiceModel> getProcessedEvents(List<Event> events) {
-    return events
-        .stream()
-        .sorted((e1,e2) -> {
-          if(e1.getStartDatetime().isBefore(e2.getStartDatetime())){
-            return 1;
-          };
-          return 0;
-        })
-        .map(this::getEventServiceModel)
-        .collect(Collectors.toList());
-  }
-
-  private EventServiceModel getEventServiceModel(Event e) {
-    EventServiceModel esm = this.modelMapper.map(e, EventServiceModel.class);
-    esm.setStartsOnDate(e.getStartDatetime().format(DATE_FORMATTER));
-    esm.setStartsOnTime(e.getStartDatetime().format(TIME_FORMATTER));
-    return esm;
-  }
-
-  @Override
-  public List<EventServiceModel> findAllByIds(List<String> eventsIds) {
-    List<Event> events = new ArrayList<>();
-
-    LocalDateTime dateTime = LocalDateTime.now();
-
-    for (String id : eventsIds) {
-      this.eventRepository
-          .findByIdAndStartDatetimeAfter(id, dateTime)
-          .ifPresent(events::add);
-    }
-
-    events.sort(Comparator.comparing(Event::getStartDatetime));
-
-    return getProcessedEvents(events);
-  }
-
   @Override
   public EventServiceModel findEventByIdAndCreator(String eventId, String username) {
     Event event = this.eventRepository.findById(eventId)
-        .orElseThrow(() -> new IllegalArgumentException(EVENT_NOT_FOUND));
+        .orElseThrow(EventNotFoundException::new);
 
     this.validateDate(event.getStartDatetime());
 
@@ -154,7 +118,7 @@ public class EventServiceImpl implements EventService {
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     if(!event.getCreator().getId().equals(user.getId())){
-      throw new IllegalArgumentException();//not owner error TODO
+      throw new IllegalOperationException();
     }
 
     return this.getEventServiceModel(event);
@@ -175,15 +139,82 @@ public class EventServiceImpl implements EventService {
     return getProcessedEvents(events);
   }
 
-  private void validateOwnership(String username, String requesterUsername) {
-    if (!username.equals(requesterUsername)) {
-      throw new AccessDeniedException(ACCESS_DENIED_ERR);
+  @Override
+  public void deleteEvent(String id, String name) {
+    Event event = this.eventRepository.findById(id)
+        .orElseThrow(EventNotFoundException::new);
+
+    if (!event.getCreator().getUsername().equals(name)){
+      throw new IllegalOperationException();
     }
+
+    this.eventRepository.deleteById(id);
+  }
+
+  @Override
+  public void editEvent(EventServiceModel serviceModel, String name) {
+
+    Event event = this.eventRepository.findById(serviceModel.getId())
+        .orElseThrow(EventNotFoundException::new);
+
+    if (!event.getCreator().getUsername().equals(name)){
+      throw new IllegalOperationException();
+    }
+
+    LocalDateTime start = LocalDateTime
+        .parse(String.format(DATE_TIME_STR_TO_FORMAT,
+            serviceModel.getStartsOnDate(),
+            serviceModel.getStartsOnTime()),
+            DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
+
+    this.validateDate(start);
+
+    User creator = this.userRepository.findByUsername(name)
+        .orElseThrow(()-> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+
+    List<Image> images = event.getImages();
+
+    Country country = this.countryRepository
+        .findByNiceName(serviceModel.getCountry().getNiceName())
+        .orElseThrow(CountryNotFoundException::new);
+
+    Category category = this.categoryRepository
+        .findByName(serviceModel.getCategory().getName())
+        .orElseThrow(CategoryNotFoundException::new);
+
+    event = this.modelMapper.map(serviceModel, Event.class);
+    event.setCreator(creator);
+    event.setStartDatetime(start);
+    event.setCountry(country);
+    event.setCategory(category);
+    event.setImages(images);
+
+    this.eventRepository.saveAndFlush(event);
+  }
+
+  private List<EventServiceModel> getProcessedEvents(List<Event> events) {
+    return events
+        .stream()
+        .sorted((e1,e2) -> {
+          if(e1.getStartDatetime().isBefore(e2.getStartDatetime())){
+            return 1;
+          }
+          return 0;
+        })
+        .map(this::getEventServiceModel)
+        .collect(Collectors.toList());
+  }
+
+  private EventServiceModel getEventServiceModel(Event e) {
+    EventServiceModel esm = this.modelMapper.map(e, EventServiceModel.class);
+    esm.setStartsOnDate(e.getStartDatetime().format(DATE_FORMATTER));
+    esm.setStartsOnTime(e.getStartDatetime().format(TIME_FORMATTER));
+    return esm;
   }
 
   private void validateDate(LocalDateTime startDate) {
     if (startDate.isBefore(LocalDateTime.now())){
-      throw new IllegalArgumentException(); //TODO -- event has expired error
+      throw new InvalidDateTimeException();
     }
   }
 }

@@ -1,0 +1,7 @@
+{
+  "name": "eventshare",
+  "version": "1.0.0",
+  "dependencies": {
+    "material-datetime-picker": "^2.4.0"
+  }
+}

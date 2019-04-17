@@ -5,7 +5,6 @@ import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -19,7 +18,11 @@ public interface UserService extends UserDetailsService {
 
   void editUserPicture(String username, ImageServiceModel imageServiceModel) throws IOException;
 
-  List<UserServiceModel> findAllUsers(String username);
+//  UserServiceModel findUserById(String id);
 
-  UserServiceModel findUserById(String id);
+  List<UserServiceModel> findAllUsersButRequester(String username);
+
+  void updateRole(String id, String principalName);
+
+//  void setUserRole(String id, String authority);
 }

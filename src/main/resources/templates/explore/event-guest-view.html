@@ -15,6 +15,7 @@
             </div>
             <div>
                 <th:block th:replace="~{fragments/details :: event-details}"></th:block>
+                <input type="hidden" id="eventId" th:value="${viewModel.id}">
                 <p id="load-images" class="alert-info">Gallery</p>
                 <div class="text-center mt-3">
                     <div class="custom-container">
@@ -28,8 +29,9 @@
 </div>
 
 <script>
-    const eventId = $('#event-id').val();
-    $(document).ready(showGallery(eventId));
+    const id = $('#eventId').val();
+
+    $(document).ready(showGallery(id));
 </script>
 </body>
 </html>

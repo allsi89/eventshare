@@ -26,16 +26,13 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" id="token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </main>
     <th:block th:include="~{fragments/footer}"></th:block>
 </div>
 
 <script>
     const id = $('#btn-id').val();
-
-    function submitForm() {
-        $('#add-event-pictures-form').submit().then(showGallery(id));
-    }
 
     function loadGallery() {
         setTimeout(function () {
@@ -45,13 +42,6 @@
     }
 
     $(document).ready(showGallery(id));
-
-    // $('#modal').bind('hidden.bs.modal', function () {
-    //     $("html").css("margin-right", "0px");
-    // });
-    // $('#modal').bind('show.bs.modal', function () {
-    //     $("html").css("margin-right", "-15px");
-    // });
 </script>
 </body>
 </html>

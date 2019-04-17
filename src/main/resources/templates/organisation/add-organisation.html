@@ -12,27 +12,27 @@
     <h1 class="mb-3 mb-3 text-center se-form-text">Add Organisation</h1>
     <div class="container">
         <form class="se-form se-form-text mt-3 mb-3 col-md-9 form-custom" th:action="@{/organisations/add}" th:object="${bindingModel}"
-              th:method="post" enctype="multipart/form-data"  sec:authorize="!hasRole('ROLE_CORP')">
+              th:method="post"  sec:authorize="!hasRole('ROLE_CORP')">
             <th:block th:replace="~{fragments/organisation-form :: add-organisation}"></th:block>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
     </div>
 </main>
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 <th:block th:include="~{fragments/footer}"></th:block>
-</body>
 <script  th:inline="javascript">
-    myFunction();
+    // myFunction();
 
-    fetch('/countries/fetch-all')
+    fetch('/fetch/all-countries')
         .then((response) => response.json())
         .then((json) => {
             json.forEach((country) =>
                 $('#country').append(
-                        `<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`))
+                    `<option value="${country.id}">${country.niceName + ' +' + country.phonecode}</option>`))
         })
         .catch((err) => console.log(err));
 
-    $('#country').change(function () {
+    $('#country').change(function() {
         let countryCode = $(this).val();
 
         if (countryCode) {
@@ -49,4 +49,5 @@
         }
     });
 </script>
+</body>
 </html>
