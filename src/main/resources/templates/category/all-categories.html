@@ -32,12 +32,10 @@
                         <th class="col-md-2 text-center" th:text="${iter.index + 1}"></th>
                         <td class="col-md-5 text-center" th:text="${category.name}"></td>
                         <td class="col-md-5 text-center">
-                            <form th:action="@{/categories/edit}" method="get">
-                                <button name="categoryId" class="btn btn-secondary green" th:value="${category.id}"
-                                        sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT')">
-                                    Edit
-                                </button>
-                            </form>
+                            <a th:href="@{/categories/edit/{id}(id=${category.id})}" name="categoryId" class="btn btn-secondary green"
+                              sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT')">
+                                Edit
+                            </a>
                             <form th:action="@{/categories/delete/{id}(id=${category.id})}" method="post">
                                 <button class="btn btn-secondary mt-2"
                                         sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT')">Delete

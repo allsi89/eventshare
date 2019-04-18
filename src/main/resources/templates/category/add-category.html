@@ -13,12 +13,13 @@
     <div class="container">
         <form id="edit-category-form" class="se-form se-form-text mt-3 mb-3 col-md-6 form-custom"
               th:action="@{/categories/add}"
+              th:object="${bindingModel}"
               th:method="post">
-            <div class="form-group">
+            <div class="form-group" th:classappend="${#fields.hasErrors('name')}?'text-danger'">
                 <label for="name">Name</label>
-                <input type="text" class="form-control validate" id="name" th:value="${bindingModel.name}"
+                <input type="text" class="form-control" id="name" th:value="*{name}"
                        name="name" required>
-                <div class="invalid-tooltip"></div>
+                <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
             </div>
             <hr/>
             <button type="submit" id="submitButton" class="button buttonBlue">Save

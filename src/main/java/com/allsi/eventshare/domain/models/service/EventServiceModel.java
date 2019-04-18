@@ -1,8 +1,8 @@
 package com.allsi.eventshare.domain.models.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
 public class EventServiceModel extends BaseServiceModel{
   private String name;
   private String description;

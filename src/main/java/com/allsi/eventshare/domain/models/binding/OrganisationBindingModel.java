@@ -3,8 +3,11 @@ package com.allsi.eventshare.domain.models.binding;
 
 import javax.validation.constraints.*;
 
+import static com.allsi.eventshare.common.GlobalConstants.*;
+
 public class OrganisationBindingModel {
   private String name;
+  private String creatorUsername;
   private String countryId;
   private String city;
   private String state;
@@ -17,7 +20,7 @@ public class OrganisationBindingModel {
   public OrganisationBindingModel() {
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getName() {
     return name;
   }
@@ -26,8 +29,15 @@ public class OrganisationBindingModel {
     this.name = name;
   }
 
+  public String getCreatorUsername() {
+    return creatorUsername;
+  }
 
-  @NotBlank
+  public void setCreatorUsername(String creatorUsername) {
+    this.creatorUsername = creatorUsername;
+  }
+
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getCountryId() {
     return countryId;
   }
@@ -36,7 +46,7 @@ public class OrganisationBindingModel {
     this.countryId = countryNiceName;
   }
 
- @NotBlank
+ @NotBlank(message = BLANK_ERR_MSG)
   public String getCity() {
     return city;
   }
@@ -78,6 +88,7 @@ public class OrganisationBindingModel {
   }
 
   @Email
+  @Pattern(regexp = EMAIL_PATTERN, message = INVALID_EMAIL_MSG)
   public String getEmail() {
     return email;
   }

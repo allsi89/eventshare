@@ -1,7 +1,8 @@
 <th:block th:fragment=>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Event Share</title>
+    <title th:text="${title}"></title>
+    <link rel="icon" th:href="${favicon}">
     <link type="text/css" rel="stylesheet" th:href="@{/css/reset-css.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link type="text/css" rel="stylesheet" th:href="@{/css/materialize-new.css}">
@@ -15,6 +16,5 @@
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/materialize-new.js"></script>
     <script type="text/javascript" src="/js/custom.js"></script>
-    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.png}">
 </th:block>
 

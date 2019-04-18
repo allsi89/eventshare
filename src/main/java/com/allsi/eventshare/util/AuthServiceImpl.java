@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.CORP;
+import static com.allsi.eventshare.common.GlobalConstants.CORP;
 
 @Service
 public class AuthServiceImpl implements AuthService {

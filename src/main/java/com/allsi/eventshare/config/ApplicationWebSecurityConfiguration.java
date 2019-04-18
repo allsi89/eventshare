@@ -24,12 +24,6 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .authorizeRequests()
         .antMatchers("/js/**", "/css/**", "/images/**").permitAll()
         .antMatchers("/", "/users/login", "/users/register").anonymous()
-//        .antMatchers("/organisation/edit", "/organisation/delete", "/organisation/view")
-//        .hasRole("CORP")
-
-//        .antMatchers("/admin", "admin/edit/**").hasRole("ADMIN")
-//        .antMatchers("/viruses/delete/**", "/viruses/edit/**", "viruses/add/**")
-//        .access("hasAnyRole('ADMIN, MODERATOR')")
         .anyRequest().authenticated()
 
         .and()
@@ -38,7 +32,6 @@ public class ApplicationWebSecurityConfiguration extends WebSecurityConfigurerAd
         .permitAll()
         .usernameParameter("username")
         .passwordParameter("password")
-//        .successHandler()
         .defaultSuccessUrl("/home", true)
         .and()
 

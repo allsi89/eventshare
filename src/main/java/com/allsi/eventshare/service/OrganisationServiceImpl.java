@@ -18,7 +18,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.*;
+import static com.allsi.eventshare.common.GlobalConstants.CORP;
+import static com.allsi.eventshare.common.GlobalConstants.USER_NOT_FOUND_ERR;
 
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
@@ -47,7 +48,6 @@ public class OrganisationServiceImpl implements OrganisationService {
         .map(organisation, OrganisationServiceModel.class);
   }
 
-  //TODO - check user with this email exists + check org with this email exists
   @Override
   public void addOrganisation(OrganisationServiceModel serviceModel, String username, String countryId) {
     User user = this.findByUserName(username);
@@ -55,8 +55,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     if (serviceModel.getEmail() == null) {
       serviceModel.setEmail(user.getEmail());
     }
-
-    validateEmail(serviceModel.getEmail(), username);
 
     Organisation organisation = this.modelMapper
         .map(serviceModel, Organisation.class);
@@ -90,8 +88,7 @@ public class OrganisationServiceImpl implements OrganisationService {
   @Override
   public void editOrganisation(OrganisationServiceModel organisationServiceModel, String username, String countryId) {
 
-    this.validateEmail(organisationServiceModel.getEmail(), username);
-
+    //todo - possibly doesn't set email right if no such is provided
     Organisation original = this.findByUsername(username);
 
     Organisation organisation = this.modelMapper
@@ -164,11 +161,4 @@ public class OrganisationServiceImpl implements OrganisationService {
         .orElseThrow(OrganisationNotFoundException::new);
   }
 
-  private void validateEmail(String email, String requesterUsername) {
-    User existing = this.userRepository.findByEmail(email)
-        .orElse(null);
-    if (existing != null && !existing.getUsername().equals(requesterUsername)){
-      throw new IllegalOperationException();
-    }
-  }
 }

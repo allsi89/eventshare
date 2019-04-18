@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+</header>
+<main>
+    <div class="container">
+        <h2 class="text-center text-dark">Something Went Wrong</h2>
+        <hr class="hr-2 bg-dark ">
+        <div class="text-center">
+            <h3 th:text="${message}" style="color: red;"></h3>
+        </div>
+        <div class="text-center">
+            <h2 th:text="${statusCode}" style="color: purple"></h2>
+        </div>
+        <hr/>
+        <th:block th:include="~{fragments/slideshow}"></th:block>
+    </div>
+</main>
+<th:block th:include="~{fragments/footer}"></th:block>
+<script>
+    $(document).ready(slideshow());
+</script>
+</body>
+</html>

@@ -1,10 +1,10 @@
 <th:block th:fragment="add-organisation" xmlns:th="http://www.thymeleaf.org">
 
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}?'text-danger'">
             <label for="name">Name</label>
-            <input type="text" class="form-control" th:value="*{name}" name="name" id="name" required>
-            <div class="invalid-tooltip"></div>
+            <input type="text" class="form-control" th:field="*{name}" name="name" id="name" required>
+            <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
         </div>
     </div>
     <hr/>
@@ -19,22 +19,25 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('email')}?'text-danger'">
             <label for="email">Organisation Email</label>
-            <input type="email" class="form-control" th:value="*{email}"
+            <input type="email" class="form-control" th:field="*{email}"
+                   th:value="*{email}"
                    id="email" name="email">
+            <small th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
         </div>
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('website')}?'text-danger'">
             <label for="website">Website</label>
             <input type="url" class="form-control" th:value="*{website}"
                    id="website" name="website">
+            <small th:each="error : ${#fields.errors('website')}" th:text="${error}"></small>
         </div>
     </div>
-    <div class="form-row">
-        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}">
+    <div class="form-row" th:classappend="${#fields.hasErrors('city')}?'text-danger'">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}?'text-danger'">
             <label for="city">City</label>
             <input type="text" class="form-control" th:value="*{city}" name="city" id="city" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('city')}" th:text="${error}"></small>
         </div>
         <div class="col-md-3 mb-2 form-group">
             <label for="state">State</label>
@@ -54,17 +57,14 @@
                th:value="*{address}" id="address" name="address">
     </div>
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('countryId')}?'text-danger'">
             <label for="country">Country</label>
             <select class="form-control" id="country"
+                    th:field="*{countryId}"
                     name="countryId" required>
-                <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
+                <option selected="" disabled="" value="Select a country"></option>
             </select>
-            <div class="tooltip-container">
-                <div class="invalid-tooltip">
-                    You must select a country
-                </div>
-            </div>
+            <small th:each="error : ${#fields.errors('countryId')}" th:text="${error}"></small>
         </div>
         <div class="col-md-6 mb-2 form-group">
             <label for="phone">Phone Number</label>
@@ -79,32 +79,37 @@
 
 <th:block th:fragment="modify-organisation" xmlns:th="http://www.thymeleaf.org">
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group input-field" th:classappend="${#fields.hasErrors('name')}">
+        <div class="col-md-6 mb-2 form-group input-field" th:classappend="${#fields.hasErrors('name')}?'text-danger'">
             <label for="name">Name</label>
-            <input type="text" class="form-control validate" th:field="*{name}" name="name" id="name"
+            <input type="text" class="form-control validate"
+                   th:field="*{name}"
+                   name="name" id="name"
                    th:value="*{name}" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
         </div>
     </div>
     <hr/>
     <div class="form-row">
         <div class="col-md-6 mb-2 form-group">
             <label for="email">Organisation Email</label>
-            <input type="email" class="form-control" th:field="*{email}"
-                   th:value="*{email}" id="email" name="email">
+            <input type="email" class="form-control"
+                   id="email" name="email"
+                   th:field="*{email}" readonly>
         </div>
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('website')}?'text-danger'">
             <label for="website">Website</label>
-            <input type="url" class="form-control" th:field="*{website}"
-                   th:value="*{website}" id="website" name="website">
+            <input type="url" class="form-control"
+                   th:field="*{website}"
+                   id="website" name="website">
+            <small th:each="error : ${#fields.errors('website')}" th:text="${error}"></small>
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}?'text-danger'">
             <label for="city">City</label>
             <input type="text" class="form-control" th:field="*{city}"
                    th:value="*{city}" name="city" id="city" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('city')}" th:text="${error}"></small>
         </div>
         <div class="col-md-3 mb-2 form-group">
             <label for="state">State</label>
@@ -129,17 +134,14 @@
 
 <th:block th:fragment="edit-option">
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('countryId')}?'text-danger'">
             <label for="country">Country</label>
             <select class="form-control" id="country"
+                    th:field="*{countryId}"
                     name="countryId" required>
-                <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
+                <option selected="" disabled="" value="Select a country"></option>
             </select>
-            <div class="tooltip-container">
-                <div class="invalid-tooltip">
-                    You must select a country
-                </div>
-            </div>
+            <small th:each="error : ${#fields.errors('countryId')}" th:text="${error}"></small>
         </div>
         <div class="col-md-6 mb-2 form-group">
             <label for="phone">Phone Number</label>

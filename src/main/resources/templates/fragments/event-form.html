@@ -1,15 +1,19 @@
 <th:block th:fragment="add-event" xmlns:th="http://www.thymeleaf.org">
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}">
+        <div class="col-md-6 mb-2 form-group"
+             th:classappend="${#fields.hasErrors('name')}?'text-danger'">
             <label for="name">Name</label>
             <input type="text" th:value="*{name}" name="name" id="name" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
+
         </div>
-        <div class="col-md-6 mb-2 form-group selects-container">
+        <div class="col-md-6 mb-2 form-group selects-container"
+             th:classappend="${#fields.hasErrors('categoryName')}?'text-danger'">
             <label for="category">Category</label>
-            <select class="form-control select-dropdown validate" id="category"
+            <select class="form-control select-dropdown" id="category"
+                    th:field="*{categoryName}"
                     name="categoryName" required>
-                <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
+                <small th:each="error : ${#fields.errors('categoryName')}" th:text="${error}"></small>
             </select>
         </div>
     </div>
@@ -17,19 +21,22 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="description">Description</label>
-            <textarea class="form-control materialize-textarea placeholder-fix validate" rows="3"
+            <textarea class="form-control materialize-textarea placeholder-fix" rows="3"
                       th:value="*{description}" name="description"
                       id="description" wrap="soft" placeholder="Describe your event here..."></textarea>
         </div>
     </div>
 
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group selects-container">
+        <div class="col-md-6 mb-2 form-group selects-container"
+             th:classappend="${#fields.hasErrors('countryId')}?'text-danger'">
             <label for="country">Country</label>
             <select class="form-control select-dropdown validate" id="country"
+                    th:field="*{countryId}"
                     name="countryId" required>
-                <option selected="" disabled="" data-toggle="tooltip" data-container="#tooltip-container"></option>
+                <option selected="" disabled="" value="Select a country"></option>
             </select>
+            <small th:each="error : ${#fields.errors('countryId')}" th:text="${error}"></small>
         </div>
         <div class="col-md-4 mb-2 form-group">
             <label for="state">State</label>
@@ -43,10 +50,11 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-5 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}">
+        <div class="col-md-5 mb-2 form-group"
+             th:classappend="${#fields.hasErrors('city')}?'text-danger'">
             <label for="city">City</label>
             <input type="text" class="form-control" th:value="*{city}" name="city" id="city" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('city')}" th:text="${error}"></small>
         </div>
 
         <div class="col-md-7 mb-2 form-group">
@@ -64,16 +72,18 @@
     </div>
     <label class="text-center">Starts On</label>
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group"
+             th:classappend="${#fields.hasErrors('startsOnDate')}?'text-danger'">
             <input type="text" class="form-control datepicker placeholder-fix"
                    th:value="*{startsOnDate}" name="startsOnDate" id="starts-on-date"
                    placeholder="Date..." required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('startsOnDate')}" th:text="${error}"></small>
         </div>
-        <div class="col-md-6 mb-2 form-group">
+        <div class="col-md-6 mb-2 form-group"
+             th:classappend="${#fields.hasErrors('startsOnTime')}?'text-danger'">
             <input type="text" class="form-control timepicker placeholder-fix" th:value="*{startsOnTime}"
                    name="startsOnTime" id="starts-on-time" placeholder="Time..." required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('startsOnTime')}" th:text="${error}"></small>
         </div>
     </div>
     <hr/>
@@ -84,17 +94,18 @@
 
 <th:block th:fragment="edit-event" xmlns:th="http://www.thymeleaf.org">
     <div class="form-row">
-        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}">
+        <div class="col-md-6 mb-2 form-group" th:classappend="${#fields.hasErrors('name')}?'text-danger'">
             <label for="name">Name</label>
-            <input type="text" th:value="*{name}" name="name" id="name" required>
-            <div class="invalid-tooltip"></div>
+            <input type="text" th:field="*{name}" name="name" id="name" required>
+            <small th:each="error : ${#fields.errors('name')}" th:text="${error}"></small>
         </div>
-        <div class="col-md-6 mb-2 form-group selects-container">
+        <div class="col-md-6 mb-2 form-group selects-container"
+             th:classappend="${#fields.hasErrors('categoryName')}?'text-danger'">
             <label for="category">Category</label>
-            <select class="form-control select-dropdown validate" id="category"
+            <select class="form-control select-dropdown" id="category"
+                    th:field="*{categoryName}"
                     name="categoryName" required>
-                <option selected="" disabled="" data-toggle="tooltip"
-                        data-container="#tooltip-container"></option>
+                <small th:each="error : ${#fields.errors('categoryName')}" th:text="${error}"></small>
             </select>
         </div>
     </div>
@@ -102,7 +113,7 @@
     <div class="form-row">
         <div class="form-group col-md-12">
             <label for="description">Description</label>
-            <textarea class="form-control materialize-textarea placeholder-fix validate" rows="3"
+            <textarea class="form-control materialize-textarea placeholder-fix" rows="3"
                       th:value="*{description}" th:text="*{description}" name="description"
                       id="description" wrap="soft"
                       placeholder="Describe your event here..."></textarea>
@@ -126,10 +137,11 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="col-md-5 mb-2 form-group" th:classappend="${#fields.hasErrors('city')}">
+        <div class="col-md-5 mb-2 form-group"
+             th:classappend="${#fields.hasErrors('city')}?'text-danger'">
             <label for="city">City</label>
             <input type="text" class="form-control" th:value="*{city}" name="city" id="city" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('city')}" th:text="${error}"></small>
         </div>
 
         <div class="col-md-7 mb-2 form-group">
@@ -148,15 +160,13 @@
     <label class="text-center">Starts On</label>
     <div class="form-row">
         <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control datepicker placeholder-fix"
+            <input type="text" class="form-control placeholder-fix"
                    th:value="*{startsOnDate}" name="startsOnDate" id="starts-on-date"
-                   placeholder="Date..." required>
-            <div class="invalid-tooltip"></div>
+                   placeholder="Date..." readonly>
         </div>
         <div class="col-md-6 mb-2 form-group">
-            <input type="text" class="form-control timepicker placeholder-fix" th:value="*{startsOnTime}"
-                   name="startsOnTime" id="starts-on-time" placeholder="Time..." required>
-            <div class="invalid-tooltip"></div>
+            <input type="text" class="form-control placeholder-fix" th:value="*{startsOnTime}"
+                   name="startsOnTime" id="starts-on-time" placeholder="Time..." readonly>
         </div>
     </div>
     <hr/>

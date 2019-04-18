@@ -3,6 +3,7 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.view.UserAllViewModel;
 import com.allsi.eventshare.service.UserService;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.*;
-import static com.allsi.eventshare.constants.GlobalConstants.ADMIN_ALL_USERS_ROUTE;
-import static com.allsi.eventshare.constants.GlobalConstants.ADMIN_ALL_USERS_VIEW;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,6 +33,7 @@ public class AdminController extends BaseController {
 
   @GetMapping("/all-users")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_ROOT')")
+  @PageTitle("All Users")
   public ModelAndView adminPanel(Principal principal, ModelAndView modelAndView,
                                  @ModelAttribute(name = "viewModel") UserAllViewModel viewModel) {
     List<UserAllViewModel> userList = this.userService

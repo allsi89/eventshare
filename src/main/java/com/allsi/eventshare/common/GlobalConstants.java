@@ -1,4 +1,4 @@
-package com.allsi.eventshare.constants;
+package com.allsi.eventshare.common;
 
 public class GlobalConstants {
 
@@ -128,4 +128,40 @@ public class GlobalConstants {
   Admin-related views
    */
    public static final String ADMIN_ALL_USERS_VIEW = "/admin/all-users";
+
+
+
+   /*
+   Binding Models constants and messages
+    */
+
+  public static final String EMPTY_ERROR_MESSAGE = "Field cannot be empty!";
+  public static final String EMAIL_PATTERN = "^([\\w.-]+)@([\\w-]+)((.(\\w){2,3})+)$";
+  public static final String INVALID_EMAIL_MSG = "Please provide a valid email.";
+  public static final String BLANK_ERR_MSG = "Input field cannot be blank.";
+  public static final String PASS_LENGTH_ERR_MGS = "Password must be 3-16 symbols long.";
+  public static final String REGEX_WEBSITE_PATTERN = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
+  public static final String USERNAME_PATTERN = "^(?![_.])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$";
+  public static final String USERNAME_LENGTH_ERR_MSG = "Username must be 5-15 symbols long.";
+  public static final String USERNAME_NOT_ALLOWED_CHARS_ERR_MSG = "Invalid username. " +
+      "Allowed symbols are lowercase letters, digits, '_' and '.'";
+
+  public static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
+  public static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
+
+
+  public static final String INVALID_FILE = "Invalid File!";
+  public static final String INCORRECT_PASSWORD = "Incorrect password!";
+  public static final String USER_NOT_FOUND_ERR = "User not found!";
+  public static final String COUNTRY_NOT_FOUND_ERR = "Country not found!";
+  public static final String ROLE_NOT_FOUND_ERR = "Authority not found!";
+
+
+
+  public static final String ROOT_ADMIN = "ROLE_ROOT";
+  public static final String ADMIN = "ROLE_ADMIN";
+  public static final String CORP = "ROLE_CORP";
+  public static final String MODERATOR = "ROLE_MODERATOR";
+  public static final String USER = "ROLE_USER";
 }
+

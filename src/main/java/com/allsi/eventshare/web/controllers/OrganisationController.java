@@ -6,6 +6,8 @@ import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
 import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.OrganisationService;
+import com.allsi.eventshare.validation.organisation.OrganisationAddValidator;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,24 +21,27 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 
-import static com.allsi.eventshare.constants.GlobalConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/organisations")
 public class OrganisationController extends BaseController {
   private final OrganisationService organisationService;
   private final ImageService imageService;
+  private final OrganisationAddValidator organisationAddValidator;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public OrganisationController(OrganisationService organisationService, ImageService imageService, ModelMapper modelMapper) {
+  public OrganisationController(OrganisationService organisationService, ImageService imageService, OrganisationAddValidator organisationAddValidator,  ModelMapper modelMapper) {
     this.organisationService = organisationService;
     this.imageService = imageService;
+    this.organisationAddValidator = organisationAddValidator;
     this.modelMapper = modelMapper;
   }
 
   @GetMapping("/details")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PageTitle("My Organisation")
   public ModelAndView viewOrganisation(Principal principal, ModelAndView modelAndView) {
 
     OrganisationServiceModel organisation = this.organisationService
@@ -53,6 +58,7 @@ public class OrganisationController extends BaseController {
 
   @GetMapping("/add")
   @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
+  @PageTitle("Add Organisation")
   public ModelAndView addOrganisation(ModelAndView modelAndView,
                                       @ModelAttribute(name = "bindingModel")
                                           OrganisationBindingModel bindingModel) {
@@ -68,6 +74,8 @@ public class OrganisationController extends BaseController {
                                                  OrganisationBindingModel bindingModel,
                                              BindingResult bindingResult,
                                              ModelAndView modelAndView){
+
+    this.organisationAddValidator.validate(bindingModel, bindingResult);
 
     if (!bindingResult.hasErrors()) {
 
@@ -86,42 +94,48 @@ public class OrganisationController extends BaseController {
 
   @GetMapping("/edit")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PageTitle("Edit Organisation")
   public ModelAndView editOrganisation(Principal principal,
                                        ModelAndView modelAndView,
-                                       @ModelAttribute("bindingModel")
+                                       @ModelAttribute("model")
                                            OrganisationBindingModel bindingModel) {
 
-    modelAndView.addObject("bindingModel",
-        getOrganisationBindingModel(principal.getName()));
+    OrganisationServiceModel serviceModel = this.organisationService
+        .getOrganisationByUsername(principal.getName());
+    bindingModel = this.modelMapper.map(serviceModel, OrganisationBindingModel.class);
 
+    modelAndView.addObject("model", bindingModel);
     return super.view(EDIT_ORG_VIEW, modelAndView);
   }
 
   @PostMapping("/edit")
   @PreAuthorize("hasRole('ROLE_CORP')")
   public ModelAndView editOrganisationConfirm(Principal principal,
-                                              @Valid @ModelAttribute("bindingModel")
+                                              @Valid @ModelAttribute("model")
                                                   OrganisationBindingModel bindingModel,
                                               ModelAndView modelAndView,
                                               BindingResult bindingResult) {
 
     if (!bindingResult.hasErrors()) {
+
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
 
       this.organisationService
-          .editOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId());
+          .editOrganisation(serviceModel, principal.getName(),
+              bindingModel.getCountryId());
 
       return super.redirect(OWNER_ORG_DETAILS_ROUTE);
     }
 
-    modelAndView.addObject("bindingModel", bindingModel);
+    modelAndView.addObject("model", bindingModel);
 
     return super.view(EDIT_ORG_VIEW, modelAndView);
   }
 
   @GetMapping("/delete")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PageTitle("Delete Organisation")
   public ModelAndView deleteOrganisation(Principal principal,
                                          ModelAndView modelAndView) {
 
@@ -146,14 +160,6 @@ public class OrganisationController extends BaseController {
     return super.redirect("/home", false);
   }
 
-
-  private OrganisationBindingModel getOrganisationBindingModel(String name) {
-    OrganisationServiceModel serviceModel = this.organisationService
-        .getOrganisationByUsername(name);
-
-    return this.modelMapper
-        .map(serviceModel, OrganisationBindingModel.class);
-  }
 
   @PostMapping("/details/change-picture")
   @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")

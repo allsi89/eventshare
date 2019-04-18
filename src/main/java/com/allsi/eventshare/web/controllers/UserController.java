@@ -7,12 +7,15 @@ import com.allsi.eventshare.domain.models.service.UserServiceModel;
 import com.allsi.eventshare.domain.models.view.UserViewModel;
 import com.allsi.eventshare.service.ImageService;
 import com.allsi.eventshare.service.UserService;
+import com.allsi.eventshare.validation.user.UserChangePasswordValidator;
+import com.allsi.eventshare.validation.user.UserEditProfileValidator;
+import com.allsi.eventshare.validation.user.UserRegisterValidator;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,30 +24,38 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 
-import static com.allsi.eventshare.constants.GlobalConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/users")
 public class UserController extends BaseController {
   private final UserService userService;
   private final ImageService imageService;
+  private final UserRegisterValidator userRegisterValidator;
+  private final UserEditProfileValidator userEditProfileValidator;
+  private final UserChangePasswordValidator changePasswordValidator;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public UserController(UserService userService, ImageService imageService, ModelMapper modelMapper) {
+  public UserController(UserService userService, ImageService imageService, UserRegisterValidator userRegisterValidator, UserEditProfileValidator userEditProfileValidator, UserChangePasswordValidator changePasswordValidator, ModelMapper modelMapper) {
     this.userService = userService;
     this.imageService = imageService;
+    this.userRegisterValidator = userRegisterValidator;
+    this.userEditProfileValidator = userEditProfileValidator;
+    this.changePasswordValidator = changePasswordValidator;
     this.modelMapper = modelMapper;
   }
 
   @GetMapping("/login")
   @PreAuthorize("isAnonymous()")
+  @PageTitle("Login")
   public ModelAndView login() {
     return super.view(USER_LOGIN_VIEW);
   }
 
   @GetMapping("/register")
   @PreAuthorize("isAnonymous()")
+  @PageTitle("Register")
   public ModelAndView register(ModelAndView modelAndView,
                                @ModelAttribute("bindingModel")
                                    UserRegisterBindingModel bindingModel) {
@@ -59,11 +70,7 @@ public class UserController extends BaseController {
                                       BindingResult bindingResult,
                                       ModelAndView modelAndView) {
 
-    if (!bindingModel.getPassword().equals(bindingModel.getConfirmPassword())) {
-      bindingResult.addError(new FieldError(
-          "bindingModel", "password", "Passwords don't match."));
-
-    }
+    this.userRegisterValidator.validate(bindingModel, bindingResult);
 
     if (!bindingResult.hasErrors()) {
       this.userService
@@ -79,18 +86,31 @@ public class UserController extends BaseController {
 
   @GetMapping("/profile")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Profile")
   public ModelAndView profile(Principal principal, ModelAndView modelAndView) {
-    modelAndView
-        .addObject("userModel", this.getUserViewModel(principal));
 
+    UserServiceModel userServiceModel = this.userService
+        .findUserByUsername(principal.getName());
+
+    UserViewModel userModel = this.modelMapper.map(userServiceModel, UserViewModel.class);
+
+    modelAndView.addObject("userModel", userModel);
     return super.view(USER_PROFILE_VIEW, modelAndView);
   }
 
   @GetMapping("/profile/edit")
   @PreAuthorize("isAuthenticated()")
-  public ModelAndView editProfile(Principal principal, ModelAndView modelAndView) {
+  @PageTitle("Edit Profile")
+  public ModelAndView editProfile(Principal principal,
+                                  @ModelAttribute(name = "userModel")
+                                      UserEditBindingModel userModel,
+                                  ModelAndView modelAndView) {
+
+    userModel = this.modelMapper
+        .map(this.userService.findUserByUsername(principal.getName()),
+            UserEditBindingModel.class);
     modelAndView
-        .addObject("userModel", this.getUserViewModel(principal));
+        .addObject("userModel", userModel);
 
     return super.view(USER_EDIT_PROFILE_VIEW, modelAndView);
   }
@@ -102,25 +122,31 @@ public class UserController extends BaseController {
                                          BindingResult bindingResult,
                                          ModelAndView modelAndView) {
 
+    this.userEditProfileValidator.validate(userModel, bindingResult);
+
     if (!bindingResult.hasErrors()) {
 
       UserServiceModel userServiceModel = this.modelMapper
           .map(userModel, UserServiceModel.class);
 
       this.userService.editUserProfile(userServiceModel);
-
       return super.redirect(USER_PROFILE_ROUTE);
     }
 
     modelAndView.addObject("userModel", userModel);
-
     return super.view(USER_EDIT_PROFILE_VIEW, modelAndView);
   }
 
   @GetMapping("/password/edit")
   @PreAuthorize("isAuthenticated()")
-  public ModelAndView editPassword() {
-    return super.view(USER_CHANGE_PASSWORD_VIEW);
+  @PageTitle("Change Password")
+  public ModelAndView editPassword(@ModelAttribute(name = "userModel")
+                                         UserEditPasswordBindingModel userModel,
+                                   ModelAndView modelAndView) {
+
+    userModel = new UserEditPasswordBindingModel();
+    modelAndView.addObject("userModel", userModel);
+    return super.view(USER_CHANGE_PASSWORD_VIEW, modelAndView);
   }
 
   @PostMapping("/password/edit")
@@ -130,10 +156,14 @@ public class UserController extends BaseController {
                                               UserEditPasswordBindingModel userModel,
                                           BindingResult bindingResult,
                                           ModelAndView modelAndView) {
-    if (!bindingResult.hasErrors() &&
-        userModel.getPassword().equals(userModel.getConfirmPassword())) {
-      this.userService.editUserPassword(this.modelMapper
-              .map(userModel, UserServiceModel.class),
+
+    userModel.setUsername(principal.getName());
+
+    this.changePasswordValidator.validate(userModel, bindingResult);
+
+    if (!bindingResult.hasErrors()) {
+      this.userService.editUserPassword(
+          this.modelMapper.map(userModel, UserServiceModel.class),
           principal.getName(),
           userModel.getOldPassword());
 
@@ -141,8 +171,7 @@ public class UserController extends BaseController {
     }
 
     modelAndView.addObject("userModel", userModel);
-
-    return super.view(USER_CHANGE_PASSWORD_VIEW);
+    return super.view(USER_CHANGE_PASSWORD_VIEW, modelAndView);
   }
 
 
@@ -155,14 +184,4 @@ public class UserController extends BaseController {
         this.imageService.saveInDb(file));
     return super.redirect(USER_PROFILE_ROUTE);
   }
-
-  private UserViewModel getUserViewModel(Principal principal) {
-    UserServiceModel userServiceModel = this.userService
-        .findUserByUsername(principal.getName());
-
-    return this.modelMapper
-        .map(userServiceModel, UserViewModel.class);
-  }
-
-
 }

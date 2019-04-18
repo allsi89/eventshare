@@ -4,6 +4,7 @@ import com.allsi.eventshare.domain.entities.Category;
 import com.allsi.eventshare.domain.entities.Event;
 import com.allsi.eventshare.domain.models.service.CategoryServiceModel;
 import com.allsi.eventshare.errors.CategoryNotFoundException;
+import com.allsi.eventshare.errors.IllegalOperationException;
 import com.allsi.eventshare.repository.CategoryRepository;
 import com.allsi.eventshare.repository.EventRepository;
 import org.modelmapper.ModelMapper;
@@ -37,13 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     return this.modelMapper.map(category, CategoryServiceModel.class);
   }
-
-//  @Override
-//  public CategoryServiceModel findByName(String name) {
-//    Category category = this.categoryRepository.findByName(name)
-//        .orElseThrow(() -> new CategoryNotFoundException());
-//    return this.modelMapper.map(category, CategoryServiceModel.class);
-//  }
 
   @Override
   public List<CategoryServiceModel> findAllCategories() {
@@ -88,6 +82,10 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public void deleteCategory(String id) {
+    if (this.eventRepository.findAllByCategory(id).size() > 0) {
+      throw new IllegalOperationException();
+    }
+
     this.categoryRepository.deleteById(id);
   }
 }

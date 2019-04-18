@@ -3,6 +3,7 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.service.*;
 import com.allsi.eventshare.domain.models.view.*;
 import com.allsi.eventshare.service.*;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.GlobalConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/explore")
@@ -41,12 +42,14 @@ public class ExploreController extends BaseController{
 
   @GetMapping("/options")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Explore")
   public ModelAndView explore(ModelAndView modelAndView) {
     return super.view(EXPLORE_VIEW, modelAndView);
   }
 
   @GetMapping("/event/{id}")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Event Details")
   public ModelAndView viewAvailableEvent(ModelAndView modelAndView,
                                      @PathVariable(name = "id") String id) {
 
@@ -61,6 +64,7 @@ public class ExploreController extends BaseController{
 
   @GetMapping("/organisations/{id}")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Events By Organisations")
   public ModelAndView getOrganisationEvents(ModelAndView modelAndView,
                                             @PathVariable(name = "id") String id,
                                             Principal principal) {
@@ -87,6 +91,7 @@ public class ExploreController extends BaseController{
 
   @GetMapping("/countries/{id}")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Events By Country")
   public ModelAndView getCountryEvents(ModelAndView modelAndView,
                                        @PathVariable(name = "id") String id) {
     CountryServiceModel country = this.countryService.findByCountryId(id);
@@ -107,6 +112,7 @@ public class ExploreController extends BaseController{
 
   @GetMapping("/categories/{id}")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Events By Category")
   public ModelAndView getCategoryEvents(ModelAndView modelAndView,
                                        @PathVariable(name = "id") String id) {
     CategoryServiceModel category = this.categoryService.findById(id);

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -42,9 +42,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = new Role(authority);
         this.roleRepository.save(role);
       }
-
     }
-
   }
 
   @Override
@@ -54,14 +52,6 @@ public class RoleServiceImpl implements RoleService {
 
     return this.modelMapper.map(role, RoleServiceModel.class);
   }
-
-//  @Override
-//  public List<RoleServiceModel> getAllRoles() {
-//    return this.roleRepository.findAll()
-//        .stream()
-//        .map(r -> this.modelMapper.map(r, RoleServiceModel.class))
-//        .collect(Collectors.toList());
-//  }
 
   @Override
   public List<RoleServiceModel> getAllRolesNotCorp() {
@@ -79,8 +69,6 @@ public class RoleServiceImpl implements RoleService {
         .map(r-> this.modelMapper.map(r, RoleServiceModel.class))
         .collect(Collectors.toList());
   }
-
-  //TODO - may not work
 
   @Override
   public List<RoleServiceModel> listAvailableRoles() {

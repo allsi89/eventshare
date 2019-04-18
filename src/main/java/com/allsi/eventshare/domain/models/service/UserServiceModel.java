@@ -1,8 +1,6 @@
 package com.allsi.eventshare.domain.models.service;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 public class UserServiceModel extends BaseServiceModel {

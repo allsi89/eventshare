@@ -19,67 +19,71 @@
 </th:block>
 
 <th:block th:fragment="register" xmlns:th="http://www.thymeleaf.org">
-<form th:action="@{/users/register}" th:method="post" class="form-custom register"
-      th:object="${bindingModel}" id="reg-form">
-    <div class="form-group" th:classappend="${#fields.hasErrors('username')}?'text-danger'">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username"
-               th:field="*{username}"
-               name="username" required>
-        <small th:each="error : ${#fields.errors('username')}" th:text="${error}"></small>
-    </div>
-    <div class="form-group" th:classappend="${#fields.hasErrors('email')}?'text-danger'">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email"
-               th:field="*{email}"
-               name="email" required>
-        <small th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
-    </div>
-    <div class="form-group" th:classappend="${#fields.hasErrors('password')}?'text-danger'">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password"
-               th:field="*{password}"
-               name="password" required>
-        <small th:each="error : ${#fields.errors('password')}" th:text="${error}"></small>
-    </div>
-    <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}?'text-danger'">
-        <label for="confirmPassword">Password</label>
-        <input type="password" class="form-control" id="confirmPassword"
-               th:field="*{confirmPassword}"
-               name="confirmPassword" required>
-        <small th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></small>
-    </div>
-    <hr>
-    <button type="submit" id="submitButton" class="button buttonBlue">Register
-        
-    </button>
-</form>
+    <form th:action="@{/users/register}" th:method="post" class="form-custom register"
+          th:object="${bindingModel}" id="reg-form">
+        <div class="form-group" th:classappend="${#fields.hasErrors('username')}?'text-danger'">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username"
+                   th:field="*{username}"
+                   name="username" required>
+            <small th:each="error : ${#fields.errors('username')}" th:text="${error}"></small>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')}?'text-danger'">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email"
+                   th:field="*{email}"
+                   name="email" required>
+            <small th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')}?'text-danger'">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password"
+                   th:field="*{password}"
+                   name="password" required>
+            <small th:each="error : ${#fields.errors('password')}" th:text="${error}"></small>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}?'text-danger'">
+            <label for="confirmPassword">Password</label>
+            <input type="password" class="form-control" id="confirmPassword"
+                   th:field="*{confirmPassword}"
+                   name="confirmPassword" required>
+            <small th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></small>
+        </div>
+        <hr>
+        <button type="submit" id="submitButton" class="button buttonBlue">Register
+
+        </button>
+    </form>
 </th:block>
 
 <th:block th:fragment="edit-profile" xmlns:th="http://www.thymeleaf.org">
     <form class="se-form se-form-text mt-3 mb-5 form-custom edit" th:action="@{/users/profile/edit}"
-          th:method="post">
+          th:method="post" th:object="${userModel}">
         <div class="form-group">
             <label for="inputUsername">Username</label>
-            <input type="text" th:value="${userModel.username}"
-                   class="form-control" name="username"
-                   id="username" readonly>
-        </div>
-        <div class="form-group">
-            <label for="inputEmail">Email</label>
-            <input type="email" th:value="${userModel.email}"
+            <input type="text" th:value="*{username}"
                    class="form-control"
-            id="email" name="email" required>
-            <div class="invalid-tooltip"></div>
+                   id="username"
+                   name="username" readonly>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('email')}?'text-danger'">
+            <label for="email">Email</label>
+            <input type="email"
+                   th:field="*{email}"
+                   class="form-control"
+                   id="email"
+                   name="email" required>
+            <small th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
         </div>
         <div class="form-group">
             <label for="inputAbout">About Me</label>
-            <textarea type="text" th:value="${userModel.about}" class="form-control materialize-textarea"
-                      id="inputAbout" name="about" th:field="${userModel.about}"></textarea>
+            <textarea type="text" th:field="*{about}"
+                      class="form-control materialize-textarea"
+                      id="inputAbout"
+                      name="about"></textarea>
         </div>
         <hr/>
         <button type="submit" id="submitButton" class="button buttonBlue">Edit
-            
         </button>
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
@@ -87,24 +91,30 @@
 
 <th:block th:fragment="edit-password" xmlns:th="http://www.thymeleaf.org">
     <form class="se-form se-form-text form-custom edit" th:action="@{/users/password/edit}"
-          th:method="post">
-        <div class="form-group">
+          th:method="post" th:object="${userModel}">
+        <div class="form-group" th:classappend="${#fields.hasErrors('oldPassword')}?'text-danger'">
             <label for="oldPassword">Old Password</label>
-            <input type="password" class="form-control" id="oldPassword"
+            <input type="password" class="form-control"
+                   th:field="*{oldPassword}"
+                   id="oldPassword"
                    name="oldPassword" required>
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('oldPassword')}" th:text="${error}"></small>
         </div>
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('password')}?'text-danger'">
             <label for="password">New Password</label>
-            <input type="password" class="form-control" id="password"
+            <input type="password" class="form-control"
+                   th:field="*{password}"
+                   id="password"
                    name="password">
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('password')}" th:text="${error}"></small>
         </div>
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}?'text-danger'">
             <label for="confirmPassword">Confirm New Password</label>
-            <input type="password" class="form-control" id="confirmPassword"
+            <input type="password" class="form-control"
+                   th:field="*{confirmPassword}"
+                   id="confirmPassword"
                    name="confirmPassword">
-            <div class="invalid-tooltip"></div>
+            <small th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></small>
         </div>
         <hr/>
         <button type="submit" id="submitButton" class="button buttonBlue">Edit</button>

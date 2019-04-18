@@ -2,6 +2,8 @@ package com.allsi.eventshare.domain.models.binding;
 
 import javax.validation.constraints.NotBlank;
 
+import static com.allsi.eventshare.common.GlobalConstants.BLANK_ERR_MSG;
+
 public class CategoryBindingModel {
   public String id;
   private String name;
@@ -17,7 +19,7 @@ public class CategoryBindingModel {
     this.id = id;
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getName() {
     return name;
   }

@@ -2,6 +2,8 @@ package com.allsi.eventshare.domain.models.binding;
 
 import javax.validation.constraints.NotBlank;
 
+import static com.allsi.eventshare.common.GlobalConstants.BLANK_ERR_MSG;
+
 public class EditEventBindingModel {
   private String name;
   private String description;
@@ -18,7 +20,7 @@ public class EditEventBindingModel {
   public EditEventBindingModel() {
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getName() {
     return name;
   }
@@ -27,7 +29,6 @@ public class EditEventBindingModel {
     this.name = name;
   }
 
-  @NotBlank
   public String getDescription() {
     return description;
   }
@@ -84,7 +85,7 @@ public class EditEventBindingModel {
     this.website = website;
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getStartsOnDate() {
     return startsOnDate;
   }
@@ -93,7 +94,7 @@ public class EditEventBindingModel {
     this.startsOnDate = startsOnDate;
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getStartsOnTime() {
     return startsOnTime;
   }
@@ -102,7 +103,7 @@ public class EditEventBindingModel {
     this.startsOnTime = startsOnTime;
   }
 
-  @NotBlank
+  @NotBlank(message = BLANK_ERR_MSG)
   public String getCategoryName() {
     return categoryName;
   }

@@ -4,6 +4,8 @@ import com.allsi.eventshare.domain.models.binding.CategoryBindingModel;
 import com.allsi.eventshare.domain.models.service.CategoryServiceModel;
 import com.allsi.eventshare.domain.models.view.CategoryViewModel;
 import com.allsi.eventshare.service.CategoryService;
+import com.allsi.eventshare.validation.category.CategoryValidator;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,22 +17,25 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.GlobalConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController extends BaseController {
   private final CategoryService categoryService;
+  private final CategoryValidator categoryValidator;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public CategoryController(CategoryService categoryService, ModelMapper modelMapper) {
+  public CategoryController(CategoryService categoryService, CategoryValidator categoryValidator, ModelMapper modelMapper) {
     this.categoryService = categoryService;
+    this.categoryValidator = categoryValidator;
     this.modelMapper = modelMapper;
   }
 
   @GetMapping("/all")
   @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
+  @PageTitle("All Categories")
   public ModelAndView allCategories(ModelAndView modelAndView) {
     List<CategoryViewModel> categories = this.categoryService.findAllCategories()
         .stream()
@@ -42,10 +47,12 @@ public class CategoryController extends BaseController {
 
   @GetMapping("/add")
   @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
+  @PageTitle("Add Category")
   public ModelAndView addCategory(ModelAndView modelAndView,
                                   @ModelAttribute(name = "bindingModel")
                                       CategoryBindingModel bindingModel) {
 
+    modelAndView.addObject("bindingModel", bindingModel);
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
   }
 
@@ -55,6 +62,9 @@ public class CategoryController extends BaseController {
                                          @ModelAttribute(name = "bindingModel")
                                              CategoryBindingModel bindingModel,
                                          BindingResult bindingResult) {
+
+    this.categoryValidator.validate(bindingModel, bindingResult);
+
     if (!bindingResult.hasErrors()) {
       CategoryServiceModel serviceModel = this.modelMapper
           .map(bindingModel, CategoryServiceModel.class);
@@ -66,10 +76,11 @@ public class CategoryController extends BaseController {
     return super.view(ADD_CATEGORY_VIEW, modelAndView);
   }
 
-  @GetMapping("/edit")
+  @GetMapping("/edit/{categoryId}")
   @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  @PageTitle("Edit Category")
   public ModelAndView editCategory(ModelAndView modelAndView,
-                                   @RequestParam(name = "categoryId") String id) {
+                                   @PathVariable(name = "categoryId") String id) {
 
     CategoryBindingModel bindingModel = this.modelMapper
         .map(this.categoryService.findById(id), CategoryBindingModel.class);
@@ -78,14 +89,18 @@ public class CategoryController extends BaseController {
     return super.view(EDIT_CATEGORY_VIEW, modelAndView);
   }
 
-  @PostMapping("/edit")
+  @PostMapping("/edit/{id}")
   @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
   public ModelAndView editCategoryConfirm(ModelAndView modelAndView,
-                                          @RequestParam(name = "id") String id,
+                                          @PathVariable(name = "id") String id,
                                           @ModelAttribute(name = "bindingModel")
                                               CategoryBindingModel bindingModel,
                                           BindingResult bindingResult) {
+
+    this.categoryValidator.validate(bindingModel, bindingResult);
+
     if (bindingResult.hasErrors()) {
+      bindingModel.setId(id);
       modelAndView.addObject("bindingModel", bindingModel);
       return super.view(EDIT_CATEGORY_VIEW, modelAndView);
     }

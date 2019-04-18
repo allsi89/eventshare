@@ -19,15 +19,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Service
 public class EventServiceImpl implements EventService {
-  private static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
   private static final String ACCESS_DENIED_ERR = "You don't have permission to access this page!";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
   private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
-  private static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
   private final EventRepository eventRepository;
   private final UserRepository userRepository;
   private final CountryRepository countryRepository;
@@ -112,8 +110,6 @@ public class EventServiceImpl implements EventService {
     Event event = this.eventRepository.findById(eventId)
         .orElseThrow(EventNotFoundException::new);
 
-    this.validateDate(event.getStartDatetime());
-
     User user = this.userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
@@ -161,28 +157,20 @@ public class EventServiceImpl implements EventService {
       throw new IllegalOperationException();
     }
 
-    LocalDateTime start = LocalDateTime
-        .parse(String.format(DATE_TIME_STR_TO_FORMAT,
-            serviceModel.getStartsOnDate(),
-            serviceModel.getStartsOnTime()),
-            DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
-
-    this.validateDate(start);
-
     User creator = this.userRepository.findByUsername(name)
         .orElseThrow(()-> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
 
     List<Image> images = event.getImages();
-
-    Country country = this.countryRepository
-        .findByNiceName(serviceModel.getCountry().getNiceName())
-        .orElseThrow(CountryNotFoundException::new);
+    Country country = event.getCountry();
 
     Category category = this.categoryRepository
         .findByName(serviceModel.getCategory().getName())
         .orElseThrow(CategoryNotFoundException::new);
 
+    LocalDateTime start = event.getStartDatetime();
+
     event = this.modelMapper.map(serviceModel, Event.class);
+
     event.setCreator(creator);
     event.setStartDatetime(start);
     event.setCountry(country);
@@ -210,11 +198,5 @@ public class EventServiceImpl implements EventService {
     esm.setStartsOnDate(e.getStartDatetime().format(DATE_FORMATTER));
     esm.setStartsOnTime(e.getStartDatetime().format(TIME_FORMATTER));
     return esm;
-  }
-
-  private void validateDate(LocalDateTime startDate) {
-    if (startDate.isBefore(LocalDateTime.now())){
-      throw new InvalidDateTimeException();
-    }
   }
 }

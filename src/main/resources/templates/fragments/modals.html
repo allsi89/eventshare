@@ -18,13 +18,13 @@
                     <th:block th:replace="~{fragments/change-picture}"></th:block>
                     <input id="btn-id" type="hidden" name="id" th:value="${viewModel.getId()}"/>
                     <input type="hidden" id="token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit" class="btn-flat btn-success rounded func-button"
-                            onclick="$('#add-event-pictures-form').submit()"
-                            data-dismiss="modal" id="submit-pic-btn">Save
-                        </button>
-                </form>
             </div>
             <div class="modal-footer">
+                <button type="submit" class="btn-flat btn-success rounded func-button"
+                        onclick="$('#add-event-pictures-form').submit()"
+                        data-dismiss="modal" id="submit-pic-btn">Save
+                </button>
+                </form>
                 <button type="button" class="btn-flat btn-danger rounded" data-dismiss="modal">Cancel</button>
             </div>
         </div>

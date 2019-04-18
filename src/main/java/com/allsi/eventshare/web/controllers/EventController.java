@@ -7,6 +7,8 @@ import com.allsi.eventshare.domain.models.view.EventListViewModel;
 import com.allsi.eventshare.domain.models.view.EventViewModel;
 import com.allsi.eventshare.service.EventService;
 import com.allsi.eventshare.service.ImageService;
+import com.allsi.eventshare.validation.event.AddEventValidator;
+import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,25 +24,27 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.GlobalConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Controller
 @RequestMapping("/events")
 public class EventController extends BaseController {
   private final EventService eventService;
   private final ImageService imageService;
+  private final AddEventValidator addEventValidator;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public EventController(EventService eventService, ModelMapper modelMapper, ImageService imageService) {
+  public EventController(EventService eventService, ModelMapper modelMapper, ImageService imageService, AddEventValidator addEventValidator) {
     this.eventService = eventService;
     this.modelMapper = modelMapper;
     this.imageService = imageService;
+    this.addEventValidator = addEventValidator;
   }
 
-  //ADD event - works
   @GetMapping("/add")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Add Event")
   public ModelAndView addEvent(ModelAndView modelAndView,
                                @ModelAttribute(name = "bindingModel")
                                    AddEventBindingModel bindingModel) {
@@ -50,7 +54,6 @@ public class EventController extends BaseController {
     return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
-  //ADD event post works
   @PostMapping("/add")
   @PreAuthorize(("isAuthenticated()"))
   public ModelAndView addEventConfirm(Principal principal,
@@ -58,6 +61,8 @@ public class EventController extends BaseController {
                                       @Valid @ModelAttribute(name = "bindingModel")
                                           AddEventBindingModel bindingModel,
                                       BindingResult bindingResult){
+
+    this.addEventValidator.validate(bindingModel, bindingResult);
 
     if (!bindingResult.hasErrors()) {
       EventServiceModel eventServiceModel = this.modelMapper
@@ -74,9 +79,9 @@ public class EventController extends BaseController {
     return super.view(ADD_EVENT_VIEW, modelAndView);
   }
 
-  //IT works
   @GetMapping("/my-events/view/{id}")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Event Details")
   public ModelAndView creatorEventView(Principal principal,
                                        ModelAndView modelAndView,
                                        @PathVariable(name = "id") String eventId) {
@@ -92,24 +97,6 @@ public class EventController extends BaseController {
     return super.view(OWNER_EVENT_DETAILS_VIEW, modelAndView);
   }
 
-//  @PostMapping("/my-events/view")
-//  @PreAuthorize("isAuthenticated()")
-//  public ModelAndView creatorEventViewAddPicture(Principal principal,
-//                                       ModelAndView modelAndView,
-//                                       @RequestParam(name = "eventId") String eventId) {
-//
-//    EventServiceModel eventServiceModel = this.eventService
-//        .findEventByIdAndCreator(eventId, principal.getName());
-//
-//    EventViewModel viewModel = this.modelMapper
-//        .map(eventServiceModel, EventViewModel.class);
-//
-//    modelAndView.addObject("viewModel", viewModel);
-//
-//    return super.view(OWNER_EVENT_DETAILS_VIEW, modelAndView);
-//  }
-
-//  IT works
   @PostMapping("/add-pictures/{id}")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
@@ -122,9 +109,9 @@ public class EventController extends BaseController {
     return super.redirect(OWNER_EVENT_DETAILS_ROUTE + id);
   }
 
-  //It Works
   @GetMapping("/my-events")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("My Events")
   public ModelAndView allUserEvents(Principal principal, ModelAndView modelAndView) {
 
     List<EventListViewModel> events =  this.eventService
@@ -149,19 +136,17 @@ public class EventController extends BaseController {
 
   @GetMapping("/my-events/edit")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Edit Event")
   public ModelAndView editEvent(@RequestParam("editId") String id,
                                 @ModelAttribute("bindingModel")
                                     EditEventBindingModel bindingModel,
                                 ModelAndView modelAndView) {
-    System.out.println();
     bindingModel = this.modelMapper
         .map(this.eventService.findEventById(id), EditEventBindingModel.class);
 
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view(EDIT_EVENT_VIEW, modelAndView);
   }
-
-  //TODO edit
 
   @PostMapping("/my-events/edit")
   @PreAuthorize("isAuthenticated()")

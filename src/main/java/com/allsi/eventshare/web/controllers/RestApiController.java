@@ -83,7 +83,6 @@ public class RestApiController {
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
   public List<CountryViewModel> fetchCountries() {
-    System.out.println();
     return this.countryService.findAllCountries()
         .stream()
         .map(c -> this.modelMapper.map(c, CountryViewModel.class))

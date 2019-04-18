@@ -217,24 +217,3 @@ function showCreatedEvents() {
 
 }
 
-// function myFunction() {
-//     $('input').focus(function () {
-//         $(this).prev().addClass('stylee');
-//     }).blur(function () {
-//         if ($(this).val()) {
-//             $(this).prev().addClass('stylee');
-//         } else {
-//             $(this).prev().removeClass('stylee');
-//         }
-//     });
-//
-//     $('select').focus(function () {
-//         $(this).prev().addClass('stylee');
-//     }).blur(function () {
-//         if ($(this).val()) {
-//             $(this).prev().addClass('stylee');
-//         } else {
-//             $(this).prev().removeClass('stylee');
-//         }
-//     });
-// }

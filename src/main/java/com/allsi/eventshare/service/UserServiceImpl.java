@@ -6,7 +6,6 @@ import com.allsi.eventshare.domain.entities.User;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
-import com.allsi.eventshare.errors.IllegalOperationException;
 import com.allsi.eventshare.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.constants.Constants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -77,10 +76,6 @@ public class UserServiceImpl implements UserService {
   public void editUserPassword(UserServiceModel model, String name, String oldPassword) {
     User user = this.userRepository.findByUsername(name)
         .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
-
-    if (!this.encoder.matches(oldPassword, user.getPassword())) {
-      throw new IllegalOperationException();
-    }
 
     user.setPassword(this.encoder.encode(model.getPassword()));
 

@@ -26,26 +26,6 @@
 
 <script th:inline="javascript">
 
-    $('#starts-on-date').on('focus', () => {
-        let today = new Date();
-        let tomorrow = new Date();
-
-        tomorrow.setDate(today.getDate() + 1);
-
-        console.log(tomorrow);
-
-        $('.datepicker').datepicker({
-            format: 'dd-mmm-yyyy',
-            minDate: tomorrow
-        });
-    });
-
-    $('#starts-on-time').on('focus', () => {
-        $('.timepicker').timepicker({
-            format: 'hh:mm'
-        });
-    });
-
     fetch('/fetch/all-categories')
         .then((response) => response.json())
         .then((json) => {

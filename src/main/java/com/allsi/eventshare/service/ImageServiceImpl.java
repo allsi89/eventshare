@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static com.allsi.eventshare.constants.Constants.INVALID_FILE;
-
 @Service
 public class ImageServiceImpl implements ImageService {
   private final ImageRepository imageRepository;
