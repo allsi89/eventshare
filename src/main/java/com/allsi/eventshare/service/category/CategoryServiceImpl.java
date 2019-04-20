@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.category;
 
 import com.allsi.eventshare.domain.entities.Category;
 import com.allsi.eventshare.domain.entities.Event;
@@ -16,9 +16,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.allsi.eventshare.service.ServiceConstants.CATEGORY_NOT_FOUND;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
-  private static final String CATEGORY_NOT_FOUND = "Category not found!";
+  private static final String OPERATION_NOT_ALLOWED = "Operation not allowed.";
 
   private final CategoryRepository categoryRepository;
   private final EventRepository eventRepository;
@@ -34,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryServiceModel findById(String id) {
     Category category = this.categoryRepository.findById(id)
-        .orElseThrow(CategoryNotFoundException::new);
+        .orElseThrow(() -> new CategoryNotFoundException(CATEGORY_NOT_FOUND));
 
     return this.modelMapper.map(category, CategoryServiceModel.class);
   }
@@ -75,15 +77,15 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public void editCategory(String categoryName, String id) {
     Category category = this.categoryRepository.findById(id)
-        .orElseThrow(CategoryNotFoundException::new);
+        .orElseThrow(() -> new CategoryNotFoundException(CATEGORY_NOT_FOUND));
     category.setName(categoryName);
     this.categoryRepository.save(category);
   }
 
   @Override
   public void deleteCategory(String id) {
-    if (this.eventRepository.findAllByCategory(id).size() > 0) {
-      throw new IllegalOperationException();
+    if (this.eventRepository.findAllByCategory(id).size() > 0 || !this.categoryRepository.findById(id).isPresent()) {
+      throw new IllegalOperationException(OPERATION_NOT_ALLOWED);
     }
 
     this.categoryRepository.deleteById(id);

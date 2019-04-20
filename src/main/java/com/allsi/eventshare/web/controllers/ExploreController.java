@@ -2,7 +2,10 @@ package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.service.*;
 import com.allsi.eventshare.domain.models.view.*;
-import com.allsi.eventshare.service.*;
+import com.allsi.eventshare.service.category.CategoryService;
+import com.allsi.eventshare.service.country.CountryService;
+import com.allsi.eventshare.service.event.EventService;
+import com.allsi.eventshare.service.organisation.OrganisationService;
 import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

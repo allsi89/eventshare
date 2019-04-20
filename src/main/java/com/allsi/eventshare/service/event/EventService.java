@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.event;
 
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
@@ -14,8 +14,6 @@ public interface EventService {
 
   List<EventServiceModel> findAllByCreator(String username);
 
-//  List<EventServiceModel> findAllByIds(List<String> eventsIds);
-
   EventServiceModel findEventByIdAndCreator(String eventId, String name);
 
   List<EventServiceModel> findAllByCountry(String countryId);
@@ -25,4 +23,6 @@ public interface EventService {
   void deleteEvent(String id, String name);
 
   void editEvent(EventServiceModel serviceModel, String name);
+
+  List<String> findAllCreatorIds();
 }

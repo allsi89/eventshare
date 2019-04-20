@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.country;
 
 import com.allsi.eventshare.domain.models.service.CountryServiceModel;
 
@@ -10,5 +10,5 @@ public interface CountryService {
 
   CountryServiceModel findByCountryId(String id);
 
-  List<CountryServiceModel> findAllCountriesWithEvents(String name);
+  List<CountryServiceModel> findAllCountriesWithEvents();
 }

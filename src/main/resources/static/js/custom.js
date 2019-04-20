@@ -187,33 +187,33 @@ function showGallery(id) {
 
 }
 
-function showCreatedEvents() {
-    fetch("/fetch/created-events")
-        .then((response) => response.json())
-        .then((json) => {
-            $('#content-container').remove();
-            $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
-
-            $('#content-container').append(
-                `<h2> Event: ${event.name}</h2>
-                     <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
-                     <hr class="border"/>
-                     <a href="/events/my-events/${event.id}" class="btn-flat btn-primary">View</a>
-                     <form action="/events/my-events/edit/">
-                     <button value="${event.id}" name="id" class="btn-flat btn-info">Edit</button>
-                     </form>
-                     <form action="/events/my-events/delete">
-                     <button value="${event.id}" name="deleteId" class="btn-flat btn-danger">Delete</a><hr/>
-                     </form>
-
-                     `);
-            json.forEach((event, index) => {
-            });
-        })
-        .catch(() => {
-           console.log("No events found!")
-        });
-
-
-}
+// function showCreatedEvents() {
+//     fetch("/fetch/created-events")
+//         .then((response) => response.json())
+//         .then((json) => {
+//             $('#content-container').remove();
+//             $('.custom-container').append(`<div id="content-container" class="mt-4 text-center"></div>`);
+//
+//             $('#content-container').append(
+//                 `<h2> Event: ${event.name}</h2>
+//                      <h3>Starts: ${event.startsOnDate.toString()} at ${event.startsOnTime.toString()} </h3>
+//                      <hr class="border"/>
+//                      <a href="/events/my-events/${event.id}" class="btn-flat btn-primary">View</a>
+//                      <form action="/events/my-events/edit/">
+//                      <button value="${event.id}" name="id" class="btn-flat btn-info">Edit</button>
+//                      </form>
+//                      <form action="/events/my-events/delete">
+//                      <button value="${event.id}" name="deleteId" class="btn-flat btn-danger">Delete</a><hr/>
+//                      </form>
+//
+//                      `);
+//             json.forEach((event, index) => {
+//             });
+//         })
+//         .catch(() => {
+//            console.log("No events found!")
+//         });
+//
+//
+// }
 

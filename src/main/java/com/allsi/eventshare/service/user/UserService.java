@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.user;
 
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
@@ -18,11 +18,11 @@ public interface UserService extends UserDetailsService {
 
   void editUserPicture(String username, ImageServiceModel imageServiceModel) throws IOException;
 
-//  UserServiceModel findUserById(String id);
-
   List<UserServiceModel> findAllUsersButRequester(String username);
 
-  void updateRole(String id, String principalName);
+  void updateRole(String id, String authority);
 
-//  void setUserRole(String id, String authority);
+  void removeCorpRole(String username);
+
+  void addCorpRole(String username);
 }

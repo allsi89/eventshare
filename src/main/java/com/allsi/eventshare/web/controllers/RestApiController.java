@@ -2,13 +2,15 @@ package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.view.*;
-import com.allsi.eventshare.service.*;
+import com.allsi.eventshare.service.category.CategoryService;
+import com.allsi.eventshare.service.country.CountryService;
+import com.allsi.eventshare.service.event.EventService;
+import com.allsi.eventshare.service.organisation.OrganisationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,25 +22,23 @@ public class RestApiController {
   private final CountryService countryService;
   private final OrganisationService organisationService;
   private final ModelMapper modelMapper;
-  private final ImageService imageService;
 
   @Autowired
-  public RestApiController(EventService eventService, CategoryService categoryService, CountryService countryService, OrganisationService organisationService, ModelMapper modelMapper, ImageService imageService) {
+  public RestApiController(EventService eventService, CategoryService categoryService, CountryService countryService, OrganisationService organisationService, ModelMapper modelMapper) {
     this.eventService = eventService;
     this.categoryService = categoryService;
     this.countryService = countryService;
     this.organisationService = organisationService;
     this.modelMapper = modelMapper;
-    this.imageService = imageService;
   }
 
 
   @GetMapping("/organisations-with-events")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
-  public List<OrganisationBriefViewModel> fetchOrganisations(Principal principal) {
+  public List<OrganisationBriefViewModel> fetchOrganisations() {
     return this.organisationService
-        .findAllOrganisationsWithEvents(principal.getName())
+        .findAllOrganisationsWithEvents()
         .stream()
         .map(o -> this.modelMapper.map(o, OrganisationBriefViewModel.class))
         .collect(Collectors.toList());
@@ -58,22 +58,22 @@ public class RestApiController {
         .collect(Collectors.toList());
   }
 
-  @GetMapping(value = "/created-events", produces = "application/json")
-  @PreAuthorize("isAuthenticated()")
-  @ResponseBody
-  public Object fetchCreated(Principal principal) {
-    return this.eventService.findAllByCreator(principal.getName())
-        .stream()
-        .map(e -> this.modelMapper.map(e, EventListViewModel.class))
-        .collect(Collectors.toList());
-  }
+//  @GetMapping(value = "/created-events", produces = "application/json")
+//  @PreAuthorize("isAuthenticated()")
+//  @ResponseBody
+//  public Object fetchCreated(Principal principal) {
+//    return this.eventService.findAllByCreator(principal.getName())
+//        .stream()
+//        .map(e -> this.modelMapper.map(e, EventListViewModel.class))
+//        .collect(Collectors.toList());
+//  }
 
   @GetMapping("/countries-with-events")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody
-  public List<CountryViewModel> fetchCountries(Principal principal) {
+  public List<CountryViewModel> fetchCountriesWithEvents() {
     return this.countryService
-        .findAllCountriesWithEvents(principal.getName())
+        .findAllCountriesWithEvents()
         .stream()
         .map(c -> this.modelMapper.map(c, CountryViewModel.class))
         .collect(Collectors.toList());
@@ -109,6 +109,4 @@ public class RestApiController {
         .map(c -> this.modelMapper.map(c, CategoryViewModel.class))
         .collect(Collectors.toList());
   }
-
-
 }

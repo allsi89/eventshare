@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.country;
 
 import com.allsi.eventshare.domain.entities.Country;
 import com.allsi.eventshare.domain.entities.Event;
@@ -15,9 +15,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.allsi.eventshare.service.ServiceConstants.COUNTRY_NOT_FOUND;
+
 @Service
 public class CountryServiceImpl implements CountryService {
-  private static final String COUNTRY_NOT_FOUND = "Country not found!";
   private final CountryRepository countryRepository;
   private final EventRepository eventRepository;
   private final ModelMapper modelMapper;
@@ -31,7 +32,7 @@ public class CountryServiceImpl implements CountryService {
 
   @Override
   public List<CountryServiceModel> findAllCountries() {
-    return this.countryRepository.getAllCountriesOrOrderByNiceName()
+    return this.countryRepository.getAllCountriesOrderByNiceName()
         .stream()
         .map(c -> this.modelMapper.map(c, CountryServiceModel.class))
         .collect(Collectors.toList());
@@ -40,12 +41,12 @@ public class CountryServiceImpl implements CountryService {
   @Override
   public CountryServiceModel findByCountryId(String id) {
     Country country = this.countryRepository.findById(id)
-        .orElseThrow(CountryNotFoundException::new);
+        .orElseThrow(() -> new CountryNotFoundException(COUNTRY_NOT_FOUND));
     return this.modelMapper.map(country, CountryServiceModel.class);
   }
 
   @Override
-  public List<CountryServiceModel> findAllCountriesWithEvents(String username) {
+  public List<CountryServiceModel> findAllCountriesWithEvents() {
     List<Event> events = this.eventRepository.findAllGroupByCountry();
 
     List<CountryServiceModel> countries = new ArrayList<>();

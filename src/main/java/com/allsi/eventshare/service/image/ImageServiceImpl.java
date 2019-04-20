@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.image;
 
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
+import static com.allsi.eventshare.service.ServiceConstants.INVALID_FILE;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -30,7 +32,7 @@ public class ImageServiceImpl implements ImageService {
     String url = this.cloudService.uploadImage(file);
 
     if (url == null){
-      throw new InvalidFileException();
+      throw new InvalidFileException(INVALID_FILE);
     }
 
     Image image = new Image(url);

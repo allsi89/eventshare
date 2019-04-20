@@ -9,23 +9,21 @@ public abstract class BaseController {
   @Autowired
   private AuthService authService;
 
-
+  protected ModelAndView view(String view) {
+    return this.view(view, new ModelAndView());
+  }
 
   protected ModelAndView view(String view, ModelAndView modelAndView) {
     modelAndView.setViewName(view);
     return modelAndView;
   }
 
-  protected ModelAndView view(String view) {
-    return this.view(view, new ModelAndView());
+  protected ModelAndView redirect(String url) {
+    return this.view("redirect:" + url);
   }
 
   protected ModelAndView redirect(String url, boolean isToBeAdded) {
     this.authService.resetAuthCorp(isToBeAdded);
-    return this.view("redirect:" + url);
-  }
-
-  protected ModelAndView redirect(String url) {
     return this.view("redirect:" + url);
   }
 }

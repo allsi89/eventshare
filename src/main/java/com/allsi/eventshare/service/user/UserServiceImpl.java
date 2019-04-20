@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.user;
 
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.entities.Role;
@@ -6,7 +6,9 @@ import com.allsi.eventshare.domain.entities.User;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.service.UserServiceModel;
+import com.allsi.eventshare.errors.IllegalOperationException;
 import com.allsi.eventshare.repository.UserRepository;
+import com.allsi.eventshare.service.role.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +21,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.common.GlobalConstants.*;
+import static com.allsi.eventshare.service.ServiceConstants.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+  private static final String INCORRECT_ID = "Incorrect id!";
+
   private final UserRepository userRepository;
   private final RoleService roleService;
   private final ModelMapper modelMapper;
@@ -38,7 +43,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserServiceModel findUserByUsername(String name) {
     User user = this.userRepository.findByUsername(name)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
     UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
 
@@ -64,7 +69,11 @@ public class UserServiceImpl implements UserService {
   @Override
   public void editUserProfile(UserServiceModel userServiceModel) {
     User user = this.userRepository.findByUsername(userServiceModel.getUsername())
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+
+    if (userServiceModel.getEmail() == null || userServiceModel.getEmail().isEmpty()) {
+      throw new IllegalOperationException(INVALID_EMAIL_MSG);
+    }
 
     user.setEmail(userServiceModel.getEmail());
     user.setAbout(userServiceModel.getAbout());
@@ -75,7 +84,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void editUserPassword(UserServiceModel model, String name, String oldPassword) {
     User user = this.userRepository.findByUsername(name)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
     user.setPassword(this.encoder.encode(model.getPassword()));
 
@@ -85,7 +94,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void editUserPicture(String username, ImageServiceModel imageServiceModel) {
     User user = this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
 
     Image image = this.modelMapper.map(imageServiceModel, Image.class);
 
@@ -105,13 +114,19 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void updateRole(String id, String role) {
+  public void updateRole(String id, String authority) {
     User user = this.userRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Incorrect id!"));
+        .orElseThrow(() -> new IllegalArgumentException(INCORRECT_ID));
+
+    for (Role role : user.getRoles()) {
+      if (role.getAuthority().equals(ROOT_ADMIN)){
+        throw new IllegalOperationException(ACCESS_DENIED_ERR);
+      }
+    }
 
     UserServiceModel serviceModel = this.getServiceModel(user);
 
-    switch (role) {
+    switch (authority) {
       case USER:
         serviceModel.getRoles().add(this.roleService.findByAuthority(USER));
         break;
@@ -125,7 +140,7 @@ public class UserServiceImpl implements UserService {
         serviceModel.getRoles().add(this.roleService.findByAuthority(ADMIN));
         break;
       default:
-        break;
+        throw new IllegalOperationException(ACCESS_DENIED_ERR);
     }
 
     Set<Role> roles = serviceModel.getRoles()
@@ -135,13 +150,36 @@ public class UserServiceImpl implements UserService {
 
     user.setRoles(roles);
 
-    this.userRepository.saveAndFlush(user);
+    this.userRepository.save(user);
+  }
+
+  @Override
+  public void removeCorpRole(String username) {
+    User user = this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+
+    user.setRoles(user.getRoles()
+        .stream()
+        .filter(r -> !r.getAuthority().equals(CORP)).collect(Collectors.toSet()));
+
+    this.userRepository.save(user);
+  }
+
+  @Override
+  public void addCorpRole(String username) {
+    User user = this.userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
+
+    user.getRoles().add(this.modelMapper
+        .map(this.roleService.findByAuthority(CORP), Role.class));
+
+    this.userRepository.save(user);
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return this.userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_ERR));
+        .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
   }
 
   private UserServiceModel getServiceModel(User user) {

@@ -1,8 +1,6 @@
 package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "categories")
 public class Category extends BaseEntity {

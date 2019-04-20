@@ -3,7 +3,7 @@ package com.allsi.eventshare.web.controllers;
 import com.allsi.eventshare.domain.models.binding.CategoryBindingModel;
 import com.allsi.eventshare.domain.models.service.CategoryServiceModel;
 import com.allsi.eventshare.domain.models.view.CategoryViewModel;
-import com.allsi.eventshare.service.CategoryService;
+import com.allsi.eventshare.service.category.CategoryService;
 import com.allsi.eventshare.validation.category.CategoryValidator;
 import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
@@ -34,7 +34,7 @@ public class CategoryController extends BaseController {
   }
 
   @GetMapping("/all")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   @PageTitle("All Categories")
   public ModelAndView allCategories(ModelAndView modelAndView) {
     List<CategoryViewModel> categories = this.categoryService.findAllCategories()
@@ -46,7 +46,7 @@ public class CategoryController extends BaseController {
   }
 
   @GetMapping("/add")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   @PageTitle("Add Category")
   public ModelAndView addCategory(ModelAndView modelAndView,
                                   @ModelAttribute(name = "bindingModel")
@@ -57,7 +57,7 @@ public class CategoryController extends BaseController {
   }
 
   @PostMapping("/add")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT', 'ROLE_MODERATOR')")
   public ModelAndView addCategoryConfirm(ModelAndView modelAndView,
                                          @ModelAttribute(name = "bindingModel")
                                              CategoryBindingModel bindingModel,
@@ -77,7 +77,7 @@ public class CategoryController extends BaseController {
   }
 
   @GetMapping("/edit/{categoryId}")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
   @PageTitle("Edit Category")
   public ModelAndView editCategory(ModelAndView modelAndView,
                                    @PathVariable(name = "categoryId") String id) {
@@ -90,7 +90,7 @@ public class CategoryController extends BaseController {
   }
 
   @PostMapping("/edit/{id}")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
   public ModelAndView editCategoryConfirm(ModelAndView modelAndView,
                                           @PathVariable(name = "id") String id,
                                           @ModelAttribute(name = "bindingModel")
@@ -100,7 +100,6 @@ public class CategoryController extends BaseController {
     this.categoryValidator.validate(bindingModel, bindingResult);
 
     if (bindingResult.hasErrors()) {
-      bindingModel.setId(id);
       modelAndView.addObject("bindingModel", bindingModel);
       return super.view(EDIT_CATEGORY_VIEW, modelAndView);
     }
@@ -110,7 +109,7 @@ public class CategoryController extends BaseController {
   }
 
   @PostMapping("/delete/{id}")
-  @PreAuthorize("isAuthenticated() AND hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ROOT')")
   public ModelAndView deleteCategoryConfirm(@PathVariable(name = "id") String id) {
 
     this.categoryService.deleteCategory(id);

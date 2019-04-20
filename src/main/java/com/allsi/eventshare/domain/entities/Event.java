@@ -2,6 +2,7 @@ package com.allsi.eventshare.domain.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "events")
@@ -21,6 +22,7 @@ public class Event extends BaseEntity{
   private User creator;
 
   public Event() {
+    this.images = new ArrayList<>();
   }
 
   @Column(name = "name", nullable = false)

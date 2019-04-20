@@ -1,10 +1,9 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.image;
 
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface ImageService {
 

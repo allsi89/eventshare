@@ -17,6 +17,6 @@ public class EventValidatorHelper {
             startDate, startTime),
             DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
 
-    return !start.isBefore(LocalDateTime.now().plusDays(1));
+    return !start.isBefore(LocalDateTime.now().plusHours(12));
   }
 }

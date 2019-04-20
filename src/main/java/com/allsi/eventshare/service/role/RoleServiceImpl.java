@@ -1,7 +1,8 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.role;
 
 import com.allsi.eventshare.domain.entities.Role;
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
+import com.allsi.eventshare.errors.AuthorisationNotFoundException;
 import com.allsi.eventshare.repository.RoleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.common.GlobalConstants.*;
+import static com.allsi.eventshare.service.ServiceConstants.ROLE_NOT_FOUND;
 
 @Service
 public class RoleServiceImpl implements RoleService {
-  private static final String ROLE_NOT_FOUND = "Role not found.";
-
   private final RoleRepository roleRepository;
   private final ModelMapper modelMapper;
 
@@ -48,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
   @Override
   public RoleServiceModel findByAuthority(String authority) {
     Role role = this.roleRepository.findByAuthority(authority)
-        .orElseThrow(() -> new IllegalArgumentException(ROLE_NOT_FOUND));
+        .orElseThrow(() -> new AuthorisationNotFoundException(ROLE_NOT_FOUND));
 
     return this.modelMapper.map(role, RoleServiceModel.class);
   }
@@ -58,24 +58,6 @@ public class RoleServiceImpl implements RoleService {
     return this.roleRepository.findAllByAuthorityNot(CORP)
         .stream()
         .map(r -> this.modelMapper.map(r, RoleServiceModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public List<RoleServiceModel> getAllRolesNotRoot() {
-    return this.roleRepository
-        .findAllByAuthorityNot(ROOT_ADMIN)
-        .stream()
-        .map(r-> this.modelMapper.map(r, RoleServiceModel.class))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public List<RoleServiceModel> listAvailableRoles() {
-    return this.roleRepository
-        .findAllByAuthorityNotAndAuthorityNot(CORP, ROOT_ADMIN)
-        .stream()
-        .map(r->this.modelMapper.map(r, RoleServiceModel.class))
         .collect(Collectors.toList());
   }
 }

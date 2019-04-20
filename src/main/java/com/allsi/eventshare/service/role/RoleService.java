@@ -1,4 +1,4 @@
-package com.allsi.eventshare.service;
+package com.allsi.eventshare.service.role;
 
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 
@@ -9,9 +9,5 @@ public interface RoleService {
 
   RoleServiceModel findByAuthority(String authority);
 
-  List<RoleServiceModel> getAllRolesNotRoot();
-
   List<RoleServiceModel> getAllRolesNotCorp();
-
-  List<RoleServiceModel> listAvailableRoles();
 }

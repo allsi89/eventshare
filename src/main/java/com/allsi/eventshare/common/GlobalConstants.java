@@ -3,7 +3,7 @@ package com.allsi.eventshare.common;
 public class GlobalConstants {
 
   /*
-  Home/Index-related routes
+  Home/Index/Error-related routes
    */
 
   public static final String INDEX_ROUTE ="/";
@@ -13,8 +13,9 @@ public class GlobalConstants {
   Home/Index-related routes
    */
 
-   public static final String INDEX_VIEW = "index";
-   public static final String HOME_VIEW = "home";
+  public static final String INDEX_VIEW = "index";
+  public static final String HOME_VIEW = "home";
+  public static final String ERROR_VIEW ="error";
 
   /*
   Organisation-related routes
@@ -140,7 +141,6 @@ public class GlobalConstants {
   public static final String INVALID_EMAIL_MSG = "Please provide a valid email.";
   public static final String BLANK_ERR_MSG = "Input field cannot be blank.";
   public static final String PASS_LENGTH_ERR_MGS = "Password must be 3-16 symbols long.";
-  public static final String REGEX_WEBSITE_PATTERN = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
   public static final String USERNAME_PATTERN = "^(?![_.])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$";
   public static final String USERNAME_LENGTH_ERR_MSG = "Username must be 5-15 symbols long.";
   public static final String USERNAME_NOT_ALLOWED_CHARS_ERR_MSG = "Invalid username. " +
@@ -150,11 +150,6 @@ public class GlobalConstants {
   public static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
 
 
-  public static final String INVALID_FILE = "Invalid File!";
-  public static final String INCORRECT_PASSWORD = "Incorrect password!";
-  public static final String USER_NOT_FOUND_ERR = "User not found!";
-  public static final String COUNTRY_NOT_FOUND_ERR = "Country not found!";
-  public static final String ROLE_NOT_FOUND_ERR = "Authority not found!";
 
 
 

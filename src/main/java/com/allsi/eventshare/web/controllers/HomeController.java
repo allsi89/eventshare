@@ -14,16 +14,6 @@ import static com.allsi.eventshare.common.GlobalConstants.INDEX_VIEW;
 @Controller
 public class HomeController extends BaseController {
   public HomeController() {
-      }
-
-  @GetMapping("/error")
-  public ModelAndView wrong() {
-    return super.view("error/wrong");
-  }
-
-  @GetMapping("/unauthorized")
-  public ModelAndView unauthorized(){
-    return super.view("error/unauthorized");
   }
 
   @GetMapping("/")
@@ -37,7 +27,7 @@ public class HomeController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   @PageTitle("Home")
   public ModelAndView home(Principal principal, ModelAndView modelAndView) {
-    if (principal != null){
+    if (principal != null) {
       modelAndView.addObject("username", principal.getName());
       return super.view(HOME_VIEW, modelAndView);
     } else {

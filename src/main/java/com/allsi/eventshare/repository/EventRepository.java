@@ -6,16 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
-
-  List<Event> findAllByCreator_UsernameAndStartDatetimeAfterOrderByStartDatetime(String username, LocalDateTime dateTime);
-
-  Optional<Event> findByIdAndStartDatetimeAfter(String id, LocalDateTime dateTime);
 
   @Query("SELECT e FROM events e GROUP BY e.country")
   List<Event> findAllGroupByCountry();
@@ -35,7 +29,5 @@ public interface EventRepository extends JpaRepository<Event, String> {
       "WHERE e.category.id LIKE :categoryId")
   List<Event> findAllByCategory(@Param(value = "categoryId") String categoryId);
 
-  @Query(value = "SELECT e FROM events e " +
-      "WHERE e.creator.id LIKE :creatorId")
-  List<Event> findAllByCreator(@Param(value = "creatorId") String creatorId);
+  List<Event> findAllByCreator_IdOrderByStartDatetimeDesc(String creatorId);
 }

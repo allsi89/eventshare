@@ -4,8 +4,9 @@ import com.allsi.eventshare.domain.models.binding.OrganisationBindingModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.domain.models.service.OrganisationServiceModel;
 import com.allsi.eventshare.domain.models.view.OrganisationViewModel;
-import com.allsi.eventshare.service.ImageService;
-import com.allsi.eventshare.service.OrganisationService;
+import com.allsi.eventshare.service.image.ImageService;
+import com.allsi.eventshare.service.organisation.OrganisationService;
+import com.allsi.eventshare.service.user.UserService;
 import com.allsi.eventshare.validation.organisation.OrganisationAddValidator;
 import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
@@ -27,20 +28,22 @@ import static com.allsi.eventshare.common.GlobalConstants.*;
 @RequestMapping("/organisations")
 public class OrganisationController extends BaseController {
   private final OrganisationService organisationService;
+  private final UserService userService;
   private final ImageService imageService;
   private final OrganisationAddValidator organisationAddValidator;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public OrganisationController(OrganisationService organisationService, ImageService imageService, OrganisationAddValidator organisationAddValidator,  ModelMapper modelMapper) {
+  public OrganisationController(OrganisationService organisationService, UserService userService, ImageService imageService, OrganisationAddValidator organisationAddValidator, ModelMapper modelMapper) {
     this.organisationService = organisationService;
+    this.userService = userService;
     this.imageService = imageService;
     this.organisationAddValidator = organisationAddValidator;
     this.modelMapper = modelMapper;
   }
 
   @GetMapping("/details")
-  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PreAuthorize("hasRole('ROLE_CORP')")
   @PageTitle("My Organisation")
   public ModelAndView viewOrganisation(Principal principal, ModelAndView modelAndView) {
 
@@ -50,14 +53,13 @@ public class OrganisationController extends BaseController {
     OrganisationViewModel viewModel = this.modelMapper
         .map(organisation, OrganisationViewModel.class);
 
-
     modelAndView.addObject("viewModel", viewModel);
 
     return super.view(OWNER_ORG_DETAILS_VIEW, modelAndView);
   }
 
   @GetMapping("/add")
-  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
+  @PreAuthorize("!hasRole('ROLE_CORP')")
   @PageTitle("Add Organisation")
   public ModelAndView addOrganisation(ModelAndView modelAndView,
                                       @ModelAttribute(name = "bindingModel")
@@ -68,12 +70,12 @@ public class OrganisationController extends BaseController {
   }
 
   @PostMapping("/add")
-  @PreAuthorize("isAuthenticated() AND !hasRole('ROLE_CORP')")
+  @PreAuthorize("!hasRole('ROLE_CORP')")
   public ModelAndView addOrganisationConfirm(Principal principal,
                                              @Valid @ModelAttribute(name = "bindingModel")
                                                  OrganisationBindingModel bindingModel,
                                              BindingResult bindingResult,
-                                             ModelAndView modelAndView){
+                                             ModelAndView modelAndView) {
 
     this.organisationAddValidator.validate(bindingModel, bindingResult);
 
@@ -82,8 +84,11 @@ public class OrganisationController extends BaseController {
       OrganisationServiceModel serviceModel = this.modelMapper
           .map(bindingModel, OrganisationServiceModel.class);
 
-      this.organisationService
-          .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId());
+      if (this.organisationService
+          .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId())) {
+        this.userService.addCorpRole(principal.getName());
+      }
+      ;
 
       return super.redirect(OWNER_ORG_DETAILS_ROUTE, true);
     }
@@ -93,7 +98,7 @@ public class OrganisationController extends BaseController {
   }
 
   @GetMapping("/edit")
-  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PreAuthorize("hasRole('ROLE_CORP')")
   @PageTitle("Edit Organisation")
   public ModelAndView editOrganisation(Principal principal,
                                        ModelAndView modelAndView,
@@ -134,7 +139,7 @@ public class OrganisationController extends BaseController {
   }
 
   @GetMapping("/delete")
-  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PreAuthorize("hasRole('ROLE_CORP')")
   @PageTitle("Delete Organisation")
   public ModelAndView deleteOrganisation(Principal principal,
                                          ModelAndView modelAndView) {
@@ -156,13 +161,15 @@ public class OrganisationController extends BaseController {
                                                 @ModelAttribute("deleteModel")
                                                     OrganisationViewModel deleteModel) {
 
-    this.organisationService.deleteOrganisation(principal.getName());
+    if (this.organisationService.deleteOrganisation(principal.getName())) {
+      this.userService.removeCorpRole(principal.getName());
+    }
+
     return super.redirect("/home", false);
   }
 
-
   @PostMapping("/details/change-picture")
-  @PreAuthorize("isAuthenticated() AND hasRole('ROLE_CORP')")
+  @PreAuthorize("hasRole('ROLE_CORP')")
   public ModelAndView changeProfilePicture(Principal principal,
                                            @RequestParam("file") MultipartFile file) throws IOException {
 

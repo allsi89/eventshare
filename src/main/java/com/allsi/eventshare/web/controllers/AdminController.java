@@ -2,7 +2,7 @@ package com.allsi.eventshare.web.controllers;
 
 import com.allsi.eventshare.domain.models.service.RoleServiceModel;
 import com.allsi.eventshare.domain.models.view.UserAllViewModel;
-import com.allsi.eventshare.service.UserService;
+import com.allsi.eventshare.service.user.UserService;
 import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ public class AdminController extends BaseController {
     this.userService = userService;
     this.modelMapper = modelMapper;
   }
-
 
   @GetMapping("/all-users")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_ROOT')")

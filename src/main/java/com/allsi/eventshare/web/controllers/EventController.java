@@ -5,8 +5,8 @@ import com.allsi.eventshare.domain.models.binding.EditEventBindingModel;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.view.EventListViewModel;
 import com.allsi.eventshare.domain.models.view.EventViewModel;
-import com.allsi.eventshare.service.EventService;
-import com.allsi.eventshare.service.ImageService;
+import com.allsi.eventshare.service.event.EventService;
+import com.allsi.eventshare.service.image.ImageService;
 import com.allsi.eventshare.validation.event.AddEventValidator;
 import com.allsi.eventshare.web.annotations.PageTitle;
 import org.modelmapper.ModelMapper;
@@ -69,8 +69,7 @@ public class EventController extends BaseController {
           .map(bindingModel, EventServiceModel.class);
 
       eventServiceModel = this.eventService
-          .addEvent(eventServiceModel,
-              principal.getName());
+          .addEvent(eventServiceModel, principal.getName());
 
       return super.redirect(OWNER_EVENT_DETAILS_ROUTE + eventServiceModel.getId());
     }
