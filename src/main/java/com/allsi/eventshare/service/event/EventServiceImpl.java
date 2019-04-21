@@ -137,14 +137,14 @@ public class EventServiceImpl implements EventService {
   @Override
   public List<EventServiceModel> findAllByCountry(String countryId) {
 
-    List<Event> events = this.eventRepository.findAllByCountry(countryId);
+    List<Event> events = this.eventRepository.findAllByCountry_Id(countryId);
 
     return this.getProcessedEvents(events);
   }
 
   @Override
   public List<EventServiceModel> findAllByCategory(String id) {
-    List<Event> events = this.eventRepository.findAllByCategory(id);
+    List<Event> events = this.eventRepository.findAllByCategory_Id(id);
 
     return this.getProcessedEvents(events);
   }

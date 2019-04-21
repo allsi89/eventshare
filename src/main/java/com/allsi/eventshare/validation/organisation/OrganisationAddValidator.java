@@ -7,6 +7,7 @@ import com.allsi.eventshare.repository.UserRepository;
 import com.allsi.eventshare.validation.ValidationConstants;
 import com.allsi.eventshare.validation.annotation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
 
 @Validator
@@ -24,19 +25,23 @@ public class OrganisationAddValidator implements org.springframework.validation.
   public boolean supports(Class<?> aClass) {
     return OrganisationBindingModel.class.equals(aClass);
   }
+
   @Override
   public void validate(Object o, Errors errors) {
 
     OrganisationBindingModel bindingModel = (OrganisationBindingModel) o;
 
-    if (bindingModel.getEmail() == null){
+    if (bindingModel.getEmail() == null) {
       return;
     }
 
     User user = this.userRepository.findByEmail(bindingModel.getEmail())
         .orElse(null);
 
-    if (user != null && !user.getUsername().equals(bindingModel.getCreatorUsername())) {
+    String username = SecurityContextHolder.getContext()
+        .getAuthentication().getName();
+
+    if (user != null && !user.getUsername().equals(username)) {
       errors.rejectValue(
           "email",
           ValidationConstants.EMAIL_ALREADY_TAKEN,

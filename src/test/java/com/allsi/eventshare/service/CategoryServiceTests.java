@@ -184,7 +184,7 @@ public class CategoryServiceTests {
 
   @Test(expected = IllegalOperationException.class)
   public void deleteCategory_withCorrectIdAndNoEvents_throwsException() {
-    when(this.eventRepository.findAllByCategory(CATEGORY_ID))
+    when(this.eventRepository.findAllByCategory_Id(CATEGORY_ID))
         .thenReturn(new ArrayList<>() {{
           add(new Event());
         }});

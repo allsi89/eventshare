@@ -295,7 +295,7 @@ public class EventServiceTests {
   public void findAllByCountry_withValidData_returnsCorrect() {
     List<Event> events = new ArrayList<>();
     events.add(getEvent());
-    when(this.eventRepository.findAllByCountry(COUNTRY_ID))
+    when(this.eventRepository.findAllByCountry_Id(COUNTRY_ID))
         .thenReturn(events);
 
     List<EventServiceModel> models = this.eventService.findAllByCountry(COUNTRY_ID);
@@ -313,7 +313,7 @@ public class EventServiceTests {
   public void findAllByCategory_withValidData_returnsCorrect() {
     List<Event> events = new ArrayList<>();
     events.add(getEvent());
-    when(this.eventRepository.findAllByCountry(CATEGORY_ID))
+    when(this.eventRepository.findAllByCountry_Id(CATEGORY_ID))
         .thenReturn(events);
 
     List<EventServiceModel> models = this.eventService.findAllByCountry(CATEGORY_ID);

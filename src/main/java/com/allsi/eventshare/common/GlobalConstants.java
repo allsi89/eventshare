@@ -9,6 +9,7 @@ public class GlobalConstants {
   public static final String INDEX_ROUTE ="/";
   public static final String HOME_ROUTE ="/home";
 
+
    /*
   Home/Index-related routes
    */
@@ -40,8 +41,9 @@ public class GlobalConstants {
    */
 
   public static final String USER_LOGIN_ROUTE = "/users/login";
-  public static final String USER_REGISTER_ROUTE = "/users/register";
   public static final String USER_PROFILE_ROUTE = "/users/profile";
+
+  public static final String USER_REGISTER_ROUTE = "/users/register";
   public static final String USER_EDIT_PROFILE_ROUTE = "/users/profile/edit";
   public static final String USER_CHANGE_PASSWORD_ROUTE = "/users/password/edit";
   public static final String USER_CHANGE_PROFILE_PICTURE_ROUTE = "/users/profile/change-picture";
@@ -60,12 +62,13 @@ public class GlobalConstants {
   Event-related routes (owner)
    */
 
+  public static final String OWNER_ALL_EVENTS_ROUTE = "/events/my-events";
+  public static final String OWNER_EVENT_DETAILS_ROUTE = "/events/my-events/view/";
+
   public static final String ADD_EVENT_ROUTE = "/events/add";
   public static final String EDIT_EVENT_ROUTE = "/events/my-events/edit";
   public static final String DELETE_EVENT_ROUTE = "/events/my-events/delete";
   public static final String CREATED_EVENTS_ROUTE = "/events/my-events";
-  public static final String OWNER_ALL_EVENTS_ROUTE = "/events/my-events";
-  public static final String OWNER_EVENT_DETAILS_ROUTE = "/events/my-events/view/";
   public static final String CHANGE_EVENT_PICTURE_ROUTE ="/events/all-pictures/"; // + eventId
 
   /*
@@ -148,9 +151,6 @@ public class GlobalConstants {
 
   public static final String DATE_TIME_FORMAT = "dd-MMM-yyyy hh:mm a";
   public static final String DATE_TIME_STR_TO_FORMAT = "%s %s";
-
-
-
 
 
   public static final String ROOT_ADMIN = "ROLE_ROOT";

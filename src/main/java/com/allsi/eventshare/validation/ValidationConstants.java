@@ -12,4 +12,6 @@ public class ValidationConstants {
 
   public static final String CATEGORY_ALREADY_EXIST = "Category already exists!";
   public static final String WRONG_DATE = "Date should be after today!";
+
+  public static final String INVALID_INPUT = "Input is not valid!";
 }

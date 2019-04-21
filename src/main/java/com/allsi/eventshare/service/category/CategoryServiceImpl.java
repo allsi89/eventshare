@@ -84,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public void deleteCategory(String id) {
-    if (this.eventRepository.findAllByCategory(id).size() > 0 || !this.categoryRepository.findById(id).isPresent()) {
+    if (this.eventRepository.findAllByCategory_Id(id).size() > 0 || !this.categoryRepository.findById(id).isPresent()) {
       throw new IllegalOperationException(OPERATION_NOT_ALLOWED);
     }
 

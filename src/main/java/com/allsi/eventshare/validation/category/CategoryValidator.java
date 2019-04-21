@@ -34,5 +34,15 @@ public class CategoryValidator implements org.springframework.validation.Validat
           ValidationConstants.CATEGORY_ALREADY_EXIST
       );
     }
+
+    if (bindingModel.getName().isEmpty()
+        || bindingModel.getName().trim().isEmpty()
+        || bindingModel.getName() == null) {
+      errors.rejectValue("name",
+          ValidationConstants.INVALID_INPUT,
+          ValidationConstants.INVALID_INPUT
+
+      );
+    }
   }
 }

@@ -1,4 +1,4 @@
-package com.allsi.eventshare.controllers;
+package com.allsi.eventshare.web.controllers;
 
 public class OrganisationControllerTests {
 }

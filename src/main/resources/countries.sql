@@ -1,3 +1,6 @@
+USE event_share_db
+
+
 INSERT INTO `countries` (`id`,`name`, `nicename`, `iso3`, `numcode`, `phonecode`) VALUES
 ('AF', 'AFGHANISTAN', 'Afghanistan', 'AFG', 4, 93),
 ('AL', 'ALBANIA', 'Albania', 'ALB', 8, 355),
