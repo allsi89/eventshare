@@ -1,5 +1,6 @@
 package com.allsi.eventshare.web.controllers;
 
+import com.allsi.eventshare.domain.entities.Organisation;
 import com.allsi.eventshare.repository.ImageRepository;
 import com.allsi.eventshare.repository.OrganisationRepository;
 import com.allsi.eventshare.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.security.Principal;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -52,6 +54,34 @@ public class OrganisationControllerTests {
     mockMvc.perform(get("/organisations/add")
         .principal(this.principal))
         .andExpect(view().name("organisation/add-organisation"));
+  }
+
+  @Test
+  @WithMockUser(roles = {"USER", "CORP"}, username = "username")
+  public void OrganisationDetailsGet_withLoggedUserRoleCorp_returnsCorrect() throws Exception {
+    when(this.organisationRepository.findByUser_Username("username"))
+        .thenReturn(java.util.Optional.of(new Organisation()));
+
+    mockMvc.perform(get("/organisations/details")
+        .principal(this.principal))
+        .andExpect(view().name("organisation/organisation-view"));
+  }
+
+  @Test
+  @WithMockUser(roles = "USER", username = "username")
+  public void OrganisationDetailsGet_withLoggedUserRoleUser_returnsError() throws Exception {
+    when(this.organisationRepository.findByUser_Username("username"))
+        .thenReturn(java.util.Optional.of(new Organisation()));
+
+    mockMvc.perform(get("/organisations/details")
+        .principal(this.principal))
+        .andExpect(view().name("error"));
+  }
+
+  @Test
+  public void OrganisationDetailsGet_withNoLoggedUser_returnsLogin() throws Exception {
+    mockMvc.perform(get("/organisations/details"))
+        .andExpect(redirectedUrl("http://localhost/users/login"));
   }
 
 }
