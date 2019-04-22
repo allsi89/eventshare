@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.common.GlobalConstants.*;
-import static com.allsi.eventshare.service.ServiceConstants.ROLE_NOT_FOUND;
 
 @Service
 public class RoleServiceImpl implements RoleService {

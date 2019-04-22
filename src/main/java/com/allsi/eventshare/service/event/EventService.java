@@ -25,4 +25,6 @@ public interface EventService {
   void editEvent(EventServiceModel serviceModel, String name);
 
   List<String> findAllCreatorIds();
+
+  void removeImageFromGallery(String eventId, String pictureId);
 }

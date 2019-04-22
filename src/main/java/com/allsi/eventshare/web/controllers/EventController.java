@@ -5,6 +5,7 @@ import com.allsi.eventshare.domain.models.binding.EditEventBindingModel;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.view.EventListViewModel;
 import com.allsi.eventshare.domain.models.view.EventViewModel;
+import com.allsi.eventshare.domain.models.binding.ImageDeleteModel;
 import com.allsi.eventshare.service.event.EventService;
 import com.allsi.eventshare.service.image.ImageService;
 import com.allsi.eventshare.validation.event.AddEventValidator;
@@ -60,7 +61,7 @@ public class EventController extends BaseController {
                                       ModelAndView modelAndView,
                                       @Valid @ModelAttribute(name = "bindingModel")
                                           AddEventBindingModel bindingModel,
-                                      BindingResult bindingResult){
+                                      BindingResult bindingResult) {
 
     this.addEventValidator.validate(bindingModel, bindingResult);
 
@@ -98,11 +99,9 @@ public class EventController extends BaseController {
 
   @PostMapping("/add-pictures/{id}")
   @PreAuthorize("isAuthenticated()")
-  @ResponseBody
   public ModelAndView addEventPictures(Principal principal,
                                        @RequestParam("file") MultipartFile file,
-                                       @PathVariable(name = "id") String id,
-                                       ModelAndView modelAndView) throws IOException {
+                                       @PathVariable(name = "id") String id) throws IOException {
 
     this.eventService.fillGallery(id, principal.getName(), this.imageService.saveInDb(file));
     return super.redirect(OWNER_EVENT_DETAILS_ROUTE + id);
@@ -113,7 +112,7 @@ public class EventController extends BaseController {
   @PageTitle("My Events")
   public ModelAndView allUserEvents(Principal principal, ModelAndView modelAndView) {
 
-    List<EventListViewModel> events =  this.eventService
+    List<EventListViewModel> events = this.eventService
         .findAllByCreator(principal.getName())
         .stream()
         .map(e -> this.modelMapper.map(e, EventListViewModel.class))
@@ -126,7 +125,7 @@ public class EventController extends BaseController {
   @PostMapping("/my-events/delete")
   @PreAuthorize("isAuthenticated()")
   public ModelAndView deleteEventConfirm(Principal principal,
-                                       @RequestParam("deleteId") String id) {
+                                         @RequestParam("deleteId") String id) {
 
     this.eventService.deleteEvent(id, principal.getName());
 
@@ -138,9 +137,8 @@ public class EventController extends BaseController {
   @PageTitle("Edit Event")
   public ModelAndView editEvent(@RequestParam("editId") String id,
                                 @ModelAttribute("bindingModel")
-                                    EditEventBindingModel bindingModel,
-                                ModelAndView modelAndView) {
-    bindingModel = this.modelMapper
+                                    ModelAndView modelAndView) {
+    EditEventBindingModel bindingModel = this.modelMapper
         .map(this.eventService.findEventById(id), EditEventBindingModel.class);
 
     modelAndView.addObject("bindingModel", bindingModel);
@@ -156,7 +154,7 @@ public class EventController extends BaseController {
                                        ModelAndView modelAndView,
                                        BindingResult bindingResult) {
 
-    if (!bindingResult.hasErrors()){
+    if (!bindingResult.hasErrors()) {
       EventServiceModel serviceModel = this.modelMapper
           .map(bindingModel, EventServiceModel.class);
 
@@ -169,6 +167,32 @@ public class EventController extends BaseController {
 
     modelAndView.addObject("bindingModel", bindingModel);
     return super.view(EDIT_EVENT_VIEW, modelAndView);
+  }
+
+  @GetMapping("/remove-picture")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView deleteEventPicture(Principal principal,
+                                                @RequestParam(name = "pictureId") String pictureId,
+                                                @RequestParam(name = "eventId") String eventId,
+                                                ModelAndView modelAndView) {
+
+    this.eventService.findEventByIdAndCreator(eventId, principal.getName());
+
+    ImageDeleteModel deleteModel = this.modelMapper
+        .map(this.imageService.findImageById(pictureId), ImageDeleteModel.class);
+
+    modelAndView.addObject("deleteModel", deleteModel);
+    modelAndView.addObject("eventId", eventId);
+    return super.view(EVENT_DELETE_PICTURE_VIEW, modelAndView);
+  }
+
+  @PostMapping("/remove-picture")
+  @PreAuthorize("isAuthenticated()")
+  public ModelAndView deleteEventPictureConfirm(@RequestParam(name = "pictureId") String pictureId,
+                                                @RequestParam(name = "eventId") String eventId) {
+    this.eventService.removeImageFromGallery(eventId, pictureId);
+    this.imageService.removeImageById(pictureId);
+    return super.redirect(OWNER_EVENT_DETAILS_ROUTE + eventId);
   }
 
 }

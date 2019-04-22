@@ -18,9 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.common.GlobalConstants.DATE_TIME_FORMAT;
-import static com.allsi.eventshare.common.GlobalConstants.DATE_TIME_STR_TO_FORMAT;
-import static com.allsi.eventshare.service.ServiceConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -199,6 +197,21 @@ public class EventServiceImpl implements EventService {
       creatorIds.add(event.getCreator().getId());
     }
     return creatorIds;
+  }
+
+  @Override
+  public void removeImageFromGallery(String eventId, String pictureId) {
+    Event event = this.eventRepository.findById(eventId)
+        .orElseThrow(() -> new EventNotFoundException(EVENT_NOT_FOUND));
+
+    List<Image> images = event.getImages();
+    images = images.stream()
+        .filter(i -> !i.getId().equals(pictureId))
+        .collect(Collectors.toList());
+
+    event.setImages(images);
+
+    this.eventRepository.save(event);
   }
 
   private List<EventServiceModel> getProcessedEvents(List<Event> events) {

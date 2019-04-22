@@ -1,10 +1,10 @@
-package com.allsi.eventshare.domain.models.view;
+package com.allsi.eventshare.domain.models.binding;
 
-public class ImageViewModel {
+public class ImageDeleteModel {
   private String id;
   private String url;
 
-  public ImageViewModel() {
+  public ImageDeleteModel() {
   }
 
   public String getId() {
@@ -22,4 +22,5 @@ public class ImageViewModel {
   public void setUrl(String url) {
     this.url = url;
   }
+
 }

@@ -1,7 +1,12 @@
-.flash {
-    background-color: lightcoral;
-    padding: 1em;
+.small-container {
+    width: 300px;
+    max-width: 80%;
+    height: 300px;
+    max-height: 80%;
+    display: inline-block;
 }
+
+
 
 .placeholder-fix::-webkit-input-placeholder {
     color: #4caf50;

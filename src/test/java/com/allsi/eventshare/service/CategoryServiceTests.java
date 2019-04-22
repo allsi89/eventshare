@@ -60,7 +60,7 @@ public class CategoryServiceTests {
 
     when(this.categoryRepository.findById(CATEGORY_ID))
         .thenReturn(
-            java.util.Optional.of(category));
+            Optional.of(category));
 
     CategoryServiceModel serviceModel = this.categoryService.findById(CATEGORY_ID);
 

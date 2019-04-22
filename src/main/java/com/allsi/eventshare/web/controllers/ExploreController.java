@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,8 +68,7 @@ public class ExploreController extends BaseController{
   @PreAuthorize("isAuthenticated()")
   @PageTitle("Events By Organisations")
   public ModelAndView getOrganisationEvents(ModelAndView modelAndView,
-                                            @PathVariable(name = "id") String id,
-                                            Principal principal) {
+                                            @PathVariable(name = "id") String id) {
 
     OrganisationServiceModel serviceModel = this.organisationService
         .findById(id);

@@ -3,24 +3,22 @@ package com.allsi.eventshare.service;
 import com.allsi.eventshare.errors.InvalidFileException;
 import com.allsi.eventshare.repository.ImageRepository;
 import com.allsi.eventshare.service.image.ImageService;
-import com.allsi.eventshare.service.image.ImageServiceImpl;
 import com.allsi.eventshare.util.CloudService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ImageServiceTests {
   private static final String URL = "url";
@@ -28,21 +26,15 @@ public class ImageServiceTests {
   private static final String FILE_NAME = "filename.jpeg";
   private static final String TYPE ="text/plain";
   private static final String CONTENT = "some text";
-  @Mock
+  @MockBean
   private ImageRepository imageRepository;
-  @Mock
+  @MockBean
   private CloudService cloudService;
 
-  @Spy
+  @Autowired
   private ModelMapper modelMapper;
-
+  @Autowired
   private ImageService imageService;
-
-  @Before
-  public void init() {
-    this.imageService = new ImageServiceImpl(this.imageRepository,
-        this.cloudService, this.modelMapper);
-  }
 
   @Test
   public void saveInDb_withCorrectFile_returnsCorrect() throws IOException {

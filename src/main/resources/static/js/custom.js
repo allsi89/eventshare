@@ -146,26 +146,7 @@ function slideshow() {
     }
 }
 
-function post() {
-    const http = (function () {
-        const send = (url, method, body) => fetch(url, {method, body: JSON.stringify(body)})
-            .then(response => response.json());
-        const post = (url, body) => send(url, 'POST', body);
-        const get = (url) => send(url, 'GET', null);
-        return {
-            send, post, get
-        };
 
-    }());
-    $('#form').on('submit', (ev) => {
-        const id = $('#btn-id').val();
-        // const id = $(this).attr('data-id');
-        http.post(url, id)
-            .then(() => window.location.replace('/home'));
-        ev.preventDefault();
-        return false;
-    })
-}
 
 function showGallery(id) {
     fetch("/fetch/created-events/all-pictures/" + id)
@@ -177,15 +158,63 @@ function showGallery(id) {
                 console.log(json);
                 json.forEach((image, index) => {
                     $('#content-container')
-                        .append(`<img src="${image.url}" width="200px" height="200px">`);
-                    console.log(image.url);
+                        .append(`<div class="small-container mt-2">
+<img class="materialboxed" src="${image.url}" width="200px" height="200px"></div>`);
                 });
+                $('.materialboxed').materialbox();
             }))
         .catch(() => {
             $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
         })
 
 }
+
+function showGalleryCreatedEvent(id) {
+    fetch("/fetch/created-events/all-pictures/" + id)
+        .then((response) => response.json()
+            .then((json) => {
+                $('#content-container').remove();
+                $('.custom-container').append(`<div id="content-container"></div>`);
+
+                console.log(json);
+                json.forEach((image, index) => {
+                    $('#content-container')
+                        .append(`<div class="small-container mt-2">
+<img class="materialboxed" src="${image.url}" width="200px" height="200px">
+<form action="/events/remove-picture" method="get">
+<input type="hidden" name="pictureId" value="${image.id}"> 
+<input type="hidden" name="eventId" value="${id}"> 
+<button class="btn btn-secondary mt-2" type="submit">Remove</button></form></div>`);
+
+                });
+                $('.materialboxed').materialbox();
+            }))
+        .catch(() => {
+            $('.container #content-container').append(`<h2>There are no pictures in the event gallery!</h2>`)
+        })
+
+}
+
+// function post() {
+//     const http = (function () {
+//         const send = (url, method, body) => fetch(url, {method, body: JSON.stringify(body)})
+//             .then(response => response.json());
+//         const post = (url, body) => send(url, 'POST', body);
+//         const get = (url) => send(url, 'GET', null);
+//         return {
+//             send, post, get
+//         };
+//
+//     }());
+//     $('#form').on('submit', (ev) => {
+//         const id = $('#btn-id').val();
+//         // const id = $(this).attr('data-id');
+//         http.post(url, id)
+//             .then(() => window.location.replace('/home'));
+//         ev.preventDefault();
+//         return false;
+//     })
+// }
 
 // function showCreatedEvents() {
 //     fetch("/fetch/created-events")

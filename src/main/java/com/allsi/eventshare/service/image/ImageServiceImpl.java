@@ -2,6 +2,7 @@ package com.allsi.eventshare.service.image;
 
 import com.allsi.eventshare.domain.entities.Image;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
+import com.allsi.eventshare.errors.ImageNotFoundException;
 import com.allsi.eventshare.errors.InvalidFileException;
 import com.allsi.eventshare.repository.ImageRepository;
 import com.allsi.eventshare.util.CloudService;
@@ -12,7 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static com.allsi.eventshare.service.ServiceConstants.INVALID_FILE;
+import static com.allsi.eventshare.common.GlobalConstants.IMAGE_NOT_FOUND;
+import static com.allsi.eventshare.common.GlobalConstants.INVALID_FILE;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -42,6 +44,18 @@ public class ImageServiceImpl implements ImageService {
     imageServiceModel.setUrl(url);
 
     return imageServiceModel;
+  }
+
+  @Override
+  public ImageServiceModel findImageById(String pictureId) {
+    Image image = this.imageRepository.findById(pictureId)
+        .orElseThrow(() -> new ImageNotFoundException(IMAGE_NOT_FOUND));
+    return this.modelMapper.map(image, ImageServiceModel.class);
+  }
+
+  @Override
+  public void removeImageById(String pictureId) {
+    this.imageRepository.deleteById(pictureId);
   }
 
 }

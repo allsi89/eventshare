@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.allsi.eventshare.common.GlobalConstants.*;
-import static com.allsi.eventshare.service.ServiceConstants.*;
 
 @Service
 public class UserServiceImpl implements UserService {

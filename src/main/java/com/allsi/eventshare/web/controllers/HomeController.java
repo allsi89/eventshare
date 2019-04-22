@@ -27,11 +27,7 @@ public class HomeController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   @PageTitle("Home")
   public ModelAndView home(Principal principal, ModelAndView modelAndView) {
-    if (principal != null) {
-      modelAndView.addObject("username", principal.getName());
-      return super.view(HOME_VIEW, modelAndView);
-    } else {
-      return super.view(INDEX_VIEW, modelAndView);
-    }
+    modelAndView.addObject("username", principal.getName());
+    return super.view(HOME_VIEW, modelAndView);
   }
 }

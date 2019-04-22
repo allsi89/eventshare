@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.allsi.eventshare.service.ServiceConstants.*;
+import static com.allsi.eventshare.common.GlobalConstants.*;
 
 @Service
 public class OrganisationServiceImpl implements OrganisationService {

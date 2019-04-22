@@ -92,7 +92,7 @@ public class EventServiceTests {
     eventModel.setCountry(getCountry());
 
     when(this.userRepository.findByUsername(USER_USERNAME))
-        .thenReturn(java.util.Optional.of(user));
+        .thenReturn(Optional.of(user));
 
     this.eventService.addEvent(eventModel, USER_USERNAME);
   }
@@ -108,9 +108,9 @@ public class EventServiceTests {
         .map(eventModel.getCountry(), Country.class);
 
     when(this.userRepository.findByUsername(USER_USERNAME))
-        .thenReturn(java.util.Optional.of(user));
+        .thenReturn(Optional.of(user));
     when(this.countryRepository.findById(COUNTRY_ID))
-        .thenReturn(java.util.Optional.ofNullable(country));
+        .thenReturn(Optional.ofNullable(country));
 
     this.eventService.addEvent(eventModel, USER_USERNAME);
   }

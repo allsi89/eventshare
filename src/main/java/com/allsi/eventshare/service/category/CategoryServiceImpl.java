@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.allsi.eventshare.service.ServiceConstants.CATEGORY_NOT_FOUND;
+import static com.allsi.eventshare.common.GlobalConstants.CATEGORY_NOT_FOUND;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
