@@ -88,7 +88,6 @@ public class OrganisationController extends BaseController {
           .addOrganisation(serviceModel, principal.getName(), bindingModel.getCountryId())) {
         this.userService.addCorpRole(principal.getName());
       }
-      ;
 
       return super.redirect(OWNER_ORG_DETAILS_ROUTE, true);
     }
@@ -101,13 +100,12 @@ public class OrganisationController extends BaseController {
   @PreAuthorize("hasRole('ROLE_CORP')")
   @PageTitle("Edit Organisation")
   public ModelAndView editOrganisation(Principal principal,
-                                       ModelAndView modelAndView,
-                                       @ModelAttribute("model")
-                                           OrganisationBindingModel bindingModel) {
+                                       ModelAndView modelAndView) {
 
     OrganisationServiceModel serviceModel = this.organisationService
         .getOrganisationByUsername(principal.getName());
-    bindingModel = this.modelMapper.map(serviceModel, OrganisationBindingModel.class);
+    OrganisationBindingModel bindingModel = this.modelMapper
+        .map(serviceModel, OrganisationBindingModel.class);
 
     modelAndView.addObject("model", bindingModel);
     return super.view(EDIT_ORG_VIEW, modelAndView);

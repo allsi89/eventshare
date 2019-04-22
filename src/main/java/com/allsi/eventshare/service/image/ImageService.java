@@ -1,6 +1,5 @@
 package com.allsi.eventshare.service.image;
 
-import com.allsi.eventshare.domain.models.binding.ImageDeleteModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import org.springframework.web.multipart.MultipartFile;
 

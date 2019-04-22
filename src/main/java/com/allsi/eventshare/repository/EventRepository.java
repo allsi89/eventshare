@@ -19,15 +19,6 @@ public interface EventRepository extends JpaRepository<Event, String> {
   @Query("SELECT e FROM events e GROUP BY e.creator")
   List<Event> findAllGroupByCreator();
 
-//  @Query(value = "SELECT e FROM events e " +
-//      "WHERE e.country.id LIKE :countryId")
-//  List<Event> findAllByCountry(@Param(value = "countryId") String countryId);
-
-
-//  @Query(value = "SELECT e FROM events e " +
-//      "WHERE e.category.id LIKE :categoryId")
-//  List<Event> findAllByCategory(@Param(value = "categoryId") String categoryId);
-
   List<Event> findAllByCreator_IdOrderByStartDatetimeDesc(String creatorId);
 
   List<Event> findAllByCategory_Id(String categoryId);

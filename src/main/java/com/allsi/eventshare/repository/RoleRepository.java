@@ -12,6 +12,4 @@ public interface RoleRepository extends JpaRepository<Role, String> {
   List<Role> findAllByAuthorityNot(String authority);
 
   Optional<Role> findByAuthority(String authority);
-
-//  List<Role> findAllByAuthorityNotAndAuthorityNot(String corp, String root);
 }

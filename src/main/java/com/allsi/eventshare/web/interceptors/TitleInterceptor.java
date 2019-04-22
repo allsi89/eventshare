@@ -13,18 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 public class TitleInterceptor extends HandlerInterceptorAdapter {
 
   @Override
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+  public void postHandle(HttpServletRequest request,
+                         HttpServletResponse response,
+                         Object handler,
+                         ModelAndView modelAndView) {
+
     String title = "Event Share";
 
     if (modelAndView == null) {
       modelAndView = new ModelAndView();
     } else {
       if (handler instanceof HandlerMethod) {
-        PageTitle methodAnnotation = ((HandlerMethod) handler).getMethodAnnotation(PageTitle.class);
+        PageTitle methodAnnotation = ((HandlerMethod) handler)
+            .getMethodAnnotation(PageTitle.class);
 
         if (methodAnnotation != null) {
           modelAndView
-              .addObject("title", title + " - " + methodAnnotation.value());
+              .addObject("title", title + " - "
+                  + methodAnnotation.value());
         }
       }
     }

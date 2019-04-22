@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class EventNotFoundException extends RuntimeException{
   private int statusCode;
 
-  public EventNotFoundException() {
-    this.statusCode = 404;
-  }
-
   public EventNotFoundException(String message) {
     super(message);
     this.statusCode = 404;

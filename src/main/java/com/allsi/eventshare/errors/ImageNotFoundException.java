@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ImageNotFoundException extends RuntimeException{
   private int statusCode;
 
-  public ImageNotFoundException() {
-    this.statusCode = 404;
-  }
-
   public ImageNotFoundException(String message) {
     super(message);
     this.statusCode = 404;

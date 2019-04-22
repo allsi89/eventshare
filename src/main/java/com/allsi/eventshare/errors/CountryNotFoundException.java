@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CountryNotFoundException extends RuntimeException {
   private int statusCode;
 
-  public CountryNotFoundException() {
-    this.statusCode = 404;
-  }
-
   public CountryNotFoundException(String message) {
     super(message);
     this.statusCode = 404;

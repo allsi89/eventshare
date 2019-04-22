@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class IllegalOperationException extends RuntimeException {
   private int statusCode;
 
-  public IllegalOperationException() {
-    this.statusCode = 403;
-  }
-
   public IllegalOperationException(String message) {
     super(message);
     this.statusCode = 403;

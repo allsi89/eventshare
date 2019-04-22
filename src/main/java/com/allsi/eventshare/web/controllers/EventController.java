@@ -171,6 +171,7 @@ public class EventController extends BaseController {
 
   @GetMapping("/remove-picture")
   @PreAuthorize("isAuthenticated()")
+  @PageTitle("Delete Event Picture")
   public ModelAndView deleteEventPicture(Principal principal,
                                                 @RequestParam(name = "pictureId") String pictureId,
                                                 @RequestParam(name = "eventId") String eventId,

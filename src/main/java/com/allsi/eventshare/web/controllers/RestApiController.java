@@ -58,16 +58,6 @@ public class RestApiController {
         .collect(Collectors.toList());
   }
 
-//  @GetMapping(value = "/created-events", produces = "application/json")
-//  @PreAuthorize("isAuthenticated()")
-//  @ResponseBody
-//  public Object fetchCreated(Principal principal) {
-//    return this.eventService.findAllByCreator(principal.getName())
-//        .stream()
-//        .map(e -> this.modelMapper.map(e, EventListViewModel.class))
-//        .collect(Collectors.toList());
-//  }
-
   @GetMapping("/countries-with-events")
   @PreAuthorize("isAuthenticated()")
   @ResponseBody

@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CategoryNotFoundException extends RuntimeException {
   private int statusCode;
 
-  public CategoryNotFoundException() {
-    this.statusCode = 404;
-  }
-
   public CategoryNotFoundException(String message) {
     super(message);
     this.statusCode = 404;

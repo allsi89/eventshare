@@ -102,11 +102,9 @@ public class UserController extends BaseController {
   @PreAuthorize("isAuthenticated()")
   @PageTitle("Edit Profile")
   public ModelAndView editProfile(Principal principal,
-                                  @ModelAttribute(name = "userModel")
-                                      UserEditBindingModel userModel,
                                   ModelAndView modelAndView) {
 
-    userModel = this.modelMapper
+    UserEditBindingModel userModel = this.modelMapper
         .map(this.userService.findUserByUsername(principal.getName()),
             UserEditBindingModel.class);
     modelAndView
@@ -140,11 +138,9 @@ public class UserController extends BaseController {
   @GetMapping("/password/edit")
   @PreAuthorize("isAuthenticated()")
   @PageTitle("Change Password")
-  public ModelAndView editPassword(@ModelAttribute(name = "userModel")
-                                         UserEditPasswordBindingModel userModel,
-                                   ModelAndView modelAndView) {
+  public ModelAndView editPassword(ModelAndView modelAndView) {
 
-    userModel = new UserEditPasswordBindingModel();
+    UserEditPasswordBindingModel userModel = new UserEditPasswordBindingModel();
     modelAndView.addObject("userModel", userModel);
     return super.view(USER_CHANGE_PASSWORD_VIEW, modelAndView);
   }

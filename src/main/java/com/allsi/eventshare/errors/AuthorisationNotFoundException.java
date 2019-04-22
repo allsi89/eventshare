@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AuthorisationNotFoundException extends RuntimeException {
   private int statusCode;
 
-  public AuthorisationNotFoundException() {
-    this.statusCode = 404;
-  }
-
   public AuthorisationNotFoundException(String message) {
     super(message);
     this.statusCode = 404;

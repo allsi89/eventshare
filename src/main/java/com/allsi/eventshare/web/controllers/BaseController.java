@@ -18,11 +18,11 @@ public abstract class BaseController {
     return modelAndView;
   }
 
-  protected ModelAndView redirect(String url) {
+  ModelAndView redirect(String url) {
     return this.view("redirect:" + url);
   }
 
-  protected ModelAndView redirect(String url, boolean isToBeAdded) {
+  ModelAndView redirect(String url, boolean isToBeAdded) {
     this.authService.resetAuthCorp(isToBeAdded);
     return this.view("redirect:" + url);
   }
