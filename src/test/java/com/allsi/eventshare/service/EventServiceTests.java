@@ -9,10 +9,7 @@ import com.allsi.eventshare.errors.CategoryNotFoundException;
 import com.allsi.eventshare.errors.CountryNotFoundException;
 import com.allsi.eventshare.errors.EventNotFoundException;
 import com.allsi.eventshare.errors.IllegalOperationException;
-import com.allsi.eventshare.repository.CategoryRepository;
-import com.allsi.eventshare.repository.CountryRepository;
-import com.allsi.eventshare.repository.EventRepository;
-import com.allsi.eventshare.repository.UserRepository;
+import com.allsi.eventshare.repository.*;
 import com.allsi.eventshare.service.event.EventService;
 import com.allsi.eventshare.service.event.EventServiceImpl;
 import org.junit.Assert;
@@ -67,6 +64,8 @@ public class EventServiceTests {
   private CountryRepository countryRepository;
   @Mock
   private CategoryRepository categoryRepository;
+  @Mock
+  private DailyEventRepository dailyEventRepository;
 
   @Spy
   private ModelMapper modelMapper;
@@ -76,7 +75,7 @@ public class EventServiceTests {
   @Before
   public void init() {
     this.eventService = new EventServiceImpl(eventRepository, userRepository,
-        countryRepository, categoryRepository, modelMapper);
+        countryRepository, categoryRepository, dailyEventRepository, modelMapper);
     this.modelMapper = new ModelMapper();
   }
 

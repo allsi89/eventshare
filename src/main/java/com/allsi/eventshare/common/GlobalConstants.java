@@ -134,7 +134,11 @@ public class GlobalConstants {
    */
    public static final String ADMIN_ALL_USERS_VIEW = "/admin/all-users";
 
-
+/*
+Daily Event
+ */
+public static final String DAILY_EVENT_ROUTE = "/daily-event";
+public static final String DAILY_EVENT_VIEW = "/daily-event-view";
 
    /*
    Binding Models constants and messages

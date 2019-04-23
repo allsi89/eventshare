@@ -81,6 +81,9 @@
                     <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN, ROLE_ROOT_ADMIN')">
                         <a class="nav-link" th:href="@{/admin/all-users}">Admin</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/daily-event}">Daily Event</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav float-left">
                     <li class="nav-item">

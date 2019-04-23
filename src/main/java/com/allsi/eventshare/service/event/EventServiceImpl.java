@@ -4,10 +4,7 @@ import com.allsi.eventshare.domain.entities.*;
 import com.allsi.eventshare.domain.models.service.EventServiceModel;
 import com.allsi.eventshare.domain.models.service.ImageServiceModel;
 import com.allsi.eventshare.errors.*;
-import com.allsi.eventshare.repository.CategoryRepository;
-import com.allsi.eventshare.repository.CountryRepository;
-import com.allsi.eventshare.repository.EventRepository;
-import com.allsi.eventshare.repository.UserRepository;
+import com.allsi.eventshare.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,14 +26,16 @@ public class EventServiceImpl implements EventService {
   private final UserRepository userRepository;
   private final CountryRepository countryRepository;
   private final CategoryRepository categoryRepository;
+  private final DailyEventRepository dailyEventRepository;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, CountryRepository countryRepository, CategoryRepository categoryRepository, ModelMapper modelMapper) {
+  public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository, CountryRepository countryRepository, CategoryRepository categoryRepository, DailyEventRepository dailyEventRepository, ModelMapper modelMapper) {
     this.eventRepository = eventRepository;
     this.userRepository = userRepository;
     this.countryRepository = countryRepository;
     this.categoryRepository = categoryRepository;
+    this.dailyEventRepository = dailyEventRepository;
     this.modelMapper = modelMapper;
   }
 
@@ -212,6 +211,15 @@ public class EventServiceImpl implements EventService {
     event.setImages(images);
 
     this.eventRepository.save(event);
+  }
+
+  @Override
+  public EventServiceModel getDailyEvent() {
+    DailyEvent dailyEvent = this.dailyEventRepository.findAll().get(0);
+    Event event = this.eventRepository.findById(dailyEvent.getEvent().getId())
+        .orElseThrow(() -> new EventNotFoundException(EVENT_NOT_FOUND));
+
+    return this.getEventServiceModel(event);
   }
 
   private List<EventServiceModel> getProcessedEvents(List<Event> events) {
